@@ -1,0 +1,53 @@
+package mainGUI;
+
+import java.awt.Component;
+
+import javax.swing.JFrame;
+
+import dataStructures.Attribute;
+import dataStructures.TCPDocument;
+import dataStructures.maps.EdgeStatementMap;
+import edu.uci.ics.jung.graph.Graph;
+
+@SuppressWarnings("serial")
+public class PaneTurnerTCP extends AbstractPaneTurner{
+	private TCPDocument document;
+
+	public PaneTurnerTCP(JFrame parent, TCPDocument document) {
+		super(parent);
+		this.document=document;
+		setRightComponent(intitializeViewPanes());
+	}
+
+	@Override
+	protected Component intitializeViewPanes() {
+		viewPanes = new UpdatePane[metaPanes.length];
+
+		// the graph used in the SetupGraphPane must be linked to each
+		// AttributeTuple, so get a reference to it
+		viewPanes[5] = new SetupGraphPane(document,parent);
+		Graph<Attribute, EdgeStatementMap> graph = ((SetupGraphPane) viewPanes[5])
+				.getGraph();
+		viewPanes[0] = new SetupProjectPane(document.getMetaData());
+
+		// pass the reference in to the AttributePane which creates
+		// AttributeTuples the AttributeTuple deletes an Attribute vertex from
+		// the graph when it is deleted in the AttributePane
+		viewPanes[1] = new AttributePane(document.getAttributeMap(), graph,
+				parent);
+
+		//? a similar thing will probably have to be done to the Domains
+		viewPanes[2] = new DomainPane(document.getAttributeMap(), parent);
+		viewPanes[3] = new AlternativePane(document.getAlternativeMap(), parent);
+		viewPanes[4] = new ValuePane(document.getAlternativeMap(),
+				document.getAttributeMap(), parent);
+
+		viewPanes[6] = new ViewResultsPaneTCP(document,parent);
+		return viewPanes[currentSelected];
+	}
+
+	@Override
+	public String toXML() {
+		return document.toXML();
+	}
+}
