@@ -56,7 +56,7 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 		buttonPanel.add(nextButton);
 		chooser.add(buttonPanel);
 		String[] steps = { "Setup Project", "Add Attributes",
-				"Attribute \nDomains", "Add \nAlternatives",
+				"Attribute \nDomains", "Add Multiple\nStakeholders", "Add \nAlternatives",
 				"Alternative \nValues", "Setup Preferences", "View Result" };
 		metaPanes = new SelectableTextPane[steps.length];
 		for (int i = 0; i < steps.length; i++) {

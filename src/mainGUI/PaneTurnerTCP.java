@@ -25,8 +25,8 @@ public class PaneTurnerTCP extends AbstractPaneTurner{
 
 		// the graph used in the SetupGraphPane must be linked to each
 		// AttributeTuple, so get a reference to it
-		viewPanes[5] = new SetupGraphPane(document,parent);
-		Graph<Attribute, EdgeStatementMap> graph = ((SetupGraphPane) viewPanes[5])
+		viewPanes[6] = new SetupGraphPane(document,parent);
+		Graph<Attribute, EdgeStatementMap> graph = ((SetupGraphPane) viewPanes[6])
 				.getGraph();
 		viewPanes[0] = new SetupProjectPane(document.getMetaData());
 
@@ -38,11 +38,12 @@ public class PaneTurnerTCP extends AbstractPaneTurner{
 
 		//? a similar thing will probably have to be done to the Domains
 		viewPanes[2] = new DomainPane(document.getAttributeMap(), parent);
-		viewPanes[3] = new AlternativePane(document.getAlternativeMap(), parent);
-		viewPanes[4] = new ValuePane(document.getAlternativeMap(),
+		viewPanes[3] = new StakeholderPane(parent);
+		viewPanes[4] = new AlternativePane(document.getAlternativeMap(), parent);
+		viewPanes[5] = new ValuePane(document.getAlternativeMap(),
 				document.getAttributeMap(), parent);
 
-		viewPanes[6] = new ViewResultsPaneTCP(document,parent);
+		viewPanes[7] = new ViewResultsPaneTCP(document,parent);
 		return viewPanes[currentSelected];
 	}
 
