@@ -1,5 +1,7 @@
 package mainGUI;
 
+import guiElements.NewDialog;
+
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.BufferedWriter;
@@ -24,10 +26,12 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import dataStructures.CIDocument;
+import dataStructures.RunConfiguration;
 import dataStructures.TCPDocument;
 
 @SuppressWarnings("serial")
 public class PreferenceReasoner extends JApplet {
+	
 	private static AbstractPaneTurner paneTurner;
 	private static JFrame frame;
 	public static boolean loading;
@@ -45,28 +49,37 @@ public class PreferenceReasoner extends JApplet {
 			}
 		});
 		
-		JMenu newMenu = new JMenu("New");
-		newMenu.add(new AbstractAction("(T)CP-NET") {
+		fileMenu.add(new AbstractAction("New") {
 			public void actionPerformed(ActionEvent e) {
-				if (paneTurner != null) {
+				if (paneTurner != null ) {
 					//TODO - offer to save old abstractDocument before opening new one
+
 				}
-				paneTurner = new PaneTurnerTCP(frame, new TCPDocument());
-				frame.getContentPane().add(paneTurner);
-				frame.pack();
+				showNewDialog();
 			}
 		});
-		newMenu.add(new AbstractAction("CI-NET") {
-			public void actionPerformed(ActionEvent e) {
-				if (paneTurner != null) {
-					//TODO -  offer to save old abstractDocument before opening new one
-				}
-				paneTurner = new PaneTurnerCI(frame, new CIDocument());
-				frame.getContentPane().add(paneTurner);
-				frame.pack();
-			}
-		});
-		fileMenu.add(newMenu);
+//		JMenu newMenu = new JMenu("New");
+//		newMenu.add(new AbstractAction("(T)CP-NET") {
+//			public void actionPerformed(ActionEvent e) {
+//				if (paneTurner != null) {
+//					//TODO - offer to save old abstractDocument before opening new one
+//				}
+//				paneTurner = new PaneTurnerTCP(frame, new TCPDocument());
+//				frame.getContentPane().add(paneTurner);
+//				frame.pack();
+//			}
+//		});
+//		newMenu.add(new AbstractAction("CI-NET") {
+//			public void actionPerformed(ActionEvent e) {
+//				if (paneTurner != null) {
+//					//TODO -  offer to save old abstractDocument before opening new one
+//				}
+//				paneTurner = new PaneTurnerCI(frame, new CIDocument());
+//				frame.getContentPane().add(paneTurner);
+//				frame.pack();
+//			}
+//		});
+//		fileMenu.add(newMenu);
 		fileMenu.add(new AbstractAction("Open") {
 			public void actionPerformed(ActionEvent e) {
 				//TODO -  offer to save old abstractDocument before opening new one
@@ -98,6 +111,22 @@ public class PreferenceReasoner extends JApplet {
 		if (option == JFileChooser.APPROVE_OPTION) {
 			File file = chooser.getSelectedFile();
 			save(file);
+		}
+	}
+	
+	private static void showNewDialog(){
+		
+		NewDialog nd = new NewDialog(frame);
+		RunConfiguration config= nd.showDialog();
+		
+		if ( config.cpSelected == true ){
+			paneTurner = new PaneTurnerTCP(frame, new TCPDocument());
+			frame.getContentPane().add(paneTurner);
+			frame.pack();
+		} else {
+			paneTurner = new PaneTurnerCI(frame, new CIDocument());
+			frame.getContentPane().add(paneTurner);
+			frame.pack();
 		}
 	}
 
@@ -171,5 +200,6 @@ public class PreferenceReasoner extends JApplet {
 
 		// ...
 		// same for TCPDocument
+		
 	}
 }

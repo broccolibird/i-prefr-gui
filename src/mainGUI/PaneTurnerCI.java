@@ -28,10 +28,10 @@ public class PaneTurnerCI extends AbstractPaneTurner{
 				parent);
 		// a similar thing will probably have to be done to the Domains
 		viewPanes[2] = new DomainPaneCI(document.getAttributeMap(), parent);
-		viewPanes[3] = new StakeholderPane(parent);
-		viewPanes[4] = new AlternativePane(document.getAlternativeMap(), parent);
-		viewPanes[5] = new ValuePane(document.getAlternativeMap(),
+		viewPanes[3] = new AlternativePane(document.getAlternativeMap(), parent);
+		viewPanes[4] = new ValuePane(document.getAlternativeMap(),
 				document.getAttributeMap(), parent);
+		viewPanes[5] = new StakeholderPane(parent);
 		//TODO - import saved importanceMap!!
 		viewPanes[6] = new ImportancePane(document.getAttributeMap(),parent,document.getImportanceMap());
 		viewPanes[7] = new ViewResultsPaneCI(document,parent);
