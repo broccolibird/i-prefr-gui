@@ -13,8 +13,8 @@ import edu.uci.ics.jung.graph.Graph;
 public class PaneTurnerTCP extends AbstractPaneTurner{
 	private TCPDocument document;
 
-	public PaneTurnerTCP(JFrame parent, TCPDocument document) {
-		super(parent);
+	public PaneTurnerTCP(JFrame parent, TCPDocument document, boolean multipleStakeholder) {
+		super(parent, multipleStakeholder);
 		this.document=document;
 		setRightComponent(intitializeViewPanes());
 	}
@@ -23,11 +23,18 @@ public class PaneTurnerTCP extends AbstractPaneTurner{
 	protected Component intitializeViewPanes() {
 		viewPanes = new UpdatePane[metaPanes.length];
 
+		int index = 5;
+		if( isMultipleStakeholder ){
+			viewPanes[index++] = new StakeholderPane(parent);
+		}
+		
 		// the graph used in the SetupGraphPane must be linked to each
 		// AttributeTuple, so get a reference to it
-		viewPanes[6] = new SetupGraphPane(document,parent);
-		Graph<Attribute, EdgeStatementMap> graph = ((SetupGraphPane) viewPanes[6])
+		viewPanes[index] = new SetupGraphPane(document,parent);
+		Graph<Attribute, EdgeStatementMap> graph = ((SetupGraphPane) viewPanes[index++])
 				.getGraph();
+		viewPanes[index] = new ViewResultsPaneTCP(document,parent);
+		
 		viewPanes[0] = new SetupProjectPane(document.getMetaData());
 
 		// pass the reference in to the AttributePane which creates
@@ -38,12 +45,10 @@ public class PaneTurnerTCP extends AbstractPaneTurner{
 
 		//? a similar thing will probably have to be done to the Domains
 		viewPanes[2] = new DomainPane(document.getAttributeMap(), parent);
-		viewPanes[3] = new StakeholderPane(parent);
-		viewPanes[4] = new AlternativePane(document.getAlternativeMap(), parent);
-		viewPanes[5] = new ValuePane(document.getAlternativeMap(),
+		viewPanes[3] = new AlternativePane(document.getAlternativeMap(), parent);
+		viewPanes[4] = new ValuePane(document.getAlternativeMap(),
 				document.getAttributeMap(), parent);
 
-		viewPanes[7] = new ViewResultsPaneTCP(document,parent);
 		return viewPanes[currentSelected];
 	}
 

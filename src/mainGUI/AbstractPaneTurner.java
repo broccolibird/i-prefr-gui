@@ -30,11 +30,14 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 	protected SelectableTextPane[] metaPanes;
 	protected UpdatePane[] viewPanes;
 	protected int currentSelected;
+	
+	boolean isMultipleStakeholder;
 
 	// TODO - make currentSelected come from AbstractDocument MetaData
-	public AbstractPaneTurner(JFrame parent) {
+	public AbstractPaneTurner(JFrame parent, boolean isMultipleStakeholder) {
 		this.parent = parent;
-
+		this.isMultipleStakeholder = isMultipleStakeholder;
+	
 		setupActions();
 		setLeftComponent(getChooser());
 	}
@@ -55,9 +58,29 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 		buttonPanel.add(prevButton);
 		buttonPanel.add(nextButton);
 		chooser.add(buttonPanel);
-		String[] steps = { "Setup Project", "Add Attributes",
-				"Attribute \nDomains", "Add Multiple\nStakeholders", "Add \nAlternatives",
-				"Alternative \nValues", "Setup Preferences", "View Result" };
+		
+		String[] steps = null;
+		
+		if( isMultipleStakeholder ) {
+			steps = new String[8];
+			steps[0] = "Setup Project";
+			steps[1] = "Add Attributes";
+			steps[2] = "Attribute \nDomains";
+			steps[3] = "Add \nAlternatives";
+			steps[4] = "Alternative \nValues";
+			steps[5] = "Add Multiple\nStakeholders";
+			steps[6] = "Setup Preferences";
+			steps[7] = "View Result"; 
+		}else {
+			steps = new String[7];
+			steps[0] = "Setup Project";
+			steps[1] = "Add Attributes";
+			steps[2] = "Attribute \nDomains";
+			steps[3] = "Add \nAlternatives";
+			steps[4] = "Alternative \nValues";
+			steps[5] = "Setup Preferences";
+			steps[6] = "View Result";
+		} 
 		metaPanes = new SelectableTextPane[steps.length];
 		for (int i = 0; i < steps.length; i++) {
 			metaPanes[i] = new SelectableTextPane(steps[i]);

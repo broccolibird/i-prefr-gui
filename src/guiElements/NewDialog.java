@@ -1,6 +1,5 @@
 package guiElements;
 
-import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -20,11 +19,8 @@ import javax.swing.JLabel;
 
 import dataStructures.RunConfiguration;
 
-import mainGUI.PreferenceReasoner;
-
+@SuppressWarnings("serial")
 public class NewDialog extends JDialog implements ActionListener {
-
-	private JFrame parentFrame;
 	
 	private JRadioButton single;
 	private JRadioButton multiple;
@@ -33,14 +29,11 @@ public class NewDialog extends JDialog implements ActionListener {
 	
 	private JButton ok;
 	
-	Boolean singleSelected;
+	Boolean multipleSelected;
 	Boolean cpSelected;
 	
 	public NewDialog(JFrame parentFrame ){
 		super(parentFrame, Dialog.ModalityType.DOCUMENT_MODAL);
-		//setPreferredSize(new Dimension(200, 200));
-
-		this.parentFrame = parentFrame;
 		
 		getContentPane().add(createGUI());
 		pack();
@@ -51,7 +44,11 @@ public class NewDialog extends JDialog implements ActionListener {
 	
 	public RunConfiguration showDialog(){
 		setVisible(true);
-		return new RunConfiguration(singleSelected, cpSelected);
+		
+		if ( multipleSelected != null && cpSelected != null ) 
+			return new RunConfiguration(multipleSelected, cpSelected);
+		else
+			return null;
 		
 	}
 	
@@ -103,7 +100,7 @@ public class NewDialog extends JDialog implements ActionListener {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				singleSelected = null;
+				multipleSelected = null;
 				cpSelected = null;
 				setVisible(false);
 				dispose();
@@ -144,16 +141,16 @@ public class NewDialog extends JDialog implements ActionListener {
 		// TODO Auto-generated method stub
 		Object src = e.getSource();
 		if(single == src){
-			singleSelected = true;
+			multipleSelected = false;
 		}else if(multiple == src){
-			singleSelected = false;
+			multipleSelected = true;
 		}else if(cp == src){
 			cpSelected = true;
 		}else if(ci == src){
 			cpSelected = false;
 		}
 		
-		if(singleSelected != null && cpSelected != null){
+		if(multipleSelected != null && cpSelected != null){
 			ok.setEnabled(true);
 		}
 		

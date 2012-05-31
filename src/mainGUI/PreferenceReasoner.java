@@ -58,28 +58,7 @@ public class PreferenceReasoner extends JApplet {
 				showNewDialog();
 			}
 		});
-//		JMenu newMenu = new JMenu("New");
-//		newMenu.add(new AbstractAction("(T)CP-NET") {
-//			public void actionPerformed(ActionEvent e) {
-//				if (paneTurner != null) {
-//					//TODO - offer to save old abstractDocument before opening new one
-//				}
-//				paneTurner = new PaneTurnerTCP(frame, new TCPDocument());
-//				frame.getContentPane().add(paneTurner);
-//				frame.pack();
-//			}
-//		});
-//		newMenu.add(new AbstractAction("CI-NET") {
-//			public void actionPerformed(ActionEvent e) {
-//				if (paneTurner != null) {
-//					//TODO -  offer to save old abstractDocument before opening new one
-//				}
-//				paneTurner = new PaneTurnerCI(frame, new CIDocument());
-//				frame.getContentPane().add(paneTurner);
-//				frame.pack();
-//			}
-//		});
-//		fileMenu.add(newMenu);
+
 		fileMenu.add(new AbstractAction("Open") {
 			public void actionPerformed(ActionEvent e) {
 				//TODO -  offer to save old abstractDocument before opening new one
@@ -119,12 +98,14 @@ public class PreferenceReasoner extends JApplet {
 		NewDialog nd = new NewDialog(frame);
 		RunConfiguration config= nd.showDialog();
 		
-		if ( config.cpSelected == true ){
-			paneTurner = new PaneTurnerTCP(frame, new TCPDocument());
+		if (config == null){
+			//do nothing
+		} else if ( config.cpSelected == true ){
+			paneTurner = new PaneTurnerTCP(frame, new TCPDocument(), config.multipleSelected);
 			frame.getContentPane().add(paneTurner);
 			frame.pack();
 		} else {
-			paneTurner = new PaneTurnerCI(frame, new CIDocument());
+			paneTurner = new PaneTurnerCI(frame, new CIDocument(), config.multipleSelected);
 			frame.getContentPane().add(paneTurner);
 			frame.pack();
 		}
@@ -186,14 +167,16 @@ public class PreferenceReasoner extends JApplet {
 			//frame.removeAll();
 			CIDocument oldCIDocument = new CIDocument(doc);
 			loading = false;
-			paneTurner = new PaneTurnerCI(frame, oldCIDocument);
+			//TODO - change last variable to multiStakeholder
+			paneTurner = new PaneTurnerCI(frame, oldCIDocument, false);
 			frame.getContentPane().add(paneTurner);
 			frame.pack();
 		}else if(networkType.equals("TCP")){
 			//frame.removeAll();
 			TCPDocument oldTCPDocument = new TCPDocument(doc);
 			loading = false;
-			paneTurner = new PaneTurnerTCP(frame, oldTCPDocument);
+			//TODO - change last variable to multiStakeholder
+			paneTurner = new PaneTurnerTCP(frame, oldTCPDocument, false);
 			frame.getContentPane().add(paneTurner);
 			frame.pack();
 		}

@@ -1,11 +1,11 @@
 package dataStructures;
 
 public class RunConfiguration {
-	protected boolean singleSelected;
+	public boolean multipleSelected;
 	public boolean cpSelected;
 	
-	public RunConfiguration(boolean single, boolean cp){
-		singleSelected = single;
+	public RunConfiguration(boolean multiple, boolean cp){
+		multipleSelected = multiple;
 		cpSelected = cp;
 	}
 	
