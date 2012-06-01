@@ -1,5 +1,6 @@
 package mainGUI;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -8,13 +9,13 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import multiStakeholderGUI.MultipleStakeholders;
+import multiStakeholderGUI.MSPaneTurner;
 
 @SuppressWarnings("serial")
-public class StakeholderPane extends UpdatePane implements ActionListener {
+public class StakeholderPane extends UpdatePane {
 
 	private JFrame parentFrame;
-	private JButton addButton;
+	private MSPaneTurner paneTurner;
 	
 	StakeholderPane(JFrame parentFrame){
 		this.parentFrame = parentFrame;
@@ -30,22 +31,12 @@ public class StakeholderPane extends UpdatePane implements ActionListener {
 
 	private JPanel createGUI(){
 		JPanel panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.setLayout(new BorderLayout());
+
+		paneTurner = new MSPaneTurner(parentFrame, null);
 		
-		addButton = new JButton("Add Stakeholders");
-		addButton.addActionListener(this);
-		panel.add(addButton);
-		
+		panel.add(paneTurner, BorderLayout.CENTER);
 		return panel;
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		
-		if(addButton == e.getSource()){
-			MultipleStakeholders ms = new MultipleStakeholders();
-		}
-		
-		
-	}
 }
