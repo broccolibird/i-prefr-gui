@@ -25,7 +25,7 @@ public class PaneTurnerTCP extends AbstractPaneTurner{
 
 		int index = 5;
 		if( isMultipleStakeholder ){
-			viewPanes[index++] = new StakeholderPane(parent);
+			viewPanes[index++] = new StakeholderPane(parent, document);
 		}
 		
 		// the graph used in the SetupGraphPane must be linked to each

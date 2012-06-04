@@ -35,7 +35,7 @@ public class PaneTurnerCI extends AbstractPaneTurner{
 		viewPanes[index++] = new ValuePane(document.getAlternativeMap(),
 				document.getAttributeMap(), parent);
 		if( isMultipleStakeholder ){
-			viewPanes[index++] = new StakeholderPane(parent);
+			viewPanes[index++] = new StakeholderPane(parent, document);
 		} 
 		//TODO - import saved importanceMap!!
 		viewPanes[index++] = new ImportancePane(document.getAttributeMap(),parent,document.getImportanceMap());
