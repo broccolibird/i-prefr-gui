@@ -1,6 +1,7 @@
 package multiStakeholderGUI;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 
 import guiElements.SelectableTextPane;
@@ -16,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
 
+import dataStructures.AbstractDocument;
 import dataStructures.Attribute;
 import dataStructures.maps.EdgeStatementMap;
 import edu.uci.ics.jung.graph.Graph;
@@ -30,7 +32,8 @@ import mainGUI.UpdatePane;
 import mainGUI.ValuePane;
 import mainGUI.ViewResultsPaneTCP;
 
-public class MSPaneTurner extends JSplitPane {
+@SuppressWarnings("serial")
+public class PaneTurnerMS extends JSplitPane {
 
 	protected JFrame parent;
 	
@@ -44,21 +47,28 @@ public class MSPaneTurner extends JSplitPane {
 	protected UpdatePane[] viewPanes;
 	protected int currentSelected;
 	
-	public MSPaneTurner(JFrame parent) {
+	private AbstractDocument document;
+	
+	public PaneTurnerMS(JFrame parent, AbstractDocument document) {
 		this.parent = parent;
-
+		this.document = document;
+		
 		setupActions();
 		setLeftComponent(getChooser());
 		
 		setRightComponent(initializeViewPanes());
+		
+		setPreferredSize(new Dimension(700, 800));
 	}
 	
 	protected Component initializeViewPanes() {
 		viewPanes = new UpdatePane[metaPanes.length];
 
-		viewPanes[0] = new TestPane(parent, "one");
-		viewPanes[1] = new TestPane(parent, "two");
-		viewPanes[2] = new TestPane(parent, "three");
+		viewPanes[2] = new MemberPane(document.getRoleMap(), parent);
+		//Graph<Attribute, EdgeStatementMap> graph = ((SetupGraphPane) viewPanes[2]).getGraph();
+		viewPanes[0] = new RolePane( document.getRoleMap(), parent);
+		//viewPanes[1] = new DomainPane(document.getAttributeMap(), parent);
+		viewPanes[1] = new TestPane(parent, "Create Role Hierarchy");
 		
 		return viewPanes[currentSelected];
 	}
