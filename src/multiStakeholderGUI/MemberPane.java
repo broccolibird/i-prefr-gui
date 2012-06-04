@@ -1,6 +1,5 @@
 package multiStakeholderGUI;
 
-import guiElements.tuples.DomainTuple;
 import guiElements.tuples.MemberTuple;
 
 import java.util.Collection;
@@ -13,9 +12,7 @@ import javax.swing.JTextField;
 
 import mainGUI.UpdatePane;
 
-import dataStructures.Attribute;
 import dataStructures.Role;
-import dataStructures.maps.AttributeMap;
 import dataStructures.maps.RoleMap;
 
 @SuppressWarnings("serial")
