@@ -9,6 +9,7 @@ import org.w3c.dom.NodeList;
 import dataStructures.maps.AlternativeMap;
 import dataStructures.maps.AttributeMap;
 import dataStructures.maps.OptionMap;
+import dataStructures.maps.RoleMap;
 import dataStructures.maps.SuperkeyMap;
 import dataStructures.maps.ValueMap;
 
@@ -16,11 +17,14 @@ public abstract class AbstractDocument {
 
 	protected AttributeMap attributeMap;
 	protected AlternativeMap alternativeMap;
+	protected RoleMap roleMap;
 	protected MetaData metaData;
 
-	public AbstractDocument() {
+	public AbstractDocument(boolean isMultiStakeholder) {
 		attributeMap = new AttributeMap();
 		alternativeMap = new AlternativeMap();
+		if (isMultiStakeholder)
+			roleMap = new RoleMap();
 		metaData = new MetaData();
 	}
 	
@@ -129,6 +133,10 @@ public abstract class AbstractDocument {
 		return alternativeMap;
 	}
 
+	public RoleMap getRoleMap(){
+		return roleMap;
+	}
+	
 	public MetaData getMetaData() {
 		return metaData;
 	}

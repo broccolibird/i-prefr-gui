@@ -101,11 +101,11 @@ public class PreferenceReasoner extends JApplet {
 		if (config == null){
 			//do nothing
 		} else if ( config.cpSelected == true ){
-			paneTurner = new PaneTurnerTCP(frame, new TCPDocument(), config.multipleSelected);
+			paneTurner = new PaneTurnerTCP(frame, new TCPDocument(config.multipleSelected), config.multipleSelected);
 			frame.getContentPane().add(paneTurner);
 			frame.pack();
 		} else {
-			paneTurner = new PaneTurnerCI(frame, new CIDocument(), config.multipleSelected);
+			paneTurner = new PaneTurnerCI(frame, new CIDocument(config.multipleSelected), config.multipleSelected);
 			frame.getContentPane().add(paneTurner);
 			frame.pack();
 		}

@@ -2,8 +2,8 @@ package dataStructures;
 
 public class TCPDocument extends AbstractDocument{
 	
-	public TCPDocument(){
-		super();
+	public TCPDocument(boolean isMultiStakeholder){
+		super(isMultiStakeholder);
 	}
 	public TCPDocument(org.w3c.dom.Document doc){
 		super(doc);

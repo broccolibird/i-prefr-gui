@@ -12,8 +12,8 @@ public class CIDocument extends AbstractDocument {
 
 	private ImportanceMap importanceMap;
 
-	public CIDocument() {
-		super();
+	public CIDocument(boolean isMultiStakeholder) {
+		super(isMultiStakeholder);
 		this.importanceMap = new ImportanceMap();
 	}
 
