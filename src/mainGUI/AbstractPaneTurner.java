@@ -86,24 +86,12 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 	private void setupActions() {
 		next = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
-				metaPanes[currentSelected].toggleColor();
-				if (currentSelected < metaPanes.length - 1) {
-					currentSelected++;
-					viewPanes[currentSelected].update();
-					setRightComponent(viewPanes[currentSelected]);
-				}
-				metaPanes[currentSelected].toggleColor();
+				next();
 			}
 		};
 		prev = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
-				metaPanes[currentSelected].toggleColor();
-				if (currentSelected > 0) {
-					currentSelected--;
-					viewPanes[currentSelected].update();
-					setRightComponent(viewPanes[currentSelected]);
-				}
-				metaPanes[currentSelected].toggleColor();
+				previous();
 			}
 		};
 		KeyStroke down = KeyStroke.getKeyStroke("DOWN");
@@ -131,6 +119,26 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 
 	public void pack() {
 		parent.pack();
+	}
+	
+	public void previous(){
+		metaPanes[currentSelected].toggleColor();
+		if (currentSelected > 0) {
+			currentSelected--;
+			viewPanes[currentSelected].update();
+			setRightComponent(viewPanes[currentSelected]);
+		}
+		metaPanes[currentSelected].toggleColor();
+	}
+	
+	public void next() {
+		metaPanes[currentSelected].toggleColor();
+		if (currentSelected < metaPanes.length - 1) {
+			currentSelected++;
+			viewPanes[currentSelected].update();
+			setRightComponent(viewPanes[currentSelected]);
+		}
+		metaPanes[currentSelected].toggleColor();
 	}
 
 }

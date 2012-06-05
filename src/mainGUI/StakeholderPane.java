@@ -20,10 +20,11 @@ public class StakeholderPane extends UpdatePane {
 	private JFrame parentFrame;
 	private PaneTurnerMS paneTurner;
 	private AbstractDocument document;
-	
-	public StakeholderPane(JFrame parentFrame, AbstractDocument document){
+	private AbstractPaneTurner parentTurner;
+	public StakeholderPane(JFrame parentFrame, AbstractDocument document, AbstractPaneTurner parentTurner){
 		this.parentFrame = parentFrame;
 		this.document = document;
+		this.parentTurner = parentTurner;
 		
 		setLayout(new BorderLayout());
 		this.add(createGUI(), BorderLayout.CENTER);
@@ -42,7 +43,7 @@ public class StakeholderPane extends UpdatePane {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
 		
-		paneTurner = new PaneTurnerMS(parentFrame, document);
+		paneTurner = new PaneTurnerMS(parentFrame, document, parentTurner);
 		
 		panel.add(paneTurner, BorderLayout.CENTER);
 		return panel;

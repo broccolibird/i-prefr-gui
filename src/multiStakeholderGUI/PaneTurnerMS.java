@@ -18,19 +18,9 @@ import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
 
 import dataStructures.AbstractDocument;
-import dataStructures.Attribute;
-import dataStructures.maps.EdgeStatementMap;
-import edu.uci.ics.jung.graph.Graph;
 
-import mainGUI.AlternativePane;
-import mainGUI.AttributePane;
-import mainGUI.DomainPane;
-import mainGUI.SetupGraphPane;
-import mainGUI.SetupProjectPane;
-import mainGUI.StakeholderPane;
+import mainGUI.AbstractPaneTurner;
 import mainGUI.UpdatePane;
-import mainGUI.ValuePane;
-import mainGUI.ViewResultsPaneTCP;
 
 @SuppressWarnings("serial")
 public class PaneTurnerMS extends JSplitPane {
@@ -48,10 +38,12 @@ public class PaneTurnerMS extends JSplitPane {
 	protected int currentSelected;
 	
 	private AbstractDocument document;
+	private AbstractPaneTurner parentTurner;
 	
-	public PaneTurnerMS(JFrame parent, AbstractDocument document) {
+	public PaneTurnerMS(JFrame parent, AbstractDocument document, AbstractPaneTurner parentTurner) {
 		this.parent = parent;
 		this.document = document;
+		this.parentTurner = parentTurner;
 		
 		setupActions();
 		setLeftComponent(getChooser());
@@ -65,10 +57,12 @@ public class PaneTurnerMS extends JSplitPane {
 		viewPanes = new UpdatePane[metaPanes.length];
 
 		viewPanes[2] = new MemberPane(document.getRoleMap(), parent);
+		
 		//Graph<Attribute, EdgeStatementMap> graph = ((SetupGraphPane) viewPanes[2]).getGraph();
 		viewPanes[0] = new RolePane( document.getRoleMap(), parent);
 		//viewPanes[1] = new DomainPane(document.getAttributeMap(), parent);
-		viewPanes[1] = new TestPane(parent, "Create Role Hierarchy");
+		viewPanes[1] = new TestPane(parent, "Hierarchy Pane"); 
+				//new HierarchyPane(document, parent);
 		
 		return viewPanes[currentSelected];
 	}
@@ -100,22 +94,28 @@ public class PaneTurnerMS extends JSplitPane {
 	private void setupActions() {
 		next = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
+				System.out.println(currentSelected);
 				metaPanes[currentSelected].toggleColor();
 				if (currentSelected < metaPanes.length - 1) {
 					currentSelected++;
 					viewPanes[currentSelected].update();
 					setRightComponent(viewPanes[currentSelected]);
-				}
+				} else if (currentSelected == metaPanes.length - 1){
+					parentTurner.next();
+				} 
 				metaPanes[currentSelected].toggleColor();
 			}
 		};
 		prev = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
+				System.out.println(currentSelected);
 				metaPanes[currentSelected].toggleColor();
 				if (currentSelected > 0) {
 					currentSelected--;
 					viewPanes[currentSelected].update();
 					setRightComponent(viewPanes[currentSelected]);
+				} else if ( currentSelected == 0 ) {
+					parentTurner.previous();
 				}
 				metaPanes[currentSelected].toggleColor();
 			}
