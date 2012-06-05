@@ -1,6 +1,7 @@
 package mainGUI;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -24,8 +25,11 @@ public class StakeholderPane extends UpdatePane {
 		this.parentFrame = parentFrame;
 		this.document = document;
 		
-		this.add(createGUI());
+		setLayout(new BorderLayout());
+		this.add(createGUI(), BorderLayout.CENTER);
+		
 		setVisible(true);
+	
 	}
 	
 	@Override
