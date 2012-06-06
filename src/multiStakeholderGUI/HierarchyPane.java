@@ -18,10 +18,13 @@ import org.apache.commons.collections15.Factory;
 import org.apache.commons.collections15.functors.ConstantTransformer;
 
 import dataStructures.AbstractDocument;
+import dataStructures.Attribute;
 import dataStructures.Role;
+import dataStructures.maps.EdgeStatementMap;
 
 import edu.uci.ics.jung.algorithms.layout.TreeLayout;
 import edu.uci.ics.jung.graph.Forest;
+import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.CrossoverScalingControl;
@@ -145,6 +148,10 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 		controls.add(graphMouse.getModeComboBox());
 		setupRoleBox();
 		controls.add(roleBox);		
+	}
+	
+	public Graph<Role, Integer> getGraph() {
+		return graph;
 	}
 	
 	private void setupRoleBox() {

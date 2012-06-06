@@ -14,22 +14,26 @@ import javax.swing.event.DocumentEvent;
 
 import dataStructures.Role;
 import dataStructures.maps.SuperkeyMap;
+import edu.uci.ics.jung.graph.Graph;
 
 @SuppressWarnings("serial")
 public class RoleTuple extends AbstractTuple<Role> implements ActionListener{
 
 	protected JTextField roleName;
 	protected JButton xButton;
+	protected Graph<Role, Integer> graph;
 	
 	public RoleTuple(Integer key, SuperkeyMap<Role> map, JFrame parent,
-			JPanel parentPanel) {
+			JPanel parentPanel, Graph<Role, Integer> graph) {
 		super(key, map, parent, parentPanel);
-
+		this.graph = graph;
 		initializeGUI();
 	}
 	
-	public RoleTuple(SuperkeyMap<Role> map, JFrame parent, JPanel parentPanel){
+	public RoleTuple(SuperkeyMap<Role> map, JFrame parent, JPanel parentPanel,
+			Graph<Role, Integer> graph){
 		super(map, parent, parentPanel);
+		this.graph = graph;
 		initializeGUI();
 	}
 
@@ -51,9 +55,9 @@ public class RoleTuple extends AbstractTuple<Role> implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == xButton) {
 			Role r = map.get(key);
-			/*if (graph != null) {
+			if (graph != null) {
 				graph.removeVertex(r);
-			}*/
+			}
 			parentPanel.remove(this);
 			map.remove(key);
 			parentWindow.pack();
