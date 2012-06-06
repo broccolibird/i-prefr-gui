@@ -1,5 +1,6 @@
 package guiElements.tuples;
 
+import graph.RoleForest;
 import guiElements.AbstractTextListener;
 
 import java.awt.Window;
@@ -21,17 +22,17 @@ public class RoleTuple extends AbstractTuple<Role> implements ActionListener{
 
 	protected JTextField roleName;
 	protected JButton xButton;
-	protected Graph<Role, Integer> graph;
+	protected RoleForest<Role, Integer> graph;
 	
 	public RoleTuple(Integer key, SuperkeyMap<Role> map, JFrame parent,
-			JPanel parentPanel, Graph<Role, Integer> graph) {
+			JPanel parentPanel, RoleForest<Role, Integer> graph) {
 		super(key, map, parent, parentPanel);
 		this.graph = graph;
 		initializeGUI();
 	}
 	
 	public RoleTuple(SuperkeyMap<Role> map, JFrame parent, JPanel parentPanel,
-			Graph<Role, Integer> graph){
+			RoleForest<Role, Integer> graph){
 		super(map, parent, parentPanel);
 		this.graph = graph;
 		initializeGUI();
@@ -56,7 +57,7 @@ public class RoleTuple extends AbstractTuple<Role> implements ActionListener{
 		if (e.getSource() == xButton) {
 			Role r = map.get(key);
 			if (graph != null) {
-				graph.removeVertex(r);
+				graph.removeVertex(r, false);
 			}
 			parentPanel.remove(this);
 			map.remove(key);

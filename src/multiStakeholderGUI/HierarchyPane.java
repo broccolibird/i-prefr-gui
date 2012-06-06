@@ -41,7 +41,7 @@ import mainGUI.UpdatePane;
 @SuppressWarnings("serial")
 public class HierarchyPane extends UpdatePane implements ActionListener {
 
-	private Forest<Role, Integer> graph;
+	private RoleForest<Role, Integer> graph;
 	
 	Factory<Integer> edgeFactory = new Factory<Integer>() {
 		int i=0;
@@ -150,7 +150,7 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 		controls.add(roleBox);		
 	}
 	
-	public Graph<Role, Integer> getGraph() {
+	public RoleForest<Role, Integer> getGraph() {
 		return graph;
 	}
 	

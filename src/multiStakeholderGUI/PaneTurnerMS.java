@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 
+import graph.RoleForest;
 import guiElements.SelectableTextPane;
 
 import javax.swing.AbstractAction;
@@ -59,7 +60,7 @@ public class PaneTurnerMS extends JSplitPane {
 		viewPanes = new UpdatePane[metaPanes.length];
 		
 		viewPanes[1] = new HierarchyPane(document, parent);
-		Graph<Role, Integer> graph = ((HierarchyPane) viewPanes[1]).getGraph();
+		RoleForest<Role, Integer> graph = ((HierarchyPane) viewPanes[1]).getGraph();
 
 		viewPanes[0] = new RolePane( document.getRoleMap(), graph, parent);
 		

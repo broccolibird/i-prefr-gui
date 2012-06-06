@@ -1,5 +1,6 @@
 package multiStakeholderGUI;
 
+import graph.RoleForest;
 import guiElements.tuples.RoleTuple;
 
 import java.awt.event.ActionEvent;
@@ -26,11 +27,11 @@ public class RolePane extends UpdatePane implements ActionListener{
 	private JFrame parentFrame;
 	private JPanel rolePanel;
 	private JButton plusButton;
-	private Graph<Role, Integer> graph;
+	private RoleForest<Role, Integer> graph;
 	private RoleMap map;
 
 	
-	public RolePane(RoleMap map, Graph<Role,Integer> graph, JFrame parentFrame){
+	public RolePane(RoleMap map, RoleForest<Role,Integer> graph, JFrame parentFrame){
 		this.parentFrame = parentFrame;
 		this.graph = graph;
 		this.map = map;
