@@ -61,9 +61,8 @@ public class PaneTurnerMS extends JSplitPane {
 		//Graph<Attribute, EdgeStatementMap> graph = ((SetupGraphPane) viewPanes[2]).getGraph();
 		viewPanes[0] = new RolePane( document.getRoleMap(), parent);
 		//viewPanes[1] = new DomainPane(document.getAttributeMap(), parent);
-		viewPanes[1] = new TestPane(parent, "Hierarchy Pane"); 
-				//new HierarchyPane(document, parent);
-		
+		viewPanes[1] = new HierarchyPane(document, parent);
+		//new TestPane(parent, "Hierarchy Pane");
 		return viewPanes[currentSelected];
 	}
 	
@@ -80,7 +79,7 @@ public class PaneTurnerMS extends JSplitPane {
 		buttonPanel.add(nextButton);
 		chooser.add(buttonPanel);
 		String[] steps = { "Create Roles", "Create Role\nHierarchy", 
-				"Assign Stakeholders"};
+				"Assign\nStakeholders"};
 		metaPanes = new SelectableTextPane[steps.length];
 		for (int i = 0; i < steps.length; i++) {
 			metaPanes[i] = new SelectableTextPane(steps[i]);
