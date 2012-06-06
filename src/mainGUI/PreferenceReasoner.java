@@ -84,6 +84,10 @@ public class PreferenceReasoner extends JApplet {
 		frame.pack();
 	}
 	
+	public AbstractPaneTurner getPaneTurner(){
+		return paneTurner;
+	}
+	
 	private static void showSaveDialog(){
 		JFileChooser chooser = new JFileChooser();
 		int option = chooser.showSaveDialog(paneTurner);
