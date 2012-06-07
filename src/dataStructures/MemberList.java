@@ -3,41 +3,41 @@ package dataStructures;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class MemberList {
-	private LinkedList<String> names;
+public class MemberList extends LinkedList<Member> {
 	private Integer key;
 	
 	public MemberList(Integer key){
-		names = new LinkedList<String>();
+		super();
 		this.key = key;
 	}
 	
 	public MemberList(String enumeration, Integer key){
-		names = new LinkedList<String>();
+		super();
 		this.key = key;
 		setNames(enumeration);
 	}
 	
 	public void setNames(String enumeration){
-		names.clear();
+		clear();
 		String[] split = enumeration.split(",");
 		for(String s : split){
 			s.trim();
-			names.add(s);
+			add(new Member(s, key));
 		}
 	}
 	
-	public LinkedList<String> getMemberList(){
-		return names;
+	public LinkedList<Member> getMemberList(){
+		return this;
 	}
 
-	public void setMemberList(LinkedList<String> newNames){
-		this.names = newNames;
+	public void setMemberList(LinkedList<Member> newNames){
+		clear();
+		addAll(newNames);
 	}
 	
 	public String toString(){
 		String toReturn="";
-		Iterator<String> it = names.iterator();
+		Iterator<Member> it = this.iterator();
 		while(it.hasNext()){
 			toReturn+=it.next().toString()+", ";
 		}

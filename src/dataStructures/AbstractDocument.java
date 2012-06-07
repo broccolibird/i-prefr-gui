@@ -23,8 +23,7 @@ public abstract class AbstractDocument {
 	public AbstractDocument(boolean isMultiStakeholder) {
 		attributeMap = new AttributeMap();
 		alternativeMap = new AlternativeMap();
-		if (isMultiStakeholder)
-			roleMap = new RoleMap();
+		roleMap = new RoleMap(isMultiStakeholder);
 		metaData = new MetaData();
 	}
 	
@@ -160,6 +159,7 @@ public abstract class AbstractDocument {
 		doc += attributeMap.toXML();
 		doc += alternativeMap.toXML(attributeMap);
 		doc += getNetworkXML();
+		doc += roleMap.toXML();
 		doc += "</DOCUMENT>";
 		return doc;
 	}

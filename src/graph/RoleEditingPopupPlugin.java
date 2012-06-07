@@ -34,7 +34,7 @@ public class RoleEditingPopupPlugin<V,E> extends EditingPopupGraphMousePlugin<V,
 			final VisualizationViewer<V,E> vv =
 	            (VisualizationViewer<V,E>)e.getSource();
 	        final Layout<V,E> layout = vv.getGraphLayout();
-	        final RoleForest<V,E> graph = (RoleForest<V,E>)layout.getGraph();
+	        final RoleHierarchy<V,E> graph = (RoleHierarchy<V,E>)layout.getGraph();
 	        final Point2D p = e.getPoint();
 	        final Point2D ivp = p;
 	        GraphElementAccessor<V,E> pickSupport = vv.getPickSupport();

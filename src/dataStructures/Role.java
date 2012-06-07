@@ -22,4 +22,18 @@ public class Role extends NameKeyObject<MemberList>{
 		return name;
 	}
 
+	public String toXML() {
+		String role = "\t\t<ROLE ID = '"+key.toString()+"'>\n";
+		role += "\t\t\t<ISUSED>"+isUsed+"</ISUSED>\n";
+		role += "\t\t\t<TITLE>"+name+"</TITLE>\n";
+		role += "\t\t\t<MEMBERS>\n";
+		MemberList allMembers = (MemberList) getObject().getMemberList();
+		for(Member m : allMembers){
+		role += "\t\t\t\t<MEMBER>"+m.getName()+"</MEMBER>\n";		
+		}
+		role += "\t\t\t</MEMBERS>\n";
+		role += "\t\t</ROLE>\n";
+		return role;
+		
+	}
 }

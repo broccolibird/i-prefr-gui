@@ -31,19 +31,19 @@ import edu.uci.ics.jung.graph.Tree;
  * @param <E> the edge type
  */
 @SuppressWarnings("serial")
-public class RoleForest<V,E> extends GraphDecorator<V,E> implements Forest<V,E> 
+public class RoleHierarchy<V,E> extends GraphDecorator<V,E> implements Forest<V,E> 
 {
 	/**
 	 * Creates an instance backed by a new {@code DirectedSparseGraph} instance.
 	 */
-	public RoleForest() {
+	public RoleHierarchy() {
 		this(new DirectedSparseGraph<V,E>());
 	}
 
 	/**
 	 * Creates an instance backed by the input {@code DirectedGraph} i
 	 */
-	public RoleForest(DirectedGraph<V,E> delegate) {
+	public RoleHierarchy(DirectedGraph<V,E> delegate) {
 		super(delegate);
 	}
 

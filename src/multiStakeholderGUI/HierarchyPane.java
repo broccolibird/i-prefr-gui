@@ -31,7 +31,7 @@ import edu.uci.ics.jung.visualization.control.CrossoverScalingControl;
 import edu.uci.ics.jung.visualization.control.ScalingControl;
 import edu.uci.ics.jung.visualization.decorators.EdgeShape;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
-import graph.RoleForest;
+import graph.RoleHierarchy;
 import graph.RoleEditingModalGraphMouse;
 
 import mainGUI.UpdatePane;
@@ -41,7 +41,7 @@ import mainGUI.UpdatePane;
 @SuppressWarnings("serial")
 public class HierarchyPane extends UpdatePane implements ActionListener {
 
-	private RoleForest<Role, Integer> graph;
+	private RoleHierarchy<Role, Integer> graph;
 	
 	Factory<Integer> edgeFactory = new Factory<Integer>() {
 		int i=0;
@@ -74,7 +74,7 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 		this.abstractDocument = abstractDocument;
 		this.parentFrame = parentFrame;
 		
-		graph = new RoleForest<Role, Integer>();
+		graph = new RoleHierarchy<Role, Integer>();
 		
 		layout = new TreeLayout<Role, Integer>(graph);
 		
@@ -150,7 +150,7 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 		controls.add(roleBox);		
 	}
 	
-	public RoleForest<Role, Integer> getGraph() {
+	public RoleHierarchy<Role, Integer> getGraph() {
 		return graph;
 	}
 	
