@@ -15,6 +15,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -45,7 +46,11 @@ public class PreferenceReasoner extends JApplet {
 		JMenu fileMenu = new JMenu("File");
 		fileMenu.add(new AbstractAction("Save") {
 			public void actionPerformed(ActionEvent e) {
-				showSaveDialog();
+				if(paneTurner == null)
+					JOptionPane.showMessageDialog(frame, "Please create a project before saving.",
+							"Project does not exist", JOptionPane.PLAIN_MESSAGE);
+				else
+					showSaveDialog();
 			}
 		});
 		
@@ -116,7 +121,7 @@ public class PreferenceReasoner extends JApplet {
 	}
 
 	private static void save(File xmlfile) {
-		String xmlRepresentation = paneTurner.toXML();
+		String xmlRepresentation = paneTurner.toXML(xmlfile);
 		System.out.println(xmlRepresentation);
 		BufferedWriter writer = null;
 		try {
@@ -154,6 +159,8 @@ public class PreferenceReasoner extends JApplet {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		// retrieve network type from document
 		NodeList nList = doc.getElementsByTagName("NETWORK");
 		Element e = (Element)nList.item(0);
 		NodeList nList2 = (e).getElementsByTagName("TYPE");
@@ -165,22 +172,30 @@ public class PreferenceReasoner extends JApplet {
 			networkType = e2.getTextContent();
 			networkType = networkType.trim();
 		}
-		 
+		
+		// retrieve multistakeholder status from document
+		NodeList stakeholderList = doc.getElementsByTagName("STAKEHOLDERS");
+		int stakeholderLength = stakeholderList.getLength();
+		boolean isMultiStakeholder;
+		if (stakeholderLength <= 0 ) {
+			isMultiStakeholder = false;
+		} else {
+			isMultiStakeholder = Boolean.parseBoolean(Util.getOnlyChildText(doc, "STAKEHOLDERS", "MULTISTAKEHOLDER"));
+		}
+		
 		System.out.println("netType!!: "+networkType);
 		if(networkType.equals("CI")){
 			//frame.removeAll();
 			CIDocument oldCIDocument = new CIDocument(doc);
 			loading = false;
-			//TODO - change last variable to multiStakeholder
-			paneTurner = new PaneTurnerCI(frame, oldCIDocument, false);
+			paneTurner = new PaneTurnerCI(frame, oldCIDocument, isMultiStakeholder);
 			frame.getContentPane().add(paneTurner);
 			frame.pack();
 		}else if(networkType.equals("TCP")){
 			//frame.removeAll();
 			TCPDocument oldTCPDocument = new TCPDocument(doc);
 			loading = false;
-			//TODO - change last variable to multiStakeholder
-			paneTurner = new PaneTurnerTCP(frame, oldTCPDocument, false);
+			paneTurner = new PaneTurnerTCP(frame, oldTCPDocument, isMultiStakeholder);
 			frame.getContentPane().add(paneTurner);
 			frame.pack();
 		}

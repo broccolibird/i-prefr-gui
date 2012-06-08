@@ -1,6 +1,7 @@
 package mainGUI;
 
 import java.awt.Component;
+import java.io.File;
 
 import javax.swing.JFrame;
 
@@ -31,6 +32,7 @@ public class PaneTurnerTCP extends AbstractPaneTurner{
 		// the graph used in the SetupGraphPane must be linked to each
 		// AttributeTuple, so get a reference to it
 		viewPanes[index] = new SetupGraphPane(document,parent);
+		//viewPanes[index] = new SetupPreferencesPane(parent, document, isMultipleStakeholder, true);
 		Graph<Attribute, EdgeStatementMap> graph = ((SetupGraphPane) viewPanes[index++])
 				.getGraph();
 		viewPanes[index] = new ViewResultsPaneTCP(document,parent);
@@ -53,7 +55,7 @@ public class PaneTurnerTCP extends AbstractPaneTurner{
 	}
 
 	@Override
-	public String toXML() {
-		return document.toXML();
+	public String toXML(File xmlfile) {
+		return document.toXML(xmlfile);
 	}
 }

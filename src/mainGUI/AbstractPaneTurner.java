@@ -4,6 +4,7 @@ import guiElements.SelectableTextPane;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.io.File;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -51,7 +52,7 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 
 	protected abstract Component intitializeViewPanes();
 	
-	public abstract String toXML();
+	public abstract String toXML(File xmlfile);
 
 	protected JPanel getChooser() {
 		JPanel chooser = new JPanel();

@@ -1,10 +1,20 @@
 package dataStructures;
 
 
+import java.io.File;
+import java.io.IOException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import mainGUI.Util;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import dataStructures.maps.AlternativeMap;
 import dataStructures.maps.AttributeMap;
@@ -104,6 +114,68 @@ public abstract class AbstractDocument {
 			alternativeMap.put(thisKey, new Alternative(thisName,thisKey,thisObject));
 		}
 
+		
+		//create the roleMap
+		uniqueMapID = Integer.parseInt(Util.getOnlyChildText(doc, "STAKEHOLDERS", "UNIQUEMAPID"));
+		maxUniqueID = Util.maxOf(maxUniqueID, uniqueMapID);
+		boolean multistakeholder = Boolean.parseBoolean(Util.getOnlyChildText(doc, "STAKEHOLDERS", "MULTISTAKEHOLDER"));
+		roleMap = new RoleMap(uniqueMapID, multistakeholder);
+		
+		//open roles file
+		String roleFile = Util.getOnlyChildText(doc, "STAKEHOLDERS", "ROLEFILE");
+		Document roleDoc = null;
+		DocumentBuilder dBuilder;
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		try {
+			dBuilder = dbFactory.newDocumentBuilder();
+			roleDoc = dBuilder.parse(roleFile);
+			
+		} catch (ParserConfigurationException | SAXException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//populate roleMap
+		NodeList roleList = roleDoc.getElementsByTagName("ROLE");
+		int nRoles = roleList.getLength();
+		for(int i=0;i<nRoles;i++){
+			boolean thisIsUsed;
+			String roleTitle;
+			Integer roleKey;
+			MemberList memberList;
+			
+			//get the key
+			Element roleNode = (Element)roleList.item(i);
+			roleKey = Integer.parseInt(roleNode.getAttribute("ID"));
+						
+			//create the list of members (each needs the key)
+			memberList = new MemberList(roleKey);
+			
+			NodeList memberNList = roleNode.getElementsByTagName("MEMBER");
+			int nMembers = memberNList.getLength();
+
+			for(int j=0;j<nMembers;j++){
+				Element member = (Element) memberNList.item(j);
+				NamedNodeMap memberValue = member.getAttributes();
+				
+				String memberName = member.getElementsByTagName("NAME").item(0).getTextContent();
+
+				memberList.add(new Member(memberName,roleKey));
+			}
+			
+			//create a role from the above with the correct name
+			roleTitle = Util.getOnlyChildText(roleNode,"TITLE");
+			Role thisValue = new Role(roleTitle,roleKey,memberList);
+			
+			//set its isUsed boolean and put into map
+			thisIsUsed = Boolean.parseBoolean(Util.getOnlyChildText(roleNode,"ISUSED"));
+			thisValue.setUsed(thisIsUsed);
+			roleMap.put(roleKey, thisValue);
+		}
+		
+		
+		
+
 		//now initialize the MetaData
 		Element metaDataElement = (Element)((doc.getElementsByTagName("METADATA")).item(0));
 		String filename = Util.getOnlyChildText(metaDataElement,"FILENAME");
@@ -124,6 +196,7 @@ public abstract class AbstractDocument {
 		SuperkeyMap.setNextUniqueID(maxUniqueID+1);
 	}
 
+	
 	public AttributeMap getAttributeMap() {
 		return attributeMap;
 	}
@@ -153,13 +226,13 @@ public abstract class AbstractDocument {
 	//tabs or newlines put onto them - those chars are added in the function
 	//ID attributes are used only for keys of a map value and not for other
 	//numeric identifiers, which should have specific tags
-	public String toXML() {
+	public String toXML(File xmlfile) {
 		String doc = "<DOCUMENT>\n";
 		doc += metaData.toXML();
 		doc += attributeMap.toXML();
 		doc += alternativeMap.toXML(attributeMap);
 		doc += getNetworkXML();
-		doc += roleMap.toXML();
+		doc += roleMap.toXML(xmlfile);
 		doc += "</DOCUMENT>";
 		return doc;
 	}

@@ -41,6 +41,7 @@ public class MemberList extends LinkedList<Member> {
 		while(it.hasNext()){
 			toReturn+=it.next().toString()+", ";
 		}
-		return toReturn.substring(0, toReturn.lastIndexOf(','));
+		int lastIndex = toReturn.lastIndexOf(',');
+		return (lastIndex >= 0) ? toReturn.substring(0, lastIndex) : null;
 	}
 }

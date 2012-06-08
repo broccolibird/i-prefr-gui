@@ -1,6 +1,7 @@
 package mainGUI;
 
 import java.awt.Component;
+import java.io.File;
 
 import javax.swing.JFrame;
 
@@ -38,6 +39,7 @@ public class PaneTurnerCI extends AbstractPaneTurner{
 			viewPanes[index++] = new StakeholderPane(parent, document, this);
 		} 
 		//TODO - import saved importanceMap!!
+		//viewPanes[index++] = new SetupPreferencesPane(parent, document, isMultipleStakeholder, false);
 		viewPanes[index++] = new ImportancePane(document.getAttributeMap(),parent,document.getImportanceMap());
 		viewPanes[index] = new ViewResultsPaneCI(document,parent);
 		
@@ -46,7 +48,7 @@ public class PaneTurnerCI extends AbstractPaneTurner{
 	}
 
 	@Override
-	public String toXML() {
-		return document.toXML();
+	public String toXML(File xmlfile) {
+		return document.toXML(xmlfile);
 	}
 }
