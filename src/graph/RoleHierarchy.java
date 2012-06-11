@@ -1,13 +1,14 @@
 package graph;
 
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 
 import dataStructures.Role;
 
+import edu.uci.ics.jung.algorithms.layout.TreeLayout;
 import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.graph.util.Pair;
 import edu.uci.ics.jung.graph.util.TreeUtils;
@@ -33,6 +34,9 @@ import edu.uci.ics.jung.graph.Tree;
 @SuppressWarnings("serial")
 public class RoleHierarchy<V,E> extends GraphDecorator<V,E> implements Forest<V,E> 
 {
+	
+	TreeLayout<Role,Integer> layout;
+	
 	/**
 	 * Creates an instance backed by a new {@code DirectedSparseGraph} instance.
 	 */
@@ -333,6 +337,60 @@ public class RoleHierarchy<V,E> extends GraphDecorator<V,E> implements Forest<V,
         if (isRoot(vertex))
             return null;
         return delegate.getInEdges(vertex).iterator().next();
+    }
+    
+    public void setLayout(TreeLayout<Role,Integer> layout) {
+    	this.layout = layout;
+    }
+    
+    public TreeLayout<Role,Integer> getLayout() {
+    	return layout;
+    }
+    
+    public String toXML() {
+    	String xml = "<ROLEHIERARCHY>\n";
+    	
+    	Collection<Tree<V,E>> trees = getTrees();
+    	
+    	for ( Tree<V,E> tree : trees ) {
+    		xml += nodeToXML((Role) tree.getRoot());
+    		xml += childrenToXML(tree, (Role) tree.getRoot());
+    	}
+    	
+    	xml += "</ROLEHIERARCHY>\n";
+    	return xml;
+    }
+    
+    private String nodeToXML(Role role) {
+    	String xml = "\t<ROLE ID='"+role.getKey()+"'>\n";
+    	xml += "\t\t<TITLE>"+role.getName()+"</TITLE>\n";
+    	xml += "\t\t<COORDINATES>\n";
+    	Point2D coord = layout.transform(role);
+    	xml += "\t\t\t<X>"+coord.getX()+"</X>\n";
+    	xml += "\t\t\t<Y>"+coord.getY()+"</Y>\n";
+    	xml += "\t\t</COORDINATES>\n";
+    	
+    	Role parent = (Role) getParent((V)role);
+    	if( parent != null ) {
+    		xml += "\t\t<SUPERIOR ID='"+parent.getKey()+"'>"+parent.getName()+"</SUPERIOR>\n";
+    	}
+    	xml += "\t</ROLE>\n";
+    	return xml;
+    }
+    
+    private String childrenToXML(Tree tree, Role root) {
+    	
+    	String xml = "";
+    	Collection<Role> subordinates = (Collection<Role>) tree.getChildren((V) root);
+    	if( subordinates.size() > 0 ){
+    		for (Role subordinate : subordinates ) {
+    			xml += nodeToXML(subordinate);
+    			xml += childrenToXML(tree, subordinate);
+    		}
+    	}
+
+    	
+    	return xml;
     }
     
 

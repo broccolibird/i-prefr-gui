@@ -1,6 +1,9 @@
 package dataStructures;
 
 
+import graph.RoleHierarchy;
+
+import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
 
@@ -12,7 +15,6 @@ import mainGUI.Util;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -22,6 +24,7 @@ import dataStructures.maps.OptionMap;
 import dataStructures.maps.RoleMap;
 import dataStructures.maps.SuperkeyMap;
 import dataStructures.maps.ValueMap;
+import edu.uci.ics.jung.algorithms.layout.TreeLayout;
 
 public abstract class AbstractDocument {
 
@@ -114,68 +117,9 @@ public abstract class AbstractDocument {
 			alternativeMap.put(thisKey, new Alternative(thisName,thisKey,thisObject));
 		}
 
+		// initialize RoleMap
+		maxUniqueID = setupRoleMap(doc, maxUniqueID);
 		
-		//create the roleMap
-		uniqueMapID = Integer.parseInt(Util.getOnlyChildText(doc, "STAKEHOLDERS", "UNIQUEMAPID"));
-		maxUniqueID = Util.maxOf(maxUniqueID, uniqueMapID);
-		boolean multistakeholder = Boolean.parseBoolean(Util.getOnlyChildText(doc, "STAKEHOLDERS", "MULTISTAKEHOLDER"));
-		roleMap = new RoleMap(uniqueMapID, multistakeholder);
-		
-		//open roles file
-		String roleFile = Util.getOnlyChildText(doc, "STAKEHOLDERS", "ROLEFILE");
-		Document roleDoc = null;
-		DocumentBuilder dBuilder;
-		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		try {
-			dBuilder = dbFactory.newDocumentBuilder();
-			roleDoc = dBuilder.parse(roleFile);
-			
-		} catch (ParserConfigurationException | SAXException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		//populate roleMap
-		NodeList roleList = roleDoc.getElementsByTagName("ROLE");
-		int nRoles = roleList.getLength();
-		for(int i=0;i<nRoles;i++){
-			boolean thisIsUsed;
-			String roleTitle;
-			Integer roleKey;
-			MemberList memberList;
-			
-			//get the key
-			Element roleNode = (Element)roleList.item(i);
-			roleKey = Integer.parseInt(roleNode.getAttribute("ID"));
-						
-			//create the list of members (each needs the key)
-			memberList = new MemberList(roleKey);
-			
-			NodeList memberNList = roleNode.getElementsByTagName("MEMBER");
-			int nMembers = memberNList.getLength();
-
-			for(int j=0;j<nMembers;j++){
-				Element member = (Element) memberNList.item(j);
-				NamedNodeMap memberValue = member.getAttributes();
-				
-				String memberName = member.getElementsByTagName("NAME").item(0).getTextContent();
-
-				memberList.add(new Member(memberName,roleKey));
-			}
-			
-			//create a role from the above with the correct name
-			roleTitle = Util.getOnlyChildText(roleNode,"TITLE");
-			Role thisValue = new Role(roleTitle,roleKey,memberList);
-			
-			//set its isUsed boolean and put into map
-			thisIsUsed = Boolean.parseBoolean(Util.getOnlyChildText(roleNode,"ISUSED"));
-			thisValue.setUsed(thisIsUsed);
-			roleMap.put(roleKey, thisValue);
-		}
-		
-		
-		
-
 		//now initialize the MetaData
 		Element metaDataElement = (Element)((doc.getElementsByTagName("METADATA")).item(0));
 		String filename = Util.getOnlyChildText(metaDataElement,"FILENAME");
@@ -196,6 +140,121 @@ public abstract class AbstractDocument {
 		SuperkeyMap.setNextUniqueID(maxUniqueID+1);
 	}
 
+	private int setupRoleMap(org.w3c.dom.Document doc, int maxUniqueID) {
+		//create the roleMap
+		int uniqueMapID = Integer.parseInt(Util.getOnlyChildText(doc, "STAKEHOLDERS", "UNIQUEMAPID"));
+		maxUniqueID = Util.maxOf(maxUniqueID, uniqueMapID);
+		boolean multistakeholder = Boolean.parseBoolean(Util.getOnlyChildText(doc, "STAKEHOLDERS", "MULTISTAKEHOLDER"));
+		roleMap = new RoleMap(uniqueMapID, multistakeholder);
+				
+		//open roles file
+		String roleFile = Util.getOnlyChildText(doc, "STAKEHOLDERS", "ROLEFILE");
+		Document roleDoc = null;
+		DocumentBuilder dBuilder;
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		try {
+			dBuilder = dbFactory.newDocumentBuilder();
+			roleDoc = dBuilder.parse(roleFile);
+					
+		} catch (ParserConfigurationException | SAXException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+				
+		//populate roleMap
+		NodeList roleList = roleDoc.getElementsByTagName("ROLE");
+		int nRoles = roleList.getLength();
+		for(int i=0;i<nRoles;i++){
+			boolean thisIsUsed;
+			String roleTitle;
+			Integer roleKey;
+			MemberList memberList;
+					
+			//get the key
+			Element roleNode = (Element)roleList.item(i);
+			roleKey = Integer.parseInt(roleNode.getAttribute("ID"));
+								
+			//create the list of members (each needs the key)
+			memberList = new MemberList(roleKey);
+					
+			NodeList memberNList = roleNode.getElementsByTagName("MEMBER");
+			int nMembers = memberNList.getLength();
+
+			for(int j=0;j<nMembers;j++){
+				Element member = (Element) memberNList.item(j);
+						
+				String memberName = member.getElementsByTagName("NAME").item(0).getTextContent();
+
+				memberList.add(new Member(memberName,roleKey));
+			}
+					
+			//create a role from the above with the correct name
+			roleTitle = Util.getOnlyChildText(roleNode,"TITLE");
+			Role thisValue = new Role(roleTitle,roleKey,memberList);
+					
+			//set its isUsed boolean and put into map
+			thisIsUsed = Boolean.parseBoolean(Util.getOnlyChildText(roleNode,"ISUSED"));
+			thisValue.setUsed(thisIsUsed);
+			roleMap.put(roleKey, thisValue);
+		}
+		
+		//open role hierarchy file
+		String hierarchyFile = Util.getOnlyChildText(doc, "STAKEHOLDERS", "HIERARCHYFILE");
+		Document hierarchyDoc = null;
+		DocumentBuilder hierarchyDBuilder;
+		DocumentBuilderFactory hierarchyDBFactory = DocumentBuilderFactory.newInstance();
+		try {
+			hierarchyDBuilder = hierarchyDBFactory.newDocumentBuilder();
+			hierarchyDoc = hierarchyDBuilder.parse(hierarchyFile);
+							
+		} catch (ParserConfigurationException | SAXException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		RoleHierarchy rh = new RoleHierarchy();
+		TreeLayout tl = new TreeLayout(rh);
+		rh.setLayout(tl);
+		roleMap.setRoleHierarchy(rh);
+		
+		//populate role hierarchy
+		roleList = hierarchyDoc.getElementsByTagName("ROLE");
+		nRoles = roleList.getLength();
+		for(int i=0;i<nRoles;i++){
+			Element thisRole = (Element) roleList.item(i);
+			createRoleHierarchy(thisRole, rh, tl, i);
+		}
+		
+		return maxUniqueID;
+	}
+	
+	private void createRoleHierarchy(Element thisRole, RoleHierarchy rh, TreeLayout tl, Integer edge){
+		String roleTitle = thisRole.getElementsByTagName("TITLE").item(0).getTextContent();
+		System.out.println("Title: "+ roleTitle);
+		
+		int roleKey = Integer.parseInt(thisRole.getAttribute("ID"));
+		System.out.println("Key: " + roleKey);
+		
+		Role roleToAdd = roleMap.get(roleKey);
+		rh.addVertex(roleToAdd);
+		
+		Element coordElem = (Element) thisRole.getElementsByTagName("COORDINATES").item(0);
+		double xcoord = Double.parseDouble(coordElem.getElementsByTagName("X").item(0).getTextContent());
+		double ycoord = Double.parseDouble(coordElem.getElementsByTagName("Y").item(0).getTextContent());
+		System.out.println("Coordinates: ("+ xcoord+","+ycoord+")");
+		
+		tl.setLocation(roleToAdd, new Point2D.Double(xcoord,ycoord));
+		
+		NodeList superiorList = thisRole.getElementsByTagName("SUPERIOR");
+		if( superiorList.getLength() > 0 ) {
+			Element parentElem = (Element) superiorList.item(0);
+			int parentKey = Integer.parseInt(parentElem.getAttribute("ID"));
+			Role parentRole = roleMap.get(parentKey);
+			
+			rh.addEdge(edge, parentRole, roleToAdd);
+		}
+		
+	}
 	
 	public AttributeMap getAttributeMap() {
 		return attributeMap;

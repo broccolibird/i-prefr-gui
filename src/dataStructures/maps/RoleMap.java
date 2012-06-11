@@ -1,5 +1,7 @@
 package dataStructures.maps;
 
+import graph.RoleHierarchy;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -13,6 +15,7 @@ import dataStructures.Role;
 public class RoleMap extends SuperkeyMap<Role>{
 	
 	private boolean isMultipleStakeholder;
+	private RoleHierarchy roleHierarchy = null;
 	
 	public RoleMap(int mapID, boolean isMultipleStakeholder){
 		super(mapID);
@@ -28,13 +31,24 @@ public class RoleMap extends SuperkeyMap<Role>{
 		return isMultipleStakeholder;
 	}
 	
+	public void setRoleHierarchy(RoleHierarchy<Role,Integer> roleHierarchy) {
+		this.roleHierarchy = roleHierarchy;
+	}
+	
+	public RoleHierarchy getRoleHierarchy() {
+		return roleHierarchy;
+	}
+	
 	public String toXML(File xmlfile) {
 		String roles = "\t<STAKEHOLDERS>\n";
 		roles += "\t\t<UNIQUEMAPID>"+uniqueID+"</UNIQUEMAPID>\n";
 		roles += "\t\t<MULTISTAKEHOLDER>"+isMultipleStakeholder+"</MULTISTAKEHOLDER>\n";
+		
 		String roleFile = createRoleFile(xmlfile);
 		roles += "\t\t<ROLEFILE>"+roleFile+"</ROLEFILE>\n";
-		roles += "\t\t<HIERARCHYFILE>"+""+"</HIERARCHYFILE>\n";
+		
+		String hierarchyFile = createHierarchyFile(xmlfile);
+		roles += "\t\t<HIERARCHYFILE>"+hierarchyFile+"</HIERARCHYFILE>\n";
 		
 		roles += "\t</STAKEHOLDERS>\n";
 		return roles;
@@ -66,5 +80,28 @@ public class RoleMap extends SuperkeyMap<Role>{
 		}
 		
 		return roleFileName;
+	}
+	
+	private String createHierarchyFile(File xmlfile) {
+		int suffixIndex = xmlfile.getAbsolutePath().lastIndexOf('.');
+		String filePrefix = (suffixIndex >= 0) ?
+				xmlfile.getAbsolutePath().substring(0, suffixIndex) : xmlfile.getAbsolutePath();
+		String hierarchyFileName = filePrefix + "-hierarchy.xml";
+		File hierarchyFile = new File(hierarchyFileName);
+		
+		System.out.println("Creating hierarchy file @ "+hierarchyFileName+"\n");
+
+		String hierarchyXML = roleHierarchy.toXML();
+		
+		BufferedWriter writer = null;
+		try {
+			writer = new BufferedWriter(new FileWriter(hierarchyFile));
+			writer.write(hierarchyXML);
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return hierarchyFileName;
 	}
 }

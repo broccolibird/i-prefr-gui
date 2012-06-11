@@ -18,13 +18,10 @@ import org.apache.commons.collections15.Factory;
 import org.apache.commons.collections15.functors.ConstantTransformer;
 
 import dataStructures.AbstractDocument;
-import dataStructures.Attribute;
 import dataStructures.Role;
-import dataStructures.maps.EdgeStatementMap;
+import dataStructures.maps.RoleMap;
 
 import edu.uci.ics.jung.algorithms.layout.TreeLayout;
-import edu.uci.ics.jung.graph.Forest;
-import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.CrossoverScalingControl;
@@ -70,13 +67,22 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 	private JButton minus;
 	private JPanel controls;
 	
+	private JButton printXML;
+	
 	public HierarchyPane(AbstractDocument abstractDocument, JFrame parentFrame) {
 		this.abstractDocument = abstractDocument;
 		this.parentFrame = parentFrame;
 		
-		graph = new RoleHierarchy<Role, Integer>();
-		
-		layout = new TreeLayout<Role, Integer>(graph);
+		RoleMap rm = abstractDocument.getRoleMap();
+		if( rm.getRoleHierarchy() == null) {
+			graph = new RoleHierarchy<Role, Integer>();
+			layout = new TreeLayout<Role, Integer>(graph);
+			graph.setLayout(layout);
+		} else {
+			graph = rm.getRoleHierarchy();
+			layout = graph.getLayout();
+			
+		}
 		
 		// set up view settings
 		vv = new VisualizationViewer<Role, Integer>(layout, new Dimension(400, 600));
@@ -115,6 +121,13 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
             }
         });
         
+        printXML = new JButton("print XML");
+        printXML.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		System.out.println(graph.toXML());
+        	}
+        });
+        
         // set up control panel
         controls = new JPanel();
         update();
@@ -143,6 +156,7 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 	@Override
 	public void update() {
 		controls.removeAll();
+		controls.add(printXML);
 		controls.add(plus);
 		controls.add(minus);
 		controls.add(graphMouse.getModeComboBox());
