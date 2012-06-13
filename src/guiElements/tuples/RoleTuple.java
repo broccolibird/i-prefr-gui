@@ -22,17 +22,17 @@ public class RoleTuple extends AbstractTuple<Role> implements ActionListener{
 
 	protected JTextField roleName;
 	protected JButton xButton;
-	protected RoleHierarchy<Role, Integer> graph;
+	protected RoleHierarchy graph;
 	
 	public RoleTuple(Integer key, SuperkeyMap<Role> map, JFrame parent,
-			JPanel parentPanel, RoleHierarchy<Role, Integer> graph) {
+			JPanel parentPanel, RoleHierarchy graph) {
 		super(key, map, parent, parentPanel);
 		this.graph = graph;
 		initializeGUI();
 	}
 	
 	public RoleTuple(SuperkeyMap<Role> map, JFrame parent, JPanel parentPanel,
-			RoleHierarchy<Role, Integer> graph){
+			RoleHierarchy graph){
 		super(map, parent, parentPanel);
 		this.graph = graph;
 		initializeGUI();
@@ -57,7 +57,7 @@ public class RoleTuple extends AbstractTuple<Role> implements ActionListener{
 		if (e.getSource() == xButton) {
 			Role r = map.get(key);
 			if (graph != null) {
-				graph.removeVertex(r, false);
+				graph.removeVertex(r);
 			}
 			parentPanel.remove(this);
 			map.remove(key);

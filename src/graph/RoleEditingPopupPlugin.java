@@ -34,7 +34,7 @@ public class RoleEditingPopupPlugin<V,E> extends EditingPopupGraphMousePlugin<V,
 			final VisualizationViewer<V,E> vv =
 	            (VisualizationViewer<V,E>)e.getSource();
 	        final Layout<V,E> layout = vv.getGraphLayout();
-	        final RoleHierarchy<V,E> graph = (RoleHierarchy<V,E>)layout.getGraph();
+	        final RoleHierarchy graph = (RoleHierarchy)layout.getGraph();
 	        final Point2D p = e.getPoint();
 	        final Point2D ivp = p;
 	        GraphElementAccessor<V,E> pickSupport = vv.getPickSupport();
@@ -54,14 +54,14 @@ public class RoleEditingPopupPlugin<V,E> extends EditingPopupGraphMousePlugin<V,
 	                    public void actionPerformed(ActionEvent e) {
 	                        pickedVertexState.pick(vertex, false);
 	                        ((Role) vertex).setUsed(false);
-	                        graph.removeVertex(vertex, false);
+	                        graph.removeVertex((Role) vertex);
 	                        vv.repaint();
 	                    }});
 	            } else if(edge != null) {
 	                popup.add(new AbstractAction("Delete Edge") {
 	                    public void actionPerformed(ActionEvent e) {
 	                        pickedEdgeState.pick(edge, false);
-	                        graph.removeEdge(edge, false);
+	                        graph.removeEdge((Integer) edge);
 	                        vv.repaint();
 	                    }});
 	            }

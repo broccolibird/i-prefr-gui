@@ -31,7 +31,7 @@ public class RoleMap extends SuperkeyMap<Role>{
 		return isMultipleStakeholder;
 	}
 	
-	public void setRoleHierarchy(RoleHierarchy<Role,Integer> roleHierarchy) {
+	public void setRoleHierarchy(RoleHierarchy roleHierarchy) {
 		this.roleHierarchy = roleHierarchy;
 	}
 	

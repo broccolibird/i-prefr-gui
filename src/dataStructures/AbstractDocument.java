@@ -24,6 +24,7 @@ import dataStructures.maps.OptionMap;
 import dataStructures.maps.RoleMap;
 import dataStructures.maps.SuperkeyMap;
 import dataStructures.maps.ValueMap;
+import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.algorithms.layout.TreeLayout;
 
 public abstract class AbstractDocument {
@@ -32,6 +33,8 @@ public abstract class AbstractDocument {
 	protected AlternativeMap alternativeMap;
 	protected RoleMap roleMap;
 	protected MetaData metaData;
+	
+	int roleEdge = 0;
 
 	public AbstractDocument(boolean isMultiStakeholder) {
 		attributeMap = new AttributeMap();
@@ -213,8 +216,8 @@ public abstract class AbstractDocument {
 		}
 		
 		RoleHierarchy rh = new RoleHierarchy();
-		TreeLayout tl = new TreeLayout(rh);
-		rh.setLayout(tl);
+		StaticLayout sl = new StaticLayout(rh);
+		rh.setLayout(sl);
 		roleMap.setRoleHierarchy(rh);
 		
 		//populate role hierarchy
@@ -222,13 +225,13 @@ public abstract class AbstractDocument {
 		nRoles = roleList.getLength();
 		for(int i=0;i<nRoles;i++){
 			Element thisRole = (Element) roleList.item(i);
-			createRoleHierarchy(thisRole, rh, tl, i);
+			createRoleHierarchy(thisRole, rh, sl);
 		}
 		
 		return maxUniqueID;
 	}
 	
-	private void createRoleHierarchy(Element thisRole, RoleHierarchy rh, TreeLayout tl, Integer edge){
+	private void createRoleHierarchy(Element thisRole, RoleHierarchy rh, StaticLayout sl){
 		String roleTitle = thisRole.getElementsByTagName("TITLE").item(0).getTextContent();
 		System.out.println("Title: "+ roleTitle);
 		
@@ -243,16 +246,18 @@ public abstract class AbstractDocument {
 		double ycoord = Double.parseDouble(coordElem.getElementsByTagName("Y").item(0).getTextContent());
 		System.out.println("Coordinates: ("+ xcoord+","+ycoord+")");
 		
-		tl.setLocation(roleToAdd, new Point2D.Double(xcoord,ycoord));
+		sl.setLocation(roleToAdd, new Point2D.Double(xcoord,ycoord));
 		
 		NodeList superiorList = thisRole.getElementsByTagName("SUPERIOR");
-		if( superiorList.getLength() > 0 ) {
-			Element parentElem = (Element) superiorList.item(0);
+		for( int i=0; i<superiorList.getLength(); i++) {
+			Element parentElem = (Element) superiorList.item(i);
 			int parentKey = Integer.parseInt(parentElem.getAttribute("ID"));
 			Role parentRole = roleMap.get(parentKey);
 			
-			rh.addEdge(edge, parentRole, roleToAdd);
+			rh.addEdge(roleEdge++, parentRole, roleToAdd);
 		}
+		
+		rh.setNextEdge(roleEdge);
 		
 	}
 	

@@ -59,7 +59,7 @@ public class PaneTurnerMS extends JSplitPane {
 		viewPanes = new UpdatePane[metaPanes.length];
 		
 		viewPanes[1] = new HierarchyPane(document, parent);
-		RoleHierarchy<Role, Integer> graph = ((HierarchyPane) viewPanes[1]).getGraph();
+		RoleHierarchy graph = ((HierarchyPane) viewPanes[1]).getGraph();
 		
 		if( document.getRoleMap().getRoleHierarchy() == null)
 			document.getRoleMap().setRoleHierarchy(graph);

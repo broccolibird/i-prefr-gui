@@ -27,11 +27,11 @@ public class RolePane extends UpdatePane implements ActionListener{
 	private JFrame parentFrame;
 	private JPanel rolePanel;
 	private JButton plusButton;
-	private RoleHierarchy<Role, Integer> graph;
+	private RoleHierarchy graph;
 	private RoleMap map;
 
 	
-	public RolePane(RoleMap map, RoleHierarchy<Role,Integer> graph, JFrame parentFrame){
+	public RolePane(RoleMap map, RoleHierarchy graph, JFrame parentFrame){
 		this.parentFrame = parentFrame;
 		this.graph = graph;
 		this.map = map;

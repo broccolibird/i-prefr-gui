@@ -21,7 +21,10 @@ import dataStructures.AbstractDocument;
 import dataStructures.Role;
 import dataStructures.maps.RoleMap;
 
+import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
+import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.algorithms.layout.TreeLayout;
+import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.CrossoverScalingControl;
@@ -38,20 +41,16 @@ import mainGUI.UpdatePane;
 @SuppressWarnings("serial")
 public class HierarchyPane extends UpdatePane implements ActionListener {
 
-	private RoleHierarchy<Role, Integer> graph;
+	private RoleHierarchy graph;
 	
-	Factory<Integer> edgeFactory = new Factory<Integer>() {
-		int i=0;
-		public Integer create() {
-			return i++;
-		}};
+	Factory<Integer> edgeFactory;
 
     Factory<Role> vertexFactory = new Factory<Role>() {
 		public Role create() {
 			return graphMouse.getEditingPlugin().getSelectedRole();
 		}};
 		
-	private TreeLayout<Role, Integer> layout;
+	private AbstractLayout<Role, Integer> layout;
 	private VisualizationViewer<Role, Integer> vv;
 	Role root;
 	
@@ -75,13 +74,21 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 		
 		RoleMap rm = abstractDocument.getRoleMap();
 		if( rm.getRoleHierarchy() == null) {
-			graph = new RoleHierarchy<Role, Integer>();
-			layout = new TreeLayout<Role, Integer>(graph);
-			graph.setLayout(layout);
+			graph = new RoleHierarchy();
+			layout = new StaticLayout(graph);
+			edgeFactory = new Factory<Integer>() {
+				int i=0;
+				public Integer create() {
+					return i++;
+				}};
 		} else {
 			graph = rm.getRoleHierarchy();
 			layout = graph.getLayout();
-			
+			edgeFactory = new Factory<Integer>() {
+				int i = graph.getNextEdge();
+				public Integer create() {
+					return i++;
+				}};
 		}
 		
 		// set up view settings
@@ -142,8 +149,6 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 			Role selectedRole = (Role) roleBox
 					.getSelectedItem();
 			if (!selectedRole.isUsed()) {
-//				System.out.println("setting gm attribute to: "
-//						+ selectedAttribute.getName());
 				graphMouse.getEditingPlugin().setRole(selectedRole);
 			} else {
 //				System.out.println("attribute is already used");
@@ -164,7 +169,7 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 		controls.add(roleBox);		
 	}
 	
-	public RoleHierarchy<Role, Integer> getGraph() {
+	public RoleHierarchy getGraph() {
 		return graph;
 	}
 	
