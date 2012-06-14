@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 
+import javax.swing.BoxLayout;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -81,7 +82,7 @@ public class SetupGraphPane extends UpdatePane implements ActionListener {
 		vv.setVertexToolTipTransformer(vv.getRenderContext()
 				.getVertexLabelTransformer());
 
-		setLayout(new BorderLayout());
+		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		final GraphZoomScrollPane panel = new GraphZoomScrollPane(vv);
 		add(panel, BorderLayout.CENTER);
 		Factory<Attribute> vertexFactory = new VertexFactory();

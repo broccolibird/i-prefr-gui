@@ -8,6 +8,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Vector;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -66,23 +68,21 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 	
 	@Override
 	public void update() {
+		preferencesPanel.update();
 		if(isMultipleStakeholder) {
-			stakeholderControls = new JPanel();
-			stakeholderControls.setLayout(new FlowLayout());
+			stakeholderControls.removeAll();
 			
-			load = new JButton("Load");
-			save = new JButton("Save");
 			setupStakeholderBox();
 			stakeholderControls.add(stakeholderBox);
 			stakeholderControls.add(load);
 			stakeholderControls.add(save);
-			preferencesPanel.add(stakeholderControls, BorderLayout.NORTH);
 			
 		} 
 	}
 	
 	private void createGUI(){
-		setLayout(new BorderLayout());
+		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		
 		
 		
 		if(document.isCINetworkType()) {
@@ -90,8 +90,18 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 		} else {
 			preferencesPanel = new SetupGraphPane(document, parent);
 		}
+		
+		if(isMultipleStakeholder) {
+			load = new JButton("Load");
+			save = new JButton("Save");
+		}
+		stakeholderControls = new JPanel();
+		stakeholderControls.setLayout(new FlowLayout());
 		update();
-		add(preferencesPanel, BorderLayout.CENTER);
+		add(stakeholderControls);
+		
+		add(preferencesPanel);
+		add(Box.createVerticalGlue());
 		
 	}
 	
