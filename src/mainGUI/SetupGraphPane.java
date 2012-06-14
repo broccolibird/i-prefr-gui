@@ -59,7 +59,7 @@ public class SetupGraphPane extends UpdatePane implements ActionListener {
 		graph = new SparseMultigraph<Attribute, EdgeStatementMap>();
 
 		this.layout = new StaticLayout<Attribute, EdgeStatementMap>(graph,
-				new Dimension(600, 600));
+				new Dimension(550, 550));
 
 		vv = new VisualizationViewer<Attribute, EdgeStatementMap>(layout);
 		vv.setBackground(Color.white);
@@ -81,8 +81,9 @@ public class SetupGraphPane extends UpdatePane implements ActionListener {
 		vv.setVertexToolTipTransformer(vv.getRenderContext()
 				.getVertexLabelTransformer());
 
+		setLayout(new BorderLayout());
 		final GraphZoomScrollPane panel = new GraphZoomScrollPane(vv);
-		add(panel);
+		add(panel, BorderLayout.CENTER);
 		Factory<Attribute> vertexFactory = new VertexFactory();
 		Factory<EdgeStatementMap> edgeFactory = new EdgeFactory();
 

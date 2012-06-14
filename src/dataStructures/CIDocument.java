@@ -80,4 +80,9 @@ public class CIDocument extends AbstractDocument {
 		return net;
 	}
 
+	@Override
+	public boolean isCINetworkType() {
+		return true;
+	}
+
 }

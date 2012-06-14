@@ -16,5 +16,9 @@ public class TCPDocument extends AbstractDocument{
 		net += "\t</NETWORK>\n";
 		return net;
 	}
+	@Override
+	public boolean isCINetworkType() {
+		return false;
+	}
 
 }

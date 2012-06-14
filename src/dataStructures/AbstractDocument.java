@@ -277,6 +277,8 @@ public abstract class AbstractDocument {
 		return metaData;
 	}
 	
+	public abstract boolean isCINetworkType();
+	
 	public abstract String getNetworkXML();
 	
 	//Some protocol for writing 'toXML()' functions:

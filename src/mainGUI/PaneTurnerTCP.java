@@ -31,9 +31,9 @@ public class PaneTurnerTCP extends AbstractPaneTurner{
 		
 		// the graph used in the SetupGraphPane must be linked to each
 		// AttributeTuple, so get a reference to it
-		viewPanes[index] = new SetupGraphPane(document,parent);
-		//viewPanes[index] = new SetupPreferencesPane(parent, document, isMultipleStakeholder, true);
-		Graph<Attribute, EdgeStatementMap> graph = ((SetupGraphPane) viewPanes[index++])
+		//viewPanes[index] = new SetupGraphPane(document,parent);
+		viewPanes[index] = new SetupPreferencesPane(parent, document, isMultipleStakeholder);
+		Graph<Attribute, EdgeStatementMap> graph = ((SetupPreferencesPane) viewPanes[index++])
 				.getGraph();
 		viewPanes[index] = new ViewResultsPaneTCP(document,parent);
 		
