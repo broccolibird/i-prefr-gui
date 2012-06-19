@@ -13,6 +13,11 @@ import dataStructures.Member;
 import dataStructures.MemberList;
 import dataStructures.Role;
 
+/**
+ * 
+ * @author Kat
+ *
+ */
 @SuppressWarnings("serial")
 public class RoleMap extends SuperkeyMap<Role>{
 	
@@ -63,6 +68,12 @@ public class RoleMap extends SuperkeyMap<Role>{
 		return roleHierarchy;
 	}
 	
+	/**
+	 * Create xml for Role information.
+	 * 
+	 * @param xmlfile
+	 * @return xml
+	 */
 	public String toXML(File xmlfile) {
 		String roles = "\t<STAKEHOLDERS>\n";
 		roles += "\t\t<UNIQUEMAPID>"+uniqueID+"</UNIQUEMAPID>\n";

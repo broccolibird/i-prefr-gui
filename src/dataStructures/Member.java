@@ -1,8 +1,15 @@
 package dataStructures;
 
+/**
+ * Contains information pertaining to each stakeholder
+ * 
+ * @author Kat
+ */
 public class Member {
-	private String name;
+	private String name; 
 	private Integer key;
+	
+	// file location of user's preferences
 	private String preferenceFilePath;
 	
 	public Member(String name, Integer key) {

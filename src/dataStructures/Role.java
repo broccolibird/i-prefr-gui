@@ -1,7 +1,15 @@
 package dataStructures;
 
+/**
+ * Contains information about each Role, including a LinkedList of
+ * stakeholders (members)
+ * 
+ * @author Kat
+ *
+ */
 public class Role extends NameKeyObject<MemberList>{
 
+	// Role has been added to the RoleHierarchy graph
 	private boolean isUsed;
 
 	public Role(String name, Integer key, MemberList object) {
@@ -22,6 +30,10 @@ public class Role extends NameKeyObject<MemberList>{
 		return name;
 	}
 
+	/**
+	 * Creates xml for -roles.xml file
+	 * @return contents for -roles.xml file
+	 */
 	public String toXML() {
 		String role = "\t<ROLE ID = '"+key.toString()+"'>\n";
 		role += "\t\t<ISUSED>"+isUsed+"</ISUSED>\n";

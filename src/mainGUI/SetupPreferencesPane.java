@@ -105,7 +105,6 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 		add(stakeholderControls);
 		
 		add(preferencesPanel);
-		add(Box.createVerticalGlue());
 		
 	}
 	
