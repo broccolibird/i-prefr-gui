@@ -15,9 +15,11 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 
 import org.apache.commons.collections15.Factory;
+import org.apache.commons.collections15.Transformer;
 import org.apache.commons.collections15.functors.ConstantTransformer;
 
 import dataStructures.AbstractDocument;
+import dataStructures.MemberList;
 import dataStructures.Role;
 import dataStructures.maps.RoleMap;
 
@@ -99,7 +101,7 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
         vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
 	
         // add a listener for ToolTips
-        vv.setVertexToolTipTransformer(new ToStringLabeller());
+        vv.setVertexToolTipTransformer(new RoleToolTipTransformer());
         vv.getRenderContext().setArrowFillPaintTransformer(new ConstantTransformer(Color.lightGray));
 	
         // add visualizer to zoom/scroll pane
@@ -210,7 +212,14 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 				this.setForeground(Color.LIGHT_GRAY);
 			return this;
 		}
-
+	}
+	
+	class RoleToolTipTransformer implements Transformer<Role,String> {
+		@Override
+		public String transform(Role role) {
+			MemberList ml = role.getObject();
+			return ml.toString();
+		}
 	}
 
 }
