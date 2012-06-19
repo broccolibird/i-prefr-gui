@@ -31,7 +31,9 @@ public class Role extends NameKeyObject<MemberList>{
 		for(Member m : allMembers){
 			role += "\t\t\t<MEMBER>\n";
 			role += "\t\t\t\t<NAME>"+m.getName()+"</NAME>\n";
-			//role += "\t\t\t\t<PREFERENCEFILE/>\n";
+			if(m.getPreferenceFilePath() != null)
+				role += "\t\t\t\t<PREFERENCEFILE>"+m.getPreferenceFilePath()+
+							"</PREFERENCEFILE>\n";
 			role += "\t\t\t</MEMBER>\n";		
 		}
 		role += "\t\t</MEMBERS>\n";

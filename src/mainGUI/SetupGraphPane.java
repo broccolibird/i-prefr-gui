@@ -6,6 +6,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.Collection;
 import java.util.HashMap;
 
 import javax.swing.BoxLayout;
@@ -22,6 +24,7 @@ import org.apache.commons.collections15.map.LazyMap;
 
 import dataStructures.AbstractDocument;
 import dataStructures.Attribute;
+import dataStructures.Member;
 import dataStructures.maps.EdgeStatementMap;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
@@ -36,7 +39,7 @@ import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import graph.EditingModalGraphMouse;
 
 @SuppressWarnings("serial")
-public class SetupGraphPane extends UpdatePane implements ActionListener {
+public class SetupGraphPane extends PreferencePane implements ActionListener {
 
 	private SparseMultigraph<Attribute, EdgeStatementMap> graph;
 	private AbstractLayout<Attribute, EdgeStatementMap> layout;
@@ -84,7 +87,7 @@ public class SetupGraphPane extends UpdatePane implements ActionListener {
 
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		final GraphZoomScrollPane panel = new GraphZoomScrollPane(vv);
-		add(panel, BorderLayout.CENTER);
+		add(panel);
 		Factory<Attribute> vertexFactory = new VertexFactory();
 		Factory<EdgeStatementMap> edgeFactory = new EdgeFactory();
 
@@ -131,6 +134,14 @@ public class SetupGraphPane extends UpdatePane implements ActionListener {
 		add(controls, BorderLayout.SOUTH);
 	}
 
+	public void clearPane() {
+		Collection<Attribute> allUsedAttributes = graph.getVertices();
+		for( Attribute attr : allUsedAttributes ) {
+			attr.setUsed(false);
+		}
+		update();
+	}
+	
 	@Override
 	public void update() {
 		controls.removeAll();
@@ -212,6 +223,18 @@ public class SetupGraphPane extends UpdatePane implements ActionListener {
 		public EdgeStatementMap create() {
 			return new EdgeStatementMap();
 		}
+	}
+
+	@Override
+	public boolean loadMemberPreferences(Member member) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean saveMemberPreferences(File preferenceFile) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
