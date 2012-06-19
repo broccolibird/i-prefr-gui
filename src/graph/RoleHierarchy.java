@@ -8,6 +8,7 @@ import java.util.List;
 
 import dataStructures.Role;
 
+import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.algorithms.layout.TreeLayout;
 import edu.uci.ics.jung.graph.util.EdgeType;
@@ -35,15 +36,15 @@ import edu.uci.ics.jung.graph.Tree;
 @SuppressWarnings({ "serial", "rawtypes" })
 public class RoleHierarchy extends DirectedSparseGraph<Role,Integer>
 {
-	StaticLayout layout;
+	AbstractLayout<Role, Integer> layout;
 	int nextEdge;
 	
-	public StaticLayout getLayout() {
+	public AbstractLayout<Role, Integer> getLayout() {
 		return layout;
 	}
 	
-	public void setLayout(StaticLayout layout) {
-		this.layout = layout;
+	public void setLayout(AbstractLayout<Role, Integer> layout2) {
+		this.layout = layout2;
 	}
 	
 	public int getNextEdge() {

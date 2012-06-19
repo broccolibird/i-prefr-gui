@@ -76,6 +76,7 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 		if( rm.getRoleHierarchy() == null) {
 			graph = new RoleHierarchy();
 			layout = new StaticLayout(graph);
+			graph.setLayout(layout);
 			edgeFactory = new Factory<Integer>() {
 				int i=0;
 				public Integer create() {
