@@ -25,7 +25,6 @@ import dataStructures.maps.RoleMap;
 import dataStructures.maps.SuperkeyMap;
 import dataStructures.maps.ValueMap;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
-import edu.uci.ics.jung.algorithms.layout.TreeLayout;
 
 public abstract class AbstractDocument {
 
@@ -187,8 +186,13 @@ public abstract class AbstractDocument {
 				Element member = (Element) memberNList.item(j);
 						
 				String memberName = member.getElementsByTagName("NAME").item(0).getTextContent();
-
-				memberList.add(new Member(memberName,roleKey));
+				NodeList preferenceFile = member.getElementsByTagName("PREFERENCEFILE");
+				if (preferenceFile.item(0) != null) {
+					String preferenceFilePath = preferenceFile.item(0).getTextContent();
+					memberList.add(new Member (memberName, roleKey, preferenceFilePath));
+				} else {
+					memberList.add(new Member(memberName,roleKey));
+				}
 			}
 					
 			//create a role from the above with the correct name
@@ -201,33 +205,34 @@ public abstract class AbstractDocument {
 			roleMap.put(roleKey, thisValue);
 		}
 		
-		//open role hierarchy file
-		String hierarchyFile = Util.getOnlyChildText(doc, "STAKEHOLDERS", "HIERARCHYFILE");
-		Document hierarchyDoc = null;
-		DocumentBuilder hierarchyDBuilder;
-		DocumentBuilderFactory hierarchyDBFactory = DocumentBuilderFactory.newInstance();
-		try {
-			hierarchyDBuilder = hierarchyDBFactory.newDocumentBuilder();
-			hierarchyDoc = hierarchyDBuilder.parse(hierarchyFile);
-							
-		} catch (ParserConfigurationException | SAXException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if ( multistakeholder ) {
+			//open role hierarchy file
+			String hierarchyFile = Util.getOnlyChildText(doc, "STAKEHOLDERS", "HIERARCHYFILE");
+			Document hierarchyDoc = null;
+			DocumentBuilder hierarchyDBuilder;
+			DocumentBuilderFactory hierarchyDBFactory = DocumentBuilderFactory.newInstance();
+			try {
+				hierarchyDBuilder = hierarchyDBFactory.newDocumentBuilder();
+				hierarchyDoc = hierarchyDBuilder.parse(hierarchyFile);
+								
+			} catch (ParserConfigurationException | SAXException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			RoleHierarchy rh = new RoleHierarchy();
+			StaticLayout sl = new StaticLayout(rh);
+			rh.setLayout(sl);
+			roleMap.setRoleHierarchy(rh);
+			
+			//populate role hierarchy
+			roleList = hierarchyDoc.getElementsByTagName("ROLE");
+			nRoles = roleList.getLength();
+			for(int i=0;i<nRoles;i++){
+				Element thisRole = (Element) roleList.item(i);
+				createRoleHierarchy(thisRole, rh, sl);
+			}
 		}
-		
-		RoleHierarchy rh = new RoleHierarchy();
-		StaticLayout sl = new StaticLayout(rh);
-		rh.setLayout(sl);
-		roleMap.setRoleHierarchy(rh);
-		
-		//populate role hierarchy
-		roleList = hierarchyDoc.getElementsByTagName("ROLE");
-		nRoles = roleList.getLength();
-		for(int i=0;i<nRoles;i++){
-			Element thisRole = (Element) roleList.item(i);
-			createRoleHierarchy(thisRole, rh, sl);
-		}
-		
 		return maxUniqueID;
 	}
 	

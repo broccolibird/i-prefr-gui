@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import dataStructures.Member;
+import dataStructures.MemberList;
 import dataStructures.Role;
 
 @SuppressWarnings("serial")
@@ -17,14 +19,36 @@ public class RoleMap extends SuperkeyMap<Role>{
 	private boolean isMultipleStakeholder;
 	private RoleHierarchy roleHierarchy = null;
 	
+	/**
+	 * Create a new RoleMap instance. Used when loading project from a file
+	 *
+	 * @param mapID
+	 * @param isMultipleStakeholder
+	 */
 	public RoleMap(int mapID, boolean isMultipleStakeholder){
 		super(mapID);
 		this.isMultipleStakeholder = isMultipleStakeholder;
 	}
 	
+	/**
+	 * Create a new RoleMap instance
+	 * 
+	 * @param isMultipleStakeholder
+	 */
 	public RoleMap(boolean isMultipleStakeholder){
 		super();
 		this.isMultipleStakeholder = isMultipleStakeholder;
+		if(!isMultipleStakeholder) {
+			addDefaultRoleMember();
+		}
+	}
+	
+	private void addDefaultRoleMember(){
+		Member m = new Member("default", 0);
+		MemberList ml = new MemberList(0);
+		ml.add(m);
+		Role r = new Role("default", 0, ml);
+		put(0, r);
 	}
 	
 	public boolean isMultipleStakeholder(){
@@ -47,8 +71,8 @@ public class RoleMap extends SuperkeyMap<Role>{
 		String roleFile = createRoleFile(xmlfile);
 		roles += "\t\t<ROLEFILE>"+roleFile+"</ROLEFILE>\n";
 		
-		String hierarchyFile = createHierarchyFile(xmlfile);
-		roles += "\t\t<HIERARCHYFILE>"+hierarchyFile+"</HIERARCHYFILE>\n";
+		if ( isMultipleStakeholder )
+			roles += "\t\t<HIERARCHYFILE>"+createHierarchyFile(xmlfile)+"</HIERARCHYFILE>\n";
 		
 		roles += "\t</STAKEHOLDERS>\n";
 		return roles;
