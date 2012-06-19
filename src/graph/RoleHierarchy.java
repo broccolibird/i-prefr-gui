@@ -54,6 +54,55 @@ public class RoleHierarchy extends DirectedSparseGraph<Role,Integer>
 		this.nextEdge = nextEdge;
 	}
 	
+	@Override
+    public boolean addEdge(Integer edge, Pair<? extends Role> endpoints, EdgeType edgeType)
+    {
+    	this.validateEdgeType(edgeType);
+        Pair<Role> new_endpoints = getValidatedEndpoints(edge, endpoints);
+        if (new_endpoints == null)
+            return false;
+        
+        Role source = new_endpoints.getFirst();
+        Role dest = new_endpoints.getSecond();
+        
+        if (findEdge(source, dest) != null)
+            return false;
+        
+        if(makesCycle(source,dest)) {
+        	
+        	return false;
+        }
+        
+        edges.put(edge, new_endpoints);
+
+        if (!vertices.containsKey(source))
+            this.addVertex(source);
+        
+        if (!vertices.containsKey(dest))
+            this.addVertex(dest);
+        
+        // map source of this edge to <dest, edge> and vice versa
+        vertices.get(source).getSecond().put(dest, edge);
+        vertices.get(dest).getFirst().put(source, edge);
+
+        return true;
+    }
+	
+	private boolean makesCycle(Role source, Role dest) {
+		Collection<Integer> outEdges =  getOutEdges(dest);
+		for(Integer edge : outEdges ) {
+			Role edgeDest = getDest(edge);
+			if(edgeDest == source) {
+				return true;
+			} else {
+				boolean makesCycle = makesCycle(source, edgeDest);
+				if(makesCycle)
+					return true;
+			}
+		}
+		return false;
+	}
+	
 	 public String toXML() {
 	    	String xml = "<ROLEHIERARCHY>\n";
 	    	
