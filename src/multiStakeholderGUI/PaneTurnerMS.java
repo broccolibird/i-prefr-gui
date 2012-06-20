@@ -19,7 +19,6 @@ import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
 
 import dataStructures.AbstractDocument;
-import dataStructures.Role;
 
 import mainGUI.AbstractPaneTurner;
 import mainGUI.UpdatePane;
@@ -58,7 +57,7 @@ public class PaneTurnerMS extends JSplitPane {
 	protected Component initializeViewPanes() {
 		viewPanes = new UpdatePane[metaPanes.length];
 		
-		viewPanes[1] = new HierarchyPane(document, parent);
+		viewPanes[1] = new HierarchyPane(document);
 		RoleHierarchy graph = ((HierarchyPane) viewPanes[1]).getGraph();
 		
 		if( document.getRoleMap().getRoleHierarchy() == null)

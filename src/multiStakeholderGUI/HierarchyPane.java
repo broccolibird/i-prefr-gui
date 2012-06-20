@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
 
@@ -25,8 +24,6 @@ import dataStructures.maps.RoleMap;
 
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
-import edu.uci.ics.jung.algorithms.layout.TreeLayout;
-import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.CrossoverScalingControl;
@@ -38,11 +35,10 @@ import graph.RoleEditingModalGraphMouse;
 
 import mainGUI.UpdatePane;
 
-
-
 @SuppressWarnings("serial")
 public class HierarchyPane extends UpdatePane implements ActionListener {
-
+	
+	private AbstractDocument abstractDocument;
 	private RoleHierarchy graph;
 	
 	Factory<Integer> edgeFactory;
@@ -54,13 +50,7 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 		
 	private AbstractLayout<Role, Integer> layout;
 	private VisualizationViewer<Role, Integer> vv;
-	Role root;
-	
-	private AbstractDocument abstractDocument;
-	
-	private JFrame parentFrame;
 	private final RoleEditingModalGraphMouse<Role, Integer> graphMouse;
-
 	
 	// remember GUI Elements so they can be redrawn in update()
 	private JComboBox<Role> roleBox;
@@ -68,11 +58,9 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 	private JButton minus;
 	private JPanel controls;
 	
-	private JButton printXML;
 	
-	public HierarchyPane(AbstractDocument abstractDocument, JFrame parentFrame) {
+	public HierarchyPane(AbstractDocument abstractDocument) {
 		this.abstractDocument = abstractDocument;
-		this.parentFrame = parentFrame;
 		
 		RoleMap rm = abstractDocument.getRoleMap();
 		if( rm.getRoleHierarchy() == null) {
@@ -98,7 +86,7 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 		vv = new VisualizationViewer<Role, Integer>(layout, new Dimension(400, 600));
 		vv.setBackground(Color.white);
 		vv.getRenderContext().setEdgeShapeTransformer(new EdgeShape.Line()); 
-        vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
+        vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<Role>());
 	
         // add a listener for ToolTips
         vv.setVertexToolTipTransformer(new RoleToolTipTransformer());
@@ -130,14 +118,7 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
                 scaler.scale(vv, 1/1.1f, vv.getCenter());
             }
         });
-        
-        printXML = new JButton("print XML");
-        printXML.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		System.out.println(graph.toXML());
-        	}
-        });
-        
+                
         // set up control panel
         controls = new JPanel();
         update();
@@ -154,7 +135,7 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 			if (!selectedRole.isUsed()) {
 				graphMouse.getEditingPlugin().setRole(selectedRole);
 			} else {
-//				System.out.println("attribute is already used");
+//				System.out.println("stakeholder is already used");
 //				// maybe warn the user that their selection is not going to work
 			}
 		}
@@ -164,7 +145,6 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 	@Override
 	public void update() {
 		controls.removeAll();
-		controls.add(printXML);
 		controls.add(plus);
 		controls.add(minus);
 		controls.add(graphMouse.getModeComboBox());

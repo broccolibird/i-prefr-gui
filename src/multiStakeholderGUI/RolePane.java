@@ -15,9 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import dataStructures.Role;
-import dataStructures.maps.EdgeStatementMap;
 import dataStructures.maps.RoleMap;
-import edu.uci.ics.jung.graph.Graph;
 
 import mainGUI.UpdatePane;
 
