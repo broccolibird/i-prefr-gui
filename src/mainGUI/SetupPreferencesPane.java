@@ -61,7 +61,9 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 		Role[] roles = (Role[]) rm.values().toArray(new Role[0]);
 		Vector<Member> allMembers = new Vector<Member>();
 		for(Role role: roles) {
-			allMembers.addAll((LinkedList<Member>)role.getObject());
+			LinkedList<Member> members = role.getObject();
+			if (members != null)
+				allMembers.addAll(members);
 		}
 		
 		stakeholderBox = new JComboBox<Member>(allMembers);
