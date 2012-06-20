@@ -24,13 +24,13 @@ public class AttributePane extends UpdatePane implements ActionListener {
 	private JPanel attributePanel;
 	private JButton plusButton;
 	private JFrame parentFrame;
-	private Graph<Attribute, EdgeStatementMap> graph;
+	private SetupPreferencesPane preferencesPane;
 
 	public AttributePane(AttributeMap oldMap,
-			Graph<Attribute, EdgeStatementMap> graph2, JFrame parentFrame) {
+			SetupPreferencesPane preferencesPane, JFrame parentFrame) {
 		this.map = oldMap;
 		this.parentFrame = parentFrame;
-		this.graph = graph2;
+		this.preferencesPane = preferencesPane;
 		this.add(createGUI());
 		setVisible(true);
 	}
@@ -53,7 +53,7 @@ public class AttributePane extends UpdatePane implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (plusButton == e.getSource()) {
 			attributePanel.add(new AttributeTuple(map, parentFrame,
-					attributePanel, graph));
+					attributePanel, preferencesPane));
 			pack();
 		}
 	}
@@ -76,9 +76,9 @@ public class AttributePane extends UpdatePane implements ActionListener {
 		Collection<Entry<Integer, Attribute>> set = map.entrySet();
 		for (Entry<Integer, Attribute> p : set)
 			attributePanel.add(new AttributeTuple(p.getKey(), map, parentFrame,
-					attributePanel, graph));
+					attributePanel, preferencesPane));
 		attributePanel.add(new AttributeTuple(map, parentFrame, attributePanel,
-				graph));
+				preferencesPane));
 		parentFrame.pack();
 	}
 }

@@ -32,9 +32,8 @@ public class PaneTurnerTCP extends AbstractPaneTurner{
 		// the graph used in the SetupGraphPane must be linked to each
 		// AttributeTuple, so get a reference to it
 		//viewPanes[index] = new SetupGraphPane(document,parent);
-		viewPanes[index] = new SetupPreferencesPane(parent, document, isMultipleStakeholder);
-		Graph<Attribute, EdgeStatementMap> graph = ((SetupPreferencesPane) viewPanes[index++])
-				.getGraph();
+		SetupPreferencesPane preferencesPane = new SetupPreferencesPane(parent, document, isMultipleStakeholder);
+		viewPanes[index++] = preferencesPane;
 		viewPanes[index] = new ViewResultsPaneTCP(document,parent);
 		
 		viewPanes[0] = new SetupProjectPane(document.getMetaData());
@@ -42,7 +41,7 @@ public class PaneTurnerTCP extends AbstractPaneTurner{
 		// pass the reference in to the AttributePane which creates
 		// AttributeTuples the AttributeTuple deletes an Attribute vertex from
 		// the graph when it is deleted in the AttributePane
-		viewPanes[1] = new AttributePane(document.getAttributeMap(), graph,
+		viewPanes[1] = new AttributePane(document.getAttributeMap(), preferencesPane,
 				parent);
 
 		//? a similar thing will probably have to be done to the Domains

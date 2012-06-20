@@ -9,6 +9,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 
+import mainGUI.SetupPreferencesPane;
+
 import dataStructures.Attribute;
 import dataStructures.AttributeKey;
 import dataStructures.maps.AttributeMap;
@@ -22,20 +24,20 @@ public class AttributeTuple extends AbstractTuple<Attribute> implements
 
 	protected JTextField attributeName;
 	protected JButton xButton;
-	protected Graph<Attribute, EdgeStatementMap> graph;
+	protected SetupPreferencesPane preferencesPane;
 
 	public AttributeTuple(Integer key, AttributeMap map, JFrame parent,
-			JPanel parentPanel, Graph<Attribute, EdgeStatementMap> graph) {
+			JPanel parentPanel, SetupPreferencesPane preferencesPane) {
 		super(key, map, parent, parentPanel);
 
-		this.graph = graph;
+		this.preferencesPane = preferencesPane;
 		initializeGUI();
 	}
 
 	public AttributeTuple(AttributeMap map, JFrame parent, JPanel parentPanel,
-			Graph<Attribute, EdgeStatementMap> graph) {
+			SetupPreferencesPane preferencesPane) {
 		super(map, parent, parentPanel);
-		this.graph = graph;
+		this.preferencesPane = preferencesPane;
 		initializeGUI();
 	}
 
@@ -57,8 +59,8 @@ public class AttributeTuple extends AbstractTuple<Attribute> implements
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == xButton) {
 			Attribute a = map.get(key);
-			if (graph != null) {
-				graph.removeVertex(a);
+			if (preferencesPane.getGraph() != null) {
+				preferencesPane.getGraph().removeVertex(a);
 			}
 			parentPanel.remove(this);
 			map.remove(key);

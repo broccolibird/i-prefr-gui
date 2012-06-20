@@ -43,6 +43,7 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 	
 	JButton save;
 	JButton load;
+	JButton clear;
 	
 	JTextArea noMembers;
 	
@@ -86,6 +87,7 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 		
 		stakeholderControls.add(save); 
 		stakeholderControls.add(load);
+		stakeholderControls.add(clear);
 		
 		if(curMember == null) {
 			stakeholderControls.setVisible(false);
@@ -123,6 +125,14 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				selectPreferencesFile();				
+			}
+		});
+		
+		clear = new JButton("Clear");
+		clear.addActionListener( new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				clearMemberPreferences();				
 			}
 		});
 		
@@ -170,18 +180,24 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 		else return null;
 	}
 
-	private void loadMemberPreferences() {
-		// Clear previous user's preferences					
+	private void clearMemberPreferences() {
 		// sets attributes to unused
 		preferencesPanel.clearPane();
 		remove(preferencesPanel);
-		
+			
 		initializePreferencePanel();
+		add(preferencesPanel);
+		revalidate();
+	}
+	
+	private void loadMemberPreferences() {
+		// Clear previous user's preferences					
+		clearMemberPreferences();
+		
 		if(curMember != null && curMember.getPreferenceFilePath() != null) {
 			File file = new File(curMember.getPreferenceFilePath());
 			preferencesPanel.loadMemberPreferences(file);
 		}
-		add(preferencesPanel);
 		preferencesPanel.update();
 		revalidate();
 	}
@@ -222,7 +238,7 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		if( e.getSource() == stakeholderBox ) {
+		if( e.getSource() == stakeholderBox && curMember != stakeholderBox.getSelectedItem()) {
 			curMember = (Member) stakeholderBox.getSelectedItem();
 			loadMemberPreferences();
 		}
