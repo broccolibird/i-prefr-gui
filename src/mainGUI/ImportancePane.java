@@ -98,14 +98,7 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 		}
 
 		@Override
-		public boolean loadMemberPreferences(Member member) {
-			// There are no preferences to load
-			if( member == null || member.getPreferenceFilePath() == null) {
-				return false;
-			}
-			
-			File file = new File(member.getPreferenceFilePath());
-			
+		public boolean loadMemberPreferences(File file) {
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder;
 			Document doc=null;

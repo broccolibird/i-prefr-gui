@@ -1,5 +1,7 @@
 package mainGUI;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -7,17 +9,19 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.Vector;
 
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import dataStructures.AbstractDocument;
 import dataStructures.Attribute;
 import dataStructures.Member;
+import dataStructures.MemberList;
 import dataStructures.Role;
 import dataStructures.maps.EdgeStatementMap;
 import dataStructures.maps.RoleMap;
@@ -38,6 +42,9 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 	Member curMember;
 	
 	JButton save;
+	JButton load;
+	
+	JTextArea noMembers;
 	
 	public SetupPreferencesPane(JFrame parent, AbstractDocument document,
 			boolean isTCPPref){
@@ -61,6 +68,8 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 		stakeholderBox.invalidate();
 		if(allMembers.size() > 0){
 			stakeholderBox.setSelectedIndex(0);
+		} else {
+			curMember = null;
 		}
 	}
 	
@@ -76,6 +85,17 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 		}
 		
 		stakeholderControls.add(save); 
+		stakeholderControls.add(load);
+		
+		if(curMember == null) {
+			stakeholderControls.setVisible(false);
+			preferencesPanel.setVisible(false);
+			noMembers.setVisible(true);
+		} else {
+			stakeholderControls.setVisible(true);
+			preferencesPanel.setVisible(true);
+			noMembers.setVisible(false);
+		}
 	}
 	
 	private void createGUI(){
@@ -95,16 +115,40 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 					savePreferences();
 				}
 				
-				
+			}
+		});
+		
+		load = new JButton("Load Existing File");
+		load.addActionListener( new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				selectPreferencesFile();				
 			}
 		});
 		
 		stakeholderControls = new JPanel();
 		stakeholderControls.setLayout(new FlowLayout());
+				
+		if( !isMultipleStakeholder) {
+			RoleMap rm = document.getRoleMap();
+			Role defaultRole = rm.get(rm.firstKey());
+			MemberList ml = defaultRole.getObject();
+			Member defaultMember = ml.getFirst();
+			curMember = defaultMember;
+			loadMemberPreferences();
+		}
+		
+		noMembers = new JTextArea("There are currently no stakeholders in your project.\n"+
+				"Please create a stakeholder to input preferences.");
+		noMembers.setEditable(false);
+		noMembers.setPreferredSize(new Dimension(300, 40));
+		noMembers.setMaximumSize(noMembers.getPreferredSize());
+		noMembers.setBackground(new Color(255,255,255,0));
+		
 		update();
 		add(stakeholderControls);
-		
 		add(preferencesPanel);
+		add(noMembers);
 		
 	}
 	
@@ -115,6 +159,7 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 			preferencesPanel = new SetupGraphPane(document, parent);
 		}
 	}
+	
 	private PreferencePane getPreferencePanel() {
 		return preferencesPanel;
 	}
@@ -132,8 +177,10 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 		remove(preferencesPanel);
 		
 		initializePreferencePanel();
-		if(curMember != null && curMember.getPreferenceFilePath() != null)
-			preferencesPanel.loadMemberPreferences(curMember);
+		if(curMember != null && curMember.getPreferenceFilePath() != null) {
+			File file = new File(curMember.getPreferenceFilePath());
+			preferencesPanel.loadMemberPreferences(file);
+		}
 		add(preferencesPanel);
 		preferencesPanel.update();
 		revalidate();
@@ -152,6 +199,24 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 			curMember.setPreferenceFilePath(file.getAbsolutePath());
 			savePreferences();
 		}
+	}
+	
+	private void selectPreferencesFile() {
+		//use a chooser to get the file to open
+		JFileChooser chooser = new JFileChooser();
+	    FileNameExtensionFilter filter = new FileNameExtensionFilter(
+	    		"XML (*.xml)","xml");
+	    chooser.setFileFilter(filter);
+	    int option = chooser.showOpenDialog(this);
+		if (option == JFileChooser.APPROVE_OPTION) {
+			File file = chooser.getSelectedFile();
+			loadExistingPreferences(file);
+		}
+	}
+	
+	private void loadExistingPreferences(File file) {
+		preferencesPanel.loadMemberPreferences(file);
+		curMember.setPreferenceFilePath(file.getAbsolutePath());
 	}
 	
 	@Override

@@ -226,7 +226,7 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 	}
 
 	@Override
-	public boolean loadMemberPreferences(Member member) {
+	public boolean loadMemberPreferences(File file) {
 		// TODO Auto-generated method stub
 		return false;
 	}
