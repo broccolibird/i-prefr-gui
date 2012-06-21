@@ -190,9 +190,9 @@ public abstract class AbstractDocument {
 				NodeList preferenceFile = member.getElementsByTagName("PREFERENCEFILE");
 				if (preferenceFile.item(0) != null) { // Member already has a preference file
 					String preferenceFilePath = preferenceFile.item(0).getTextContent();
-					memberMap.put(thisKey, new Member (memberName, roleKey, preferenceFilePath));
+					memberMap.put(thisKey, new Member (memberName, thisKey, preferenceFilePath));
 				} else {
-					memberMap.put(thisKey, new Member(memberName,roleKey));
+					memberMap.put(thisKey, new Member(memberName,thisKey));
 				}
 			}
 					
