@@ -18,8 +18,8 @@ import org.apache.commons.collections15.Transformer;
 import org.apache.commons.collections15.functors.ConstantTransformer;
 
 import dataStructures.AbstractDocument;
-import dataStructures.MemberList;
 import dataStructures.Role;
+import dataStructures.maps.MemberMap;
 import dataStructures.maps.RoleMap;
 
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
@@ -197,8 +197,10 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 	class RoleToolTipTransformer implements Transformer<Role,String> {
 		@Override
 		public String transform(Role role) {
-			MemberList ml = role.getObject();
-			return ml.toString();
+			MemberMap mMap = role.getObject();
+			if(mMap == null)
+				return "";
+			return mMap.toString();
 		}
 	}
 

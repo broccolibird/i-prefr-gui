@@ -10,7 +10,6 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import dataStructures.Member;
-import dataStructures.MemberList;
 import dataStructures.Role;
 
 /**
@@ -50,9 +49,9 @@ public class RoleMap extends SuperkeyMap<Role>{
 	
 	private void addDefaultRoleMember(){
 		Member m = new Member("default", 0);
-		MemberList ml = new MemberList(0);
-		ml.add(m);
-		Role r = new Role("default", 0, ml);
+		MemberMap map = new MemberMap();
+		map.put(0, m);
+		Role r = new Role("default", 0, map);
 		put(0, r);
 	}
 	
