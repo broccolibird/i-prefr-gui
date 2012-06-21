@@ -3,33 +3,32 @@ package guiElements.tuples;
 import guiElements.AbstractTextListener;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 
-import dataStructures.Attribute;
-import dataStructures.Domain;
-import dataStructures.MemberList;
-import dataStructures.Role;
-import dataStructures.maps.RoleMap;
+import dataStructures.Member;
+import dataStructures.maps.MemberMap;
 
-public class MemberTuple extends AbstractTuple<Role> implements
+public class MemberTuple extends AbstractTuple<Member> implements
 		ActionListener {
 
-	protected JTextArea memberField;
+	protected JTextField memberName;
+	protected JButton xButton;
 	
-	public MemberTuple(Integer key, RoleMap map, JFrame parent, 
+	public MemberTuple(Integer key, MemberMap map, JFrame parent, 
 			JPanel parentPanel){
 		super(key, map, parent, parentPanel);
 		initializeGUI();
 	}
 	
-	public MemberTuple(RoleMap map, JFrame parent, JPanel parentPanel){
+	public MemberTuple(MemberMap map, JFrame parent, JPanel parentPanel){
 		super(map, parent, parentPanel);
 		initializeGUI();
 		
@@ -39,34 +38,33 @@ public class MemberTuple extends AbstractTuple<Role> implements
 	public void initializeGUI(){
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		
-		memberField = new JTextArea(3, 25);
-		Role r = map.get(key);
+		memberName = new JTextField(12);
+		Member m = map.get(key);
 		
-		if(r == null) {
-			System.err.println("role should not be null in MemberTuple");
-		}
-		String memTitle = r.getName();
-		JTextField memberTitle = new JTextField(memTitle);
-		memberTitle.setEditable(false);
-		memberTitle.setPreferredSize(new Dimension(75, 20));
-		this.add(memberTitle);
-		MemberList m = r.getObject();
+		if(m != null)
+			memberName.setText(m.getName());
+		memberName.getDocument().addDocumentListener(
+				new MemberTextListener(memberName));
+		this.add(memberName);
 		
-		String enumeration = "";
-		if (m != null)
-			enumeration = m.toString();
-		else
-			r.setObject(new MemberList(enumeration, r.getKey()));
+		xButton = new JButton("x");
+		xButton.addActionListener(this);
+		this.add(xButton);
 		
-		memberField.setText(enumeration);
-		memberField.getDocument().addDocumentListener(new MemberTextListener(memberField));
-		memberField.setPreferredSize(new Dimension(100, 20));
-		this.add(memberField);
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		
+		map.remove(key);
+		memberName.setText("");
+		parentWindow.pack();
+		
 	}
 	
 	class MemberTextListener extends AbstractTextListener {
 
-		public MemberTextListener(JTextArea field) {
+		public MemberTextListener(JTextField field) {
 			super(field);
 		}
 
@@ -82,14 +80,22 @@ public class MemberTuple extends AbstractTuple<Role> implements
 		}
 
 		private void handleChange() {
-			Role r = map.get(key);
-			if (r == null) {
-				System.err.println("role should not be null");
-			}
-			if (field == memberField) {
-				MemberList m = r.getObject();
-				m.setNames(memberField.getText());
-				parentWindow.pack();
+			boolean newEntry = false;
+			Member m = map.get(key);
+			
+			if ( !memberName.getText().equals("")) {
+				if(m == null) {
+					newEntry = true;
+					m = new Member("", key);
+				}
+				
+				if (field == memberName) {
+					m.setName(memberName.getText());
+					if (newEntry) {
+						map.put(key, m);
+					}
+					parentWindow.pack();
+				}
 			}
 		}
 

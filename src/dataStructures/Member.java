@@ -32,7 +32,7 @@ public class Member {
 		this.name = name;
 	}
 	
-	public Integer getMemberKey() {
+	public Integer getKey() {
 		return key;
 	}
 	

@@ -1,10 +1,9 @@
 package multiStakeholderGUI;
 
-import guiElements.tuples.MemberTuple;
-
+import java.awt.Dimension;
 import java.util.Collection;
-import java.util.Map.Entry;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -40,22 +39,24 @@ public class MemberPane extends UpdatePane {
 	}
  
 	public void update() {
-		// for every map entry, add a tuple to the table
+		
+		//create table header
 		stakeholderPanel.removeAll();
 		JPanel label = new JPanel();
 		label.setLayout(new BoxLayout(label, BoxLayout.X_AXIS));
-		//label.setPreferredSize(new Dimension(150,20));
-		JTextField title = new JTextField("Role Title");
-		JTextField members = new JTextField("Role Members");
+		JTextField title = new JTextField("Enter Role Members");
 		title.setEditable(false);
-		members.setEditable(false);
+		title.setHorizontalAlignment(JTextField.CENTER);
 		label.add(title);
-		label.add(members);
 		stakeholderPanel.add(label);
-		Collection<Entry<Integer, Role>> set = map.entrySet();
-		for (Entry<Integer, Role> p : set){
-			stakeholderPanel.add(new MemberTuple(p.getKey(), map, parentFrame,
-					stakeholderPanel));
+		
+		// for every role, add a panel to the table
+		Collection<Role> roles = map.values();
+		
+		for (Role role : roles){
+			JPanel rolePanel = new MemberListPane(role, role.getObject(), parentFrame);
+			stakeholderPanel.add(rolePanel);
+			stakeholderPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 		}
 		parentFrame.pack();
 	}

@@ -14,8 +14,6 @@ import mainGUI.SetupPreferencesPane;
 import dataStructures.Attribute;
 import dataStructures.AttributeKey;
 import dataStructures.maps.AttributeMap;
-import dataStructures.maps.EdgeStatementMap;
-import edu.uci.ics.jung.graph.Graph;
 import guiElements.AbstractTextListener;
 
 @SuppressWarnings("serial")

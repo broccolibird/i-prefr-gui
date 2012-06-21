@@ -3,7 +3,6 @@ package guiElements.tuples;
 import graph.RoleHierarchy;
 import guiElements.AbstractTextListener;
 
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -15,7 +14,7 @@ import javax.swing.event.DocumentEvent;
 
 import dataStructures.Role;
 import dataStructures.maps.SuperkeyMap;
-import edu.uci.ics.jung.graph.Graph;
+import dataStructures.maps.MemberMap;
 
 @SuppressWarnings("serial")
 public class RoleTuple extends AbstractTuple<Role> implements ActionListener{
@@ -88,7 +87,7 @@ public class RoleTuple extends AbstractTuple<Role> implements ActionListener{
 			if (r == null) {
 				newEntry = true;
 				System.out.println("here making the new Role with key: "+key);
-				r = new Role("", key, null);
+				r = new Role("", key, new MemberMap());
 			}
 			if (field == roleName) {
 				r.setName(roleName.getText());

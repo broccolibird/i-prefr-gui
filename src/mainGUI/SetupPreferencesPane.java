@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Vector;
 
@@ -21,9 +22,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import dataStructures.AbstractDocument;
 import dataStructures.Attribute;
 import dataStructures.Member;
-import dataStructures.MemberList;
 import dataStructures.Role;
 import dataStructures.maps.EdgeStatementMap;
+import dataStructures.maps.MemberMap;
 import dataStructures.maps.RoleMap;
 import edu.uci.ics.jung.graph.Graph;
 
@@ -61,9 +62,12 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 		Role[] roles = (Role[]) rm.values().toArray(new Role[0]);
 		Vector<Member> allMembers = new Vector<Member>();
 		for(Role role: roles) {
-			LinkedList<Member> members = role.getObject();
-			if (members != null)
-				allMembers.addAll(members);
+			MemberMap members = role.getObject();
+			if (members != null) {
+				Collection<Member> roleMembers = members.values();
+				allMembers.addAll(roleMembers);
+
+			}
 		}
 		
 		stakeholderBox = new JComboBox<Member>(allMembers);
@@ -144,8 +148,8 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 		if( !isMultipleStakeholder) {
 			RoleMap rm = document.getRoleMap();
 			Role defaultRole = rm.get(rm.firstKey());
-			MemberList ml = defaultRole.getObject();
-			Member defaultMember = ml.getFirst();
+			MemberMap mMap = defaultRole.getObject();
+			Member defaultMember = mMap.get(0); // default member is always key 0
 			curMember = defaultMember;
 			loadMemberPreferences();
 		}

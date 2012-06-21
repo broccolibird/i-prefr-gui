@@ -20,6 +20,7 @@ import org.xml.sax.SAXException;
 
 import dataStructures.maps.AlternativeMap;
 import dataStructures.maps.AttributeMap;
+import dataStructures.maps.MemberMap;
 import dataStructures.maps.OptionMap;
 import dataStructures.maps.RoleMap;
 import dataStructures.maps.SuperkeyMap;
@@ -170,34 +171,34 @@ public abstract class AbstractDocument {
 			boolean thisIsUsed;
 			String roleTitle;
 			Integer roleKey;
-			MemberList memberList;
+			MemberMap memberMap;
 					
 			//get the key
 			Element roleNode = (Element)roleList.item(i);
 			roleKey = Integer.parseInt(roleNode.getAttribute("ID"));
 								
 			//create the list of members (each needs the key)
-			memberList = new MemberList(roleKey);
+			memberMap = new MemberMap();
 					
 			NodeList memberNList = roleNode.getElementsByTagName("MEMBER");
 			int nMembers = memberNList.getLength();
-
+			int thisKey;
 			for(int j=0;j<nMembers;j++){
 				Element member = (Element) memberNList.item(j);
-						
+				thisKey = Integer.parseInt(member.getAttribute("ID"));
 				String memberName = member.getElementsByTagName("NAME").item(0).getTextContent();
 				NodeList preferenceFile = member.getElementsByTagName("PREFERENCEFILE");
-				if (preferenceFile.item(0) != null) {
+				if (preferenceFile.item(0) != null) { // Member already has a preference file
 					String preferenceFilePath = preferenceFile.item(0).getTextContent();
-					memberList.add(new Member (memberName, roleKey, preferenceFilePath));
+					memberMap.put(thisKey, new Member (memberName, roleKey, preferenceFilePath));
 				} else {
-					memberList.add(new Member(memberName,roleKey));
+					memberMap.put(thisKey, new Member(memberName,roleKey));
 				}
 			}
 					
 			//create a role from the above with the correct name
 			roleTitle = Util.getOnlyChildText(roleNode,"TITLE");
-			Role thisValue = new Role(roleTitle,roleKey,memberList);
+			Role thisValue = new Role(roleTitle,roleKey,memberMap);
 					
 			//set its isUsed boolean and put into map
 			thisIsUsed = Boolean.parseBoolean(Util.getOnlyChildText(roleNode,"ISUSED"));
