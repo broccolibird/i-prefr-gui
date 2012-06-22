@@ -3,7 +3,9 @@ package mainGUI;
 import guiElements.NewDialog;
 
 import java.awt.Dimension;
+import java.awt.Event;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -15,7 +17,9 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -43,8 +47,16 @@ public class PreferenceReasoner extends JApplet {
 		frame.setPreferredSize(new Dimension(900, 800));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		paneTurner = null;
+		
+		// Setup menu options
 		JMenu fileMenu = new JMenu("File");
-		fileMenu.add(new AbstractAction("Save") {
+		fileMenu.setMnemonic('f');
+		JMenuItem item;
+		
+		item = fileMenu.add("Save");
+		item.setMnemonic(KeyEvent.VK_S);
+		item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK));
+		item.addActionListener(new AbstractAction("Save") {
 			public void actionPerformed(ActionEvent e) {
 				if(paneTurner == null)
 					JOptionPane.showMessageDialog(frame, "Please create a project before saving.",
@@ -54,7 +66,10 @@ public class PreferenceReasoner extends JApplet {
 			}
 		});
 		
-		fileMenu.add(new AbstractAction("New") {
+		item = fileMenu.add("New");
+		item.setMnemonic(KeyEvent.VK_N);
+		item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, Event.CTRL_MASK));
+		item.addActionListener(new AbstractAction("New") {
 			public void actionPerformed(ActionEvent e) {
 				if (paneTurner != null ) {
 					//TODO - offer to save old abstractDocument before opening new one
@@ -64,7 +79,10 @@ public class PreferenceReasoner extends JApplet {
 			}
 		});
 
-		fileMenu.add(new AbstractAction("Open") {
+		item = fileMenu.add("Open");
+		item.setMnemonic(KeyEvent.VK_O);
+		item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, Event.CTRL_MASK));
+		item.addActionListener(new AbstractAction("Open") {
 			public void actionPerformed(ActionEvent e) {
 				//TODO -  offer to save old abstractDocument before opening new one
 				
