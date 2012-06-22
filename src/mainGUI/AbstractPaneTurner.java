@@ -126,8 +126,8 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 		metaPanes[currentSelected].toggleColor();
 		if (currentSelected > 0) {
 			currentSelected--;
-			viewPanes[currentSelected].update();
 			setRightComponent(viewPanes[currentSelected]);
+			viewPanes[currentSelected].update();
 		}
 		metaPanes[currentSelected].toggleColor();
 	}
@@ -136,8 +136,9 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 		metaPanes[currentSelected].toggleColor();
 		if (currentSelected < metaPanes.length - 1) {
 			currentSelected++;
-			viewPanes[currentSelected].update();
 			setRightComponent(viewPanes[currentSelected]);
+			viewPanes[currentSelected].update();
+
 		}
 		metaPanes[currentSelected].toggleColor();
 	}

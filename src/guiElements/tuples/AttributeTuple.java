@@ -39,6 +39,10 @@ public class AttributeTuple extends AbstractTuple<Attribute> implements
 		initializeGUI();
 	}
 
+	public JTextField getTextField(){
+		return attributeName;
+	}
+	
 	@Override
 	public void initializeGUI() {
 		attributeName = new JTextField(20);
