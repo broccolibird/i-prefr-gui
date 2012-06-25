@@ -16,6 +16,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import dataStructures.AbstractDocument;
@@ -38,6 +39,8 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 	
 	JComboBox stakeholderBox;
 	JPanel stakeholderControls;
+	JTextField curFile;
+	JPanel fileControls;
 	
 	PreferencePane preferencesPanel;
 	Member curMember;
@@ -58,6 +61,10 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 		createGUI();
 	}
 	
+	/**
+	 * Setup the combobox containing role members
+	 * -- only used in multistakeholder
+	 */
 	private void setupStakeholderBox() {
 		RoleMap rm = document.getRoleMap();
 		Role[] roles = (Role[]) rm.values().toArray(new Role[0]);
@@ -98,21 +105,24 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 		stakeholderControls.add(clear);
 		
 		if(curMember == null) {
-			stakeholderControls.setVisible(false);
+			fileControls.setVisible(false);
 			preferencesPanel.setVisible(false);
 			noMembers.setVisible(true);
 		} else {
-			stakeholderControls.setVisible(true);
+			fileControls.setVisible(true);
 			preferencesPanel.setVisible(true);
 			noMembers.setVisible(false);
+			
+			setCurrentFileField();
 		}
 	}
 	
 	private void createGUI(){
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-				
+		
 		initializePreferencePanel();
 		
+		// Add file controls
 		save = new JButton("Save");
 		save.addActionListener(new ActionListener() {
 			@Override
@@ -138,8 +148,8 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 		load = new JButton("Load Existing File");
 		load.addActionListener( new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				selectPreferencesFile();				
+			public void actionPerformed(ActionEvent e) {	
+				loadExistingPreferences();
 			}
 		});
 		
@@ -153,7 +163,9 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 		
 		stakeholderControls = new JPanel();
 		stakeholderControls.setLayout(new FlowLayout());
-				
+		
+		// in non-multistakeholder project
+		// Set current Member to default member
 		if( !isMultipleStakeholder) {
 			RoleMap rm = document.getRoleMap();
 			Role defaultRole = rm.get(rm.firstKey());
@@ -163,6 +175,17 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 			loadMemberPreferences();
 		}
 		
+		// Set text for field showing user's preference file path
+		curFile = new JTextField();
+		setCurrentFileField();
+		
+		curFile.setEditable(false);
+		
+		fileControls = new JPanel();
+		fileControls.add(stakeholderControls);
+		fileControls.add(curFile);
+		
+		// Create text area to show to user when there are no members in the project
 		noMembers = new JTextArea("There are currently no stakeholders in your project.\n"+
 				"Please create a stakeholder to input preferences.");
 		noMembers.setEditable(false);
@@ -171,12 +194,15 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 		noMembers.setBackground(new Color(255,255,255,0));
 		
 		update();
-		add(stakeholderControls);
+		add(fileControls);
 		add(preferencesPanel);
 		add(noMembers);
 		
 	}
 	
+	/**
+	 * Creates a new preference panel based on the network type
+	 */
 	private void initializePreferencePanel(){
 		if(document.isCINetworkType()) {
 			preferencesPanel = new ImportancePane(document.getAttributeMap(), parent);
@@ -185,12 +211,33 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 		}
 	}
 	
+	/**
+	 * Gets the graph currently in use
+	 * @return current Graph
+	 */
 	public Graph<Attribute, EdgeStatementMap> getGraph(){
 		if(isTCPPref)
 			return ((SetupGraphPane) preferencesPanel).getGraph();
 		else return null;
 	}
+	
+	/**
+	 * Sets the text in the current file field to show which preference file
+	 * is in use
+	 */
+	private void setCurrentFileField() {
+		if(curMember == null){
+			curFile.setText("No member selected");
+		} else if (curMember.getPreferenceFilePath() == null) {
+			curFile.setText("None set");
+		} else {
+			curFile.setText(curMember.getPreferenceFilePath());
+		}
+	}
 
+	/**
+	 * Clears used attributes and replaces the current preference panel with a new one
+	 */
 	private void clearMemberPreferences() {
 		// sets attributes to unused
 		preferencesPanel.clearPane();
@@ -201,6 +248,9 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 		revalidate();
 	}
 	
+	/**
+	 * Clears previous member's preferences and loads next member's preferences
+	 */
 	private void loadMemberPreferences() {
 		// Clear previous user's preferences					
 		clearMemberPreferences();
@@ -210,14 +260,22 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 			preferencesPanel.loadMemberPreferences(file);
 		}
 		preferencesPanel.update();
+		setCurrentFileField();
 		revalidate();
 	}
 	
+	/**
+	 * Saves member preferences to the member's current preference file
+	 */
 	private void savePreferences() {
 		File memberFile = new File(curMember.getPreferenceFilePath());
 		preferencesPanel.saveMemberPreferences(memberFile);
 	}
 	
+	/**
+	 * Opens a file chooser to allow the user to select the location
+	 * of the save file before saving
+	 */
 	private void savePreferencesAs() {
 		JFileChooser chooser = new JFileChooser();
 		int option = chooser.showSaveDialog(this);
@@ -225,11 +283,14 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 			File file = chooser.getSelectedFile();
 			curMember.setPreferenceFilePath(file.getAbsolutePath());
 			savePreferences();
+			setCurrentFileField();
 		}
 	}
 	
-	private void selectPreferencesFile() {
-		//use a chooser to get the file to open
+	/**
+	 * Locate existing preference file
+	 */
+	private File selectPreferencesFile() {
 		JFileChooser chooser = new JFileChooser();
 	    FileNameExtensionFilter filter = new FileNameExtensionFilter(
 	    		"XML (*.xml)","xml");
@@ -237,14 +298,18 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 	    int option = chooser.showOpenDialog(this);
 		if (option == JFileChooser.APPROVE_OPTION) {
 			File file = chooser.getSelectedFile();
-			loadExistingPreferences(file);
+			return file;
 		}
+		return null;
 	}
 	
-	private void loadExistingPreferences(File file) {
-		preferencesPanel.loadMemberPreferences(file);
+	/**
+	 * Load an existing preference file
+	 */
+	private void loadExistingPreferences() {
+		File file = selectPreferencesFile();
 		curMember.setPreferenceFilePath(file.getAbsolutePath());
-		update();
+		loadMemberPreferences();		
 	}
 	
 	@Override
