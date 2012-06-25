@@ -196,6 +196,8 @@ public class PreferenceReasoner extends JApplet {
 			return;
 		} 
 		
+		curFile = file;
+		
 		// retrieve network type from document
 		NodeList nList = doc.getElementsByTagName("NETWORK");
 		Element e = (Element)nList.item(0);
