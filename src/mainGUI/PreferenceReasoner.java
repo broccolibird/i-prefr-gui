@@ -88,11 +88,13 @@ public class PreferenceReasoner extends JApplet {
 		item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, Event.CTRL_MASK));
 		item.addActionListener(new AbstractAction("New") {
 			public void actionPerformed(ActionEvent e) {
+				boolean switchProject = true;
 				if (paneTurner != null ) {
-					//TODO - offer to save old abstractDocument before opening new one
-
+					//offer to save old abstractDocument before opening new one
+					switchProject = showSaveChangesDialog();
 				}
-				showNewDialog();
+				if (switchProject)
+					showNewDialog();
 			}
 		});
 
@@ -101,18 +103,24 @@ public class PreferenceReasoner extends JApplet {
 		item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, Event.CTRL_MASK));
 		item.addActionListener(new AbstractAction("Open") {
 			public void actionPerformed(ActionEvent e) {
-				//TODO -  offer to save old abstractDocument before opening new one
+				//offer to save old abstractDocument before opening new one
+				boolean switchProject = true;
 				
+				if( paneTurner != null )
+					switchProject = showSaveChangesDialog();
 				
-				//use a chooser to get the file to open
-				JFileChooser chooser = new JFileChooser();
-			    FileNameExtensionFilter filter = new FileNameExtensionFilter(
-			    		"XML (*.xml)","xml");
-			    chooser.setFileFilter(filter);
-			    int option = chooser.showOpenDialog(frame);
-				if (option == JFileChooser.APPROVE_OPTION) {
-					File file = chooser.getSelectedFile();
-					open(file);
+				if ( switchProject ) {
+				
+					//use a chooser to get the file to open
+					JFileChooser chooser = new JFileChooser();
+				    FileNameExtensionFilter filter = new FileNameExtensionFilter(
+				    		"XML (*.xml)","xml");
+				    chooser.setFileFilter(filter);
+				    int option = chooser.showOpenDialog(frame);
+					if (option == JFileChooser.APPROVE_OPTION) {
+						File file = chooser.getSelectedFile();
+						open(file);
+					}
 				}
 			}
 		});
@@ -128,19 +136,37 @@ public class PreferenceReasoner extends JApplet {
 		return paneTurner;
 	}
 	
-	private static void showSaveDialog(){
+	private static boolean showSaveChangesDialog(){
+		int choice = JOptionPane.showConfirmDialog(frame,
+			    "You are about to leave the current project, would you like to save your changes?",
+			    "Save Changes",
+			    JOptionPane.YES_NO_CANCEL_OPTION);
+		if (choice == JOptionPane.YES_OPTION) {
+			return showSaveDialog();
+		} else if (choice == JOptionPane.NO_OPTION) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	private static boolean showSaveDialog(){
 		JFileChooser chooser = new JFileChooser();
 		int option = chooser.showSaveDialog(paneTurner);
 		if (option == JFileChooser.APPROVE_OPTION) {
 			File file = chooser.getSelectedFile();
 			save(file);
+			return true;
 		}
+		return false;
 	}
 	
 	private static void showNewDialog(){
 		
 		NewDialog nd = new NewDialog(frame);
 		RunConfiguration config= nd.showDialog();
+		
+		if (paneTurner != null)
+			frame.remove(paneTurner);
 		
 		if (config == null){
 			//do nothing
@@ -222,6 +248,10 @@ public class PreferenceReasoner extends JApplet {
 		}
 		
 		System.out.println("netType!!: "+networkType);
+		
+		if (paneTurner != null)
+			frame.remove(paneTurner);
+		
 		if(networkType.equals("CI")){
 			//frame.removeAll();
 			CIDocument oldCIDocument = new CIDocument(doc);
