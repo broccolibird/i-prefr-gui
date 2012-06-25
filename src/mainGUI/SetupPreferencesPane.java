@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.Vector;
 
 import javax.swing.BoxLayout;
@@ -28,6 +27,7 @@ import dataStructures.maps.MemberMap;
 import dataStructures.maps.RoleMap;
 import edu.uci.ics.jung.graph.Graph;
 
+@SuppressWarnings("serial")
 public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 
 	JFrame parent;
@@ -43,6 +43,7 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 	Member curMember;
 	
 	JButton save;
+	JButton saveAs;
 	JButton load;
 	JButton clear;
 	
@@ -92,6 +93,7 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 		}
 		
 		stakeholderControls.add(save); 
+		stakeholderControls.add(saveAs);
 		stakeholderControls.add(load);
 		stakeholderControls.add(clear);
 		
@@ -126,6 +128,13 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 			}
 		});
 		
+		saveAs = new JButton("Save As");
+		saveAs.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				savePreferencesAs();
+			}
+		});
 		load = new JButton("Load Existing File");
 		load.addActionListener( new ActionListener() {
 			@Override
@@ -174,10 +183,6 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 		} else {
 			preferencesPanel = new SetupGraphPane(document, parent);
 		}
-	}
-	
-	private PreferencePane getPreferencePanel() {
-		return preferencesPanel;
 	}
 	
 	public Graph<Attribute, EdgeStatementMap> getGraph(){
@@ -239,6 +244,7 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 	private void loadExistingPreferences(File file) {
 		preferencesPanel.loadMemberPreferences(file);
 		curMember.setPreferenceFilePath(file.getAbsolutePath());
+		update();
 	}
 	
 	@Override
