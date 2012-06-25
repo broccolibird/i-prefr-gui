@@ -5,17 +5,22 @@ import guiElements.tuples.AlternativeTuple;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.Map.Entry;
 
+import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.InputMap;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 
 import dataStructures.Alternative;
 import dataStructures.maps.AlternativeMap;
@@ -42,10 +47,21 @@ public class AlternativePane extends UpdatePane implements ActionListener {
 		alternativePanel.setLayout(new BoxLayout(alternativePanel,
 				BoxLayout.Y_AXIS));
 		panel.add(getRadioButtonPanel());
-		update();
-		panel.add(alternativePanel);
+		
 		plusButton = new JButton("+");
 		plusButton.addActionListener(this);
+		InputMap plusInputMap = plusButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		plusInputMap.put(KeyStroke.getKeyStroke("ENTER"), "selectPlus");
+		plusButton.getActionMap().put("selectPlus", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				plusButton.doClick();				
+			}
+		});
+		
+		
+		update();
+		panel.add(alternativePanel);
 		panel.add(plusButton);
 		return panel;
 	}
@@ -54,11 +70,13 @@ public class AlternativePane extends UpdatePane implements ActionListener {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-		useEntireSpace = new JRadioButton();
+		useEntireSpace = new JRadioButton("Use Entire Possible Alternative Space");
 		useEntireSpace.addActionListener(this);
-
-		specifySpace = new JRadioButton();
-		specifySpace.addActionListener(this);
+		useEntireSpace.setMnemonic(KeyEvent.VK_U);
+		
+		specifySpace = new JRadioButton("Specify Specific Alternatives");
+		specifySpace.addActionListener(this);	
+		specifySpace.setMnemonic(KeyEvent.VK_S);
 
 		ButtonGroup group = new ButtonGroup();
 		group.add(useEntireSpace);
@@ -71,13 +89,31 @@ public class AlternativePane extends UpdatePane implements ActionListener {
 		specifyPanel.setLayout(new BoxLayout(specifyPanel, BoxLayout.X_AXIS));
 
 		useEntirePanel.add(useEntireSpace);
-		useEntirePanel.add(new JLabel("Use Entire Possible Alternative Space"));
 
 		specifyPanel.add(specifySpace);
-		specifyPanel.add(new JLabel("Specify Specific Alternatives"));
 
 		panel.add(useEntirePanel);
 		panel.add(specifyPanel);
+		
+		// Add keyboard shortcuts for radio buttons
+		InputMap panelInputMap = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		panelInputMap.put(KeyStroke.getKeyStroke("U"), "selectUseEntire");
+		panelInputMap.put(KeyStroke.getKeyStroke("S"), "selectSpecify");
+		
+		panel.getActionMap().put("selectUseEntire", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				useEntireSpace.doClick();
+			}
+		});
+		
+		panel.getActionMap().put("selectSpecify", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e){
+				specifySpace.doClick();
+			}
+		});
+		
 		return panel;
 	}
 
@@ -103,31 +139,29 @@ public class AlternativePane extends UpdatePane implements ActionListener {
 		for (Entry<Integer, Alternative> p : set)
 			alternativePanel.add(new AlternativeTuple(p.getKey(), map,
 					parentFrame, alternativePanel));
-		alternativePanel.add(new AlternativeTuple(map, parentFrame,
-				alternativePanel));
+		AlternativeTuple tuple = (AlternativeTuple) alternativePanel.add(
+				new AlternativeTuple(map, parentFrame, alternativePanel));
+		tuple.getTextField().requestFocusInWindow();
 		parentFrame.pack();
 		enableDisableAlternativePanel();
 	}
 	
 	private void enableDisableAlternativePanel(){
 		Component[] components = alternativePanel.getComponents();
-		if (map.useEntireAlternativeSpace()) {
-			for (Component c : components) {
-				c.setEnabled(false);
-			}
-		}else{
-			for (Component c : components) {
-				c.setEnabled(true);
-			}
+		boolean enabled = !map.useEntireAlternativeSpace();
+		for (Component c : components) {
+			c.setEnabled(enabled);
 		}
+		plusButton.setEnabled(enabled);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object source = e.getSource();
 		if (plusButton == source) {
-			alternativePanel.add(new AlternativeTuple(map, parentFrame,
-					alternativePanel));
+			AlternativeTuple tuple = (AlternativeTuple) alternativePanel.add(
+					new AlternativeTuple(map, parentFrame, alternativePanel));
+			tuple.getTextField().requestFocusInWindow();
 			pack();
 		} else if (source == useEntireSpace) {
 			map.setUseEntireAlternativeSpace(true);

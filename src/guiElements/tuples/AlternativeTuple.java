@@ -30,6 +30,10 @@ public class AlternativeTuple extends AbstractTuple<Alternative> implements
 		initializeGUI();
 	}
 
+	public JTextField getTextField(){
+		return alternativeName;
+	}
+	
 	@Override
 	public void initializeGUI() {
 		alternativeName = new JTextField(20);
