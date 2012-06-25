@@ -164,6 +164,10 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 		stakeholderControls = new JPanel();
 		stakeholderControls.setLayout(new FlowLayout());
 		
+		// Set text for field showing user's preference file path
+		curFile = new JTextField();		
+		curFile.setEditable(false);
+		
 		// in non-multistakeholder project
 		// Set current Member to default member
 		if( !isMultipleStakeholder) {
@@ -174,12 +178,6 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 			curMember = defaultMember;
 			loadMemberPreferences();
 		}
-		
-		// Set text for field showing user's preference file path
-		curFile = new JTextField();
-		setCurrentFileField();
-		
-		curFile.setEditable(false);
 		
 		fileControls = new JPanel();
 		fileControls.add(stakeholderControls);
