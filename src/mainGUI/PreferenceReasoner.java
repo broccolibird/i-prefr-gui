@@ -40,6 +40,8 @@ public class PreferenceReasoner extends JApplet {
 	private static AbstractPaneTurner paneTurner;
 	private static JFrame frame;
 	public static boolean loading;
+	
+	private static File curFile;
 
 	public static void main(String[] args) {
 		// new JDialog: name your project
@@ -47,6 +49,7 @@ public class PreferenceReasoner extends JApplet {
 		frame.setPreferredSize(new Dimension(900, 800));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		paneTurner = null;
+		curFile = null;
 		
 		// Setup menu options
 		JMenu fileMenu = new JMenu("File");
@@ -58,6 +61,20 @@ public class PreferenceReasoner extends JApplet {
 		item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK));
 		item.addActionListener(new AbstractAction("Save") {
 			public void actionPerformed(ActionEvent e) {
+				if(paneTurner == null) {
+					JOptionPane.showMessageDialog(frame, "Please create a project before saving.",
+							"Project does not exist", JOptionPane.PLAIN_MESSAGE);
+				} else if (curFile == null){
+					showSaveDialog();
+				} else {
+					save(curFile);
+				}
+			}
+		});
+		
+		item = fileMenu.add("SaveAs");
+		item.addActionListener( new AbstractAction("SaveAs") {
+			public void actionPerformed(ActionEvent e){
 				if(paneTurner == null)
 					JOptionPane.showMessageDialog(frame, "Please create a project before saving.",
 							"Project does not exist", JOptionPane.PLAIN_MESSAGE);
@@ -160,6 +177,8 @@ public class PreferenceReasoner extends JApplet {
 		catch(IOException e) {
 		    e.printStackTrace();
 		}
+		
+		curFile = xmlfile;
 	}
 
 	private static void open(File file) {
@@ -170,13 +189,12 @@ public class PreferenceReasoner extends JApplet {
 		try {
 			dBuilder = dbFactory.newDocumentBuilder();
 			doc = dBuilder.parse(file);
-		} catch (ParserConfigurationException e) {
+		} catch (ParserConfigurationException | SAXException | IOException e) {
 			e.printStackTrace();
-		} catch (SAXException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+			JOptionPane.showMessageDialog(frame, "Failed to open file: "+e.getMessage(),
+					"Error Loading File", JOptionPane.PLAIN_MESSAGE);
+			return;
+		} 
 		
 		// retrieve network type from document
 		NodeList nList = doc.getElementsByTagName("NETWORK");
