@@ -47,4 +47,15 @@ public class Member {
 	public void setPreferenceFilePath(String preferenceFilePath) {
 		this.preferenceFilePath = preferenceFilePath;
 	}
+	
+	public String toXML() {
+		String xml = "\t\t\t<MEMBER ID = '"+key+"'>\n";
+		xml += "\t\t\t\t<NAME>"+name+"</NAME>\n";
+		if(preferenceFilePath != null)
+			xml += "\t\t\t\t<PREFERENCEFILE>"+preferenceFilePath+
+						"</PREFERENCEFILE>\n";
+		xml += "\t\t\t</MEMBER>\n";
+		
+		return xml;
+	}
 }

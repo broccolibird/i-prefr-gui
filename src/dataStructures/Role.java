@@ -52,12 +52,7 @@ public class Role extends NameKeyObject<MemberMap>{
 		role += "\t\t<MEMBERS>\n";
 		Collection<Member> allMembers = (Collection<Member>) getObject().values();
 		for(Member m : allMembers){
-			role += "\t\t\t<MEMBER ID = '"+m.getKey()+"'>\n";
-			role += "\t\t\t\t<NAME>"+m.getName()+"</NAME>\n";
-			if(m.getPreferenceFilePath() != null)
-				role += "\t\t\t\t<PREFERENCEFILE>"+m.getPreferenceFilePath()+
-							"</PREFERENCEFILE>\n";
-			role += "\t\t\t</MEMBER>\n";		
+			role += m.toXML();		
 		}
 		role += "\t\t</MEMBERS>\n";
 		role += "\t</ROLE>\n";
