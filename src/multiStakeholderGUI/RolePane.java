@@ -8,11 +8,15 @@ import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.Map.Entry;
 
+import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
+import javax.swing.InputMap;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 
 import dataStructures.Role;
 import dataStructures.maps.RoleMap;
@@ -47,6 +51,15 @@ public class RolePane extends UpdatePane implements ActionListener{
 		update();
 		plusButton = new JButton("+");
 		plusButton.addActionListener(this);
+		InputMap plusInputMap = plusButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		plusInputMap.put(KeyStroke.getKeyStroke("ENTER"), "selectPlus");
+		plusButton.getActionMap().put("selectPlus", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				plusButton.doClick();				
+			}
+		});
+		
 		panel.add(rolePanel);
 		panel.add(plusButton);
 		return panel;
@@ -55,8 +68,9 @@ public class RolePane extends UpdatePane implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (plusButton == e.getSource()) {
-			rolePanel.add(new RoleTuple(map, parentFrame,
+			RoleTuple tuple = (RoleTuple) rolePanel.add(new RoleTuple(map, parentFrame,
 					rolePanel, graph));
+			tuple.getTextField().requestFocusInWindow();
 			pack();
 		}
 		
@@ -81,7 +95,9 @@ public class RolePane extends UpdatePane implements ActionListener{
 		for (Entry<Integer, Role> p : set)
 			rolePanel.add(new RoleTuple(p.getKey(), map, parentFrame,
 					rolePanel, graph));
-		rolePanel.add(new RoleTuple(map, parentFrame, rolePanel, graph));
+		RoleTuple tuple = (RoleTuple) rolePanel.add(
+				new RoleTuple(map, parentFrame, rolePanel, graph));
+		System.out.println("focus: "+tuple.getTextField().requestFocusInWindow());
 		parentFrame.pack();
 
 	}
