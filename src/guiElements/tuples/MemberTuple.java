@@ -2,7 +2,6 @@ package guiElements.tuples;
 
 import guiElements.AbstractTextListener;
 
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -57,7 +56,8 @@ public class MemberTuple extends AbstractTuple<Member> implements
 	public void actionPerformed(ActionEvent e) {
 		
 		map.remove(key);
-		memberName.setText("");
+		//memberName.setText("");
+		parentPanel.remove(this);
 		parentWindow.pack();
 		
 	}

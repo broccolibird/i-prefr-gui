@@ -2,6 +2,7 @@ package multiStakeholderGUI;
 
 import guiElements.tuples.MemberTuple;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -24,6 +25,7 @@ import dataStructures.maps.MemberMap;
 @SuppressWarnings("serial")
 public class MemberListPane extends UpdatePane implements ActionListener {
 
+	public final static int COLUMNS = 3;
 	Role role;
 	MemberMap map;
 	JFrame parentFrame;
@@ -32,10 +34,13 @@ public class MemberListPane extends UpdatePane implements ActionListener {
 	
 	GridLayout layout;
 	
+	int removed;
+	
 	public MemberListPane(Role role, MemberMap map, JFrame parentFrame) {
 		this.role = role;
 		this.map = map;
 		this.parentFrame = parentFrame;
+		this.removed = 0;
 		
 		createGUI();
 	}
@@ -51,7 +56,7 @@ public class MemberListPane extends UpdatePane implements ActionListener {
 		add(Box.createRigidArea(new Dimension(0, 5)));
 		
 		memberListEntry = new JPanel();
-		layout = new GridLayout(0, 3, 10, 10);
+		layout = new GridLayout(0, COLUMNS, 10, 10);
 		memberListEntry.setLayout(layout);
 		update();
 		add(memberListEntry);
@@ -64,21 +69,35 @@ public class MemberListPane extends UpdatePane implements ActionListener {
 		
 	}
 	
+	public void remove(Component comp) {
+		memberListEntry.remove(comp);
+		removed++;
+		System.out.println("Removed: "+removed);
+		repaint();
+		//revalidate();
+	}
+	
 	public void addRow() {
-		finishRow(3);
+		finishRow(COLUMNS);
 	}
 	
 	public void finishRow(int entries) {
 		for(int i = 0; i < entries; i++) {
 			memberListEntry.add(new MemberTuple(
-					map, parentFrame, memberListEntry));
+					map, parentFrame, this));
 		}
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (plusButton == e.getSource()) {
-			addRow();
+			removed = removed % COLUMNS;
+			if( removed == 0 )
+				addRow();
+			else {
+				finishRow(removed);
+				removed = 0;
+			}
 			revalidate();
 		}
 	}
@@ -97,10 +116,10 @@ public class MemberListPane extends UpdatePane implements ActionListener {
 						map, parentFrame, this));
 			}
 			
-			if(numMembers%3 == 0)
+			if(numMembers%COLUMNS == 0)
 				addRow();
 			else
-				finishRow(3 - numMembers%3);
+				finishRow(COLUMNS - numMembers%COLUMNS);
 		}
 		
 		
