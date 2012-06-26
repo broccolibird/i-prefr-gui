@@ -17,11 +17,11 @@ public class PaneTurnerTCP extends AbstractPaneTurner{
 	public PaneTurnerTCP(JFrame parent, TCPDocument document, boolean multipleStakeholder) {
 		super(parent, multipleStakeholder);
 		this.document=document;
-		setRightComponent(intitializeViewPanes());
+		setRightComponent(initializeViewPanes());
 	}
 
 	@Override
-	protected Component intitializeViewPanes() {
+	protected Component initializeViewPanes() {
 		viewPanes = new UpdatePane[metaPanes.length];
 
 		int index = 5;

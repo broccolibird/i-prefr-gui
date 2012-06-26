@@ -16,11 +16,11 @@ public class PaneTurnerCI extends AbstractPaneTurner{
 		this.document = document;
 		this.isMultipleStakeholder = isMultipleStakeholder;
 		
-		setRightComponent(intitializeViewPanes());
+		setRightComponent(initializeViewPanes());
 	}
 
 	@Override
-	protected Component intitializeViewPanes() {
+	protected Component initializeViewPanes() {
 		int index = 0;
 		viewPanes = new UpdatePane[metaPanes.length];
 		viewPanes[index++] = new SetupProjectPane(document.getMetaData());

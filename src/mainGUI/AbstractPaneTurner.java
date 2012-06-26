@@ -32,7 +32,7 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 	protected UpdatePane[] viewPanes;
 	protected int currentSelected;
 	
-	boolean isMultipleStakeholder;
+	protected boolean isMultipleStakeholder;
 	
 	static String[] s_prefReasSteps = { "Setup Project", "Add Attributes", 
 		"Attribute\nDomains", "Add\nAlternatives", "Alternative\nValues", 
@@ -50,7 +50,7 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 		setLeftComponent(getChooser());
 	}
 
-	protected abstract Component intitializeViewPanes();
+	protected abstract Component initializeViewPanes();
 	
 	public abstract String toXML(File xmlfile);
 
