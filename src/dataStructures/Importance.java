@@ -25,20 +25,20 @@ public class Importance {
 	}
 	
 	public String toXML(){
-		String importance = "\t\t\t<IMPORTANCE ID = '"+key.toString()+"'>\n";
-		importance += "\t\t\t\t<LISTS>\n";
+		String importance = "\t<IMPORTANCE ID = '"+key.toString()+"'>\n";
+		importance += "\t\t<LISTS>\n";
 		for(int i=0;i<lists.length;i++){
-			importance += "\t\t\t\t\t<LIST>\n";
-			importance += "\t\t\t\t\t\t<INDEX>"+i+"</INDEX>\n";
+			importance += "\t\t\t<LIST>\n";
+			importance += "\t\t\t\t<INDEX>"+i+"</INDEX>\n";
 			AttributeList list = lists[i];
 			if(list!=null)
 			for(Attribute a : list){
-				importance += "\t\t\t\t\t\t<ATTRIBUTEKEY>"+a.getAttributeKey().getKey().toString()+"</ATTRIBUTEKEY>\n";
+				importance += "\t\t\t\t<ATTRIBUTEKEY>"+a.getAttributeKey().getKey().toString()+"</ATTRIBUTEKEY>\n";
 			}
-			importance += "\t\t\t\t\t</LIST>\n";
+			importance += "\t\t\t</LIST>\n";
 		}
-		importance += "\t\t\t\t</LISTS>\n";		
-		importance += "\t\t\t</IMPORTANCE>\n";
+		importance += "\t\t</LISTS>\n";		
+		importance += "\t</IMPORTANCE>\n";
 		return importance;
 	}
 	
