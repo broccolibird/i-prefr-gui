@@ -132,10 +132,11 @@ public class PreferenceReasoner extends JApplet {
 		frame.pack();
 	}
 	
-	public AbstractPaneTurner getPaneTurner(){
-		return paneTurner;
-	}
-	
+	/**
+	 * Opens a dialog asking the user if they would like to save changes to the current project
+	 * @return true if the user successfully saves the project or if they choose not to save,
+	 * 			returns false if the user cancels out of the action.
+	 */
 	private static boolean showSaveChangesDialog(){
 		int choice = JOptionPane.showConfirmDialog(frame,
 			    "You are about to leave the current project, would you like to save your changes?",
@@ -149,17 +150,24 @@ public class PreferenceReasoner extends JApplet {
 			return false;
 		}
 	}
+	
+	/**
+	 * Opens a file chooser for the user to select a location to save the project
+	 * @return true if the file is saved successfully
+	 */
 	private static boolean showSaveDialog(){
 		JFileChooser chooser = new JFileChooser();
 		int option = chooser.showSaveDialog(paneTurner);
 		if (option == JFileChooser.APPROVE_OPTION) {
 			File file = chooser.getSelectedFile();
-			save(file);
-			return true;
+			return save(file);
 		}
 		return false;
 	}
 	
+	/**
+	 * Opens a dialog and creates a new project based on the user's selections
+	 */
 	private static void showNewDialog(){
 		
 		NewDialog nd = new NewDialog(frame);
@@ -181,7 +189,13 @@ public class PreferenceReasoner extends JApplet {
 		}
 	}
 
-	private static void save(File xmlfile) {
+	/**
+	 * Saves an xml representation of the project to the
+	 * given file.
+	 * @param xmlfile - file to save to
+	 * @return true if the file is saved successfully
+	 */
+	private static boolean save(File xmlfile) {
 		String xmlRepresentation = paneTurner.toXML(xmlfile);
 		System.out.println(xmlRepresentation);
 		BufferedWriter writer = null;
@@ -190,12 +204,14 @@ public class PreferenceReasoner extends JApplet {
 		}
 		catch (IOException e) {
 		    e.printStackTrace();
+		    return false;
 		}
 		try {
 		    writer.write(xmlRepresentation);
 		}
 		catch(IOException e) {
 		    e.printStackTrace();
+		    return false;
 		}
 		try {
 		    writer.close();
@@ -205,8 +221,13 @@ public class PreferenceReasoner extends JApplet {
 		}
 		
 		curFile = xmlfile;
+		return true;
 	}
 
+	/**
+	 * Opens the given file and loads the project
+	 * @param file
+	 */
 	private static void open(File file) {
 		loading = true;
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
