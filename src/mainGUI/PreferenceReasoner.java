@@ -94,6 +94,7 @@ public class PreferenceReasoner extends JApplet {
 					switchProject = showSaveChangesDialog();
 				}
 				if (switchProject)
+					curFile = null;
 					showNewDialog();
 			}
 		});
@@ -110,7 +111,7 @@ public class PreferenceReasoner extends JApplet {
 					switchProject = showSaveChangesDialog();
 				
 				if ( switchProject ) {
-				
+					curFile = null;
 					//use a chooser to get the file to open
 					JFileChooser chooser = new JFileChooser();
 				    FileNameExtensionFilter filter = new FileNameExtensionFilter(
