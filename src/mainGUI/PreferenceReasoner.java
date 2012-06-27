@@ -174,16 +174,17 @@ public class PreferenceReasoner extends JApplet {
 		NewDialog nd = new NewDialog(frame);
 		RunConfiguration config= nd.showDialog();
 		
-		if (paneTurner != null)
-			frame.remove(paneTurner);
-		
 		if (config == null){
 			//do nothing
 		} else if ( config.cpSelected == true ){
+			if (paneTurner != null)
+				frame.remove(paneTurner);
 			paneTurner = new PaneTurnerTCP(frame, new TCPDocument(config.multipleSelected), config.multipleSelected);
 			frame.getContentPane().add(paneTurner);
 			frame.pack();
 		} else {
+			if (paneTurner != null)
+				frame.remove(paneTurner);
 			paneTurner = new PaneTurnerCI(frame, new CIDocument(config.multipleSelected), config.multipleSelected);
 			frame.getContentPane().add(paneTurner);
 			frame.pack();
