@@ -41,7 +41,7 @@ public class PaneTurnerCI extends AbstractPaneTurner{
 		//TODO - import saved importanceMap!!
 		viewPanes[index++] = new SetupPreferencesPane(parent, document, isMultipleStakeholder);
 		//viewPanes[index++] = new ImportancePane(document.getAttributeMap(),parent,document.getImportanceMap());
-		viewPanes[index] = new ViewResultsPaneCI(document,parent);
+		viewPanes[index] = new ViewResultsPane(document,parent);
 		
 		
 		return viewPanes[currentSelected];

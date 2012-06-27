@@ -34,7 +34,7 @@ public class PaneTurnerTCP extends AbstractPaneTurner{
 		//viewPanes[index] = new SetupGraphPane(document,parent);
 		SetupPreferencesPane preferencesPane = new SetupPreferencesPane(parent, document, isMultipleStakeholder);
 		viewPanes[index++] = preferencesPane;
-		viewPanes[index] = new ViewResultsPaneTCP(document,parent);
+		viewPanes[index] = new ViewResultsPane(document,parent);
 		
 		viewPanes[0] = new SetupProjectPane(document.getMetaData());
 
