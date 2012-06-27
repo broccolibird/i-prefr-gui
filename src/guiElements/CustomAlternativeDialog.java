@@ -56,7 +56,7 @@ public class CustomAlternativeDialog extends JDialog implements ActionListener{
 		// then add a valuemap to the alternative with the defaults if there
 		// isn't one yet
 		if(singleAlternative==null){
-			singleAlternative = new Alternative("custom alternative",new Integer(-1),null);
+			singleAlternative = new Alternative("custom alternative",new Integer(-1),new ValueMap());
 		}
 		
 		ValueMap valueMap = singleAlternative.getObject();
