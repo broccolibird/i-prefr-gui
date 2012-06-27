@@ -11,4 +11,7 @@ public abstract class PreferencePane extends UpdatePane{
 	public abstract boolean loadMemberPreferences(File file);
 	
 	public abstract boolean saveMemberPreferences(File preferenceFile);
+	
+	public abstract boolean existUnsavedChanges();
+	
 }

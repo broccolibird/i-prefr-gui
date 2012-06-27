@@ -237,4 +237,11 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 		return false;
 	}
 
+	@Override
+	public boolean existUnsavedChanges() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
 }

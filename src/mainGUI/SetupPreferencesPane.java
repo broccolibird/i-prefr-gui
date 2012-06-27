@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -82,7 +83,10 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 		stakeholderBox.addActionListener(this);
 		stakeholderBox.invalidate();
 		if(allMembers.size() > 0){
-			stakeholderBox.setSelectedIndex(0);
+			if (curMember != null)
+				stakeholderBox.setSelectedItem(curMember);
+			else
+				stakeholderBox.setSelectedIndex(0);
 		} else {
 			curMember = null;
 		}
@@ -148,7 +152,8 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 		load = new JButton("Load Existing File");
 		load.addActionListener( new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {	
+			public void actionPerformed(ActionEvent e) {
+				checkForUnsavedChanges();
 				loadExistingPreferences();
 			}
 		});
@@ -157,7 +162,14 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 		clear.addActionListener( new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				clearMemberPreferences();				
+				int choice = JOptionPane.showConfirmDialog(parent,
+					    "You are about to clear the current preferences,"+
+					    " would you like to continue?",
+					    "Clear preferences",
+					    JOptionPane.YES_NO_OPTION);
+				
+				if (choice == JOptionPane.YES_OPTION)
+					clearMemberPreferences();				
 			}
 		});
 		
@@ -306,14 +318,51 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 	 */
 	private void loadExistingPreferences() {
 		File file = selectPreferencesFile();
-		curMember.setPreferenceFilePath(file.getAbsolutePath());
-		loadMemberPreferences();		
+		if( file != null) { //user must select a file in order to load
+			curMember.setPreferenceFilePath(file.getAbsolutePath());
+			loadMemberPreferences();
+		}
+	}
+	
+	/**
+	 * Creates a dialog asking the user if they would like to save unsaved
+	 * changes
+	 * @return true if the user would like to save changes
+	 */
+	private boolean showUnsavedChangesDialog() {
+		int choice = JOptionPane.showConfirmDialog(parent,
+			    "The action you have selected will cause any unsaved"+
+			    " changes to be lost. Would you like to save changes now?",
+			    "Save unsaved preferences",
+			    JOptionPane.YES_NO_OPTION);
+		
+		if (choice == JOptionPane.YES_OPTION)
+			return true;
+		
+		return false;
+	}
+	
+	/**
+	 * Checks for unsaved changes in the current importance map
+	 * If they exist, ask user if they would like to save changes
+	 */
+	private void checkForUnsavedChanges() {
+		if(preferencesPanel.existUnsavedChanges()){
+			if(showUnsavedChangesDialog()){
+				if(curMember.getPreferenceFilePath() == null) {
+					savePreferencesAs();
+				}else{
+					savePreferences();
+				}
+			}
+		}
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		if( e.getSource() == stakeholderBox && curMember != stakeholderBox.getSelectedItem()) {
+			checkForUnsavedChanges();
 			curMember = (Member) stakeholderBox.getSelectedItem();
 			loadMemberPreferences();
 		}

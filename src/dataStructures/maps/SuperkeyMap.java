@@ -12,6 +12,7 @@ public class SuperkeyMap<A> extends TreeMap<Integer, A> {
 	private static int nextUniqueID = 0;
 	protected int uniqueID;
 	private ArrayList<Integer> keySuperset;
+	private boolean saved;
 	
 	public static void setNextUniqueID(int newUniqueID){
 		nextUniqueID = newUniqueID;
@@ -26,12 +27,14 @@ public class SuperkeyMap<A> extends TreeMap<Integer, A> {
 		super();
 		keySuperset = new ArrayList<Integer>();
 		this.uniqueID = nextUniqueID++;
+		saved = true;
 	}
 
 	public SuperkeyMap(int uniqueID) {
 		super();
 		this.uniqueID = uniqueID;
 		this.keySuperset = new ArrayList<Integer>();
+		saved = true;
 	}
 
 	public Integer getUniqueKey() {
@@ -60,6 +63,7 @@ public class SuperkeyMap<A> extends TreeMap<Integer, A> {
 					+ " replacing " + toReturn.toString()
 					+ " durring a load proceedure.");
 		}
+		saved = false;
 		return toReturn;
 	}
 
@@ -77,6 +81,7 @@ public class SuperkeyMap<A> extends TreeMap<Integer, A> {
 		if (key.getClass() != Integer.class)
 			throw new IllegalArgumentException();
 		keySuperset.remove(key);
+		saved = false;
 		return super.remove(key);
 	}
 	
@@ -122,5 +127,13 @@ public class SuperkeyMap<A> extends TreeMap<Integer, A> {
 		if (uniqueID != other.uniqueID)
 			return false;
 		return true;
+	}
+	
+	public boolean existUnsavedChanges() {
+		return !saved;
+	}
+	
+	public void setSaved(boolean saved) {
+		this.saved = saved;
 	}
 }

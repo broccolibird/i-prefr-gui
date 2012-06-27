@@ -151,6 +151,9 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 				}
 				map.put(thisKey, thisValue);
 			}
+			
+			map.setSaved(true);
+			
 			return true;
 		}
 
@@ -175,7 +178,14 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 			    e.printStackTrace();
 			}
 			
+			map.setSaved(true);
+			
 			return true;
 		}
+
+		@Override
+		public boolean existUnsavedChanges() {
+			return map.existUnsavedChanges();
+		}	
 
 }
