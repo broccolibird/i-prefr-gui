@@ -20,8 +20,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
-import mainGUI.ViewResultsPaneTCP.AlternativeListener;
-
 import dataStructures.AbstractDocument;
 import dataStructures.Alternative;
 import dataStructures.AlternativeList;
@@ -30,6 +28,7 @@ import dataStructures.Role;
 import dataStructures.maps.MemberMap;
 import dataStructures.maps.RoleMap;
 
+@SuppressWarnings("serial")
 public class ViewResultsPane extends UpdatePane implements ActionListener {
 	public static final int CONSISTENCY = 0;
 	public static final int DOMINANCE = 1;
@@ -54,6 +53,7 @@ public class ViewResultsPane extends UpdatePane implements ActionListener {
 	
 	private JPanel dominancePanel;
 	
+	JPanel stakeholderPanel;
 	private JComboBox stakeholderBox;
 	private Member curMember;
 	private boolean allMembers;
@@ -73,6 +73,8 @@ public class ViewResultsPane extends UpdatePane implements ActionListener {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
+		stakeholderPanel = new JPanel();
+		
 		JPanel consistencyPanel = createConsistencyPanel();
 	
 		JPanel resultsPanel = createResultsPanel();
@@ -80,6 +82,7 @@ public class ViewResultsPane extends UpdatePane implements ActionListener {
 		dominancePanel = createDominancePanel();
 
 		update();
+		panel.add(stakeholderPanel);
 		panel.add(consistencyPanel);
 		panel.add(dominancePanel);
 		panel.add(resultsPanel);
@@ -88,25 +91,21 @@ public class ViewResultsPane extends UpdatePane implements ActionListener {
 	
 	@Override
 	public void update() {
-		dominancePanel.removeAll();
-		dominanceButton = new JButton("Dominance");
-		dominanceButton.addActionListener(this);
-		leftDominanceSet= new JTextField("{}");
-		leftDominanceSet.setEditable(false);
-		leftDominanceSet.addMouseListener(new AlternativeListener(leftDominanceSet,leftAlternative));
-		JLabel greaterThan = new JLabel(">");
-		rightDominanceSet=new JTextField("{}");
-		rightDominanceSet.setEditable(false);
-		rightDominanceSet.addMouseListener(new AlternativeListener(rightDominanceSet,rightAlternative));
-		dominanceField=new JTextField("result");
-		dominanceField.setEditable(false);
 		
-		dominancePanel.add(dominanceButton);
-		dominancePanel.add(leftDominanceSet);
-		dominancePanel.add(greaterThan);
-		dominancePanel.add(rightDominanceSet);
-		dominancePanel.add(dominanceField);
-		//TODO - update the resultsField
+		RoleMap rm = document.getRoleMap();
+		
+		if (rm.isMultipleStakeholder()) {
+			stakeholderPanel.removeAll();
+			setupStakeholderBox();
+			stakeholderPanel.add(stakeholderBox);
+		} else {
+			// set curMember to default member
+			curMember = rm.get(0).getObject().get(0); 
+			allMembers = false;
+		}
+		
+		resetResultFields();
+		
 		parentFrame.pack();
 	}
 	
@@ -125,6 +124,23 @@ public class ViewResultsPane extends UpdatePane implements ActionListener {
 	protected JPanel createDominancePanel() {
 		JPanel dominancePanel = new JPanel();
 		dominancePanel.setLayout(new BoxLayout(dominancePanel, BoxLayout.X_AXIS));
+		dominanceButton = new JButton("Dominance");
+		dominanceButton.addActionListener(this);
+		leftDominanceSet= new JTextField("{}");
+		leftDominanceSet.setEditable(false);
+		leftDominanceSet.addMouseListener(new AlternativeListener(leftDominanceSet,leftAlternative));
+		JLabel greaterThan = new JLabel(">");
+		rightDominanceSet=new JTextField("{}");
+		rightDominanceSet.setEditable(false);
+		rightDominanceSet.addMouseListener(new AlternativeListener(rightDominanceSet,rightAlternative));
+		dominanceField=new JTextField("result");
+		dominanceField.setEditable(false);
+		
+		dominancePanel.add(dominanceButton);
+		dominancePanel.add(leftDominanceSet);
+		dominancePanel.add(greaterThan);
+		dominancePanel.add(rightDominanceSet);
+		dominancePanel.add(dominanceField);
 		return dominancePanel;
 	}
 	
@@ -139,6 +155,11 @@ public class ViewResultsPane extends UpdatePane implements ActionListener {
 		resultsPanel.add(topNextButton);
 		resultsPanel.add(resultsField);
 		return resultsPanel;
+	}
+	
+	protected void resetResultFields() {
+		consistencyField.setText("result");
+		dominanceField.setText("result");
 	}
 	
 	/**
@@ -180,17 +201,36 @@ public class ViewResultsPane extends UpdatePane implements ActionListener {
 			}else{
 				sendQuery(NEXT);
 			}
-		}		
+		} else if (source == stakeholderBox) {
+			Object selectedItem = stakeholderBox.getSelectedItem();
+			if (selectedItem instanceof Member) {
+				curMember = (Member) selectedItem;
+				allMembers = false;
+			} else if (selectedItem.equals("All Members")) {
+				curMember = null;
+				allMembers = true;
+			}
+			resetResultFields();
+		}
 	}
 	
 	protected void sendQuery(int type) {
 		switch (type) {
 		case CONSISTENCY:
 			System.out.println("send cosistency query");
+			if (allMembers)
+				consistencyField.setText("new results for All Members");
+			else
+				consistencyField.setText("new results for "+curMember);
+
 			//TODO - update result field
 			break;
 		case DOMINANCE:
 			System.out.println("send dominance query");
+			if (allMembers)
+				dominanceField.setText("new results for All Members");
+			else
+				dominanceField.setText("new results for "+curMember);
 			//TODO - update result field
 			break;
 		case TOP:
