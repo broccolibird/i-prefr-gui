@@ -243,5 +243,4 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 		return false;
 	}
 
-
 }

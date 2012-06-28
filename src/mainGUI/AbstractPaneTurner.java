@@ -17,6 +17,8 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
 
+import dataStructures.AbstractDocument;
+
 @SuppressWarnings("serial")
 public abstract class AbstractPaneTurner extends JSplitPane {
 
@@ -34,6 +36,10 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 	
 	protected boolean isMultipleStakeholder;
 	
+	protected AbstractDocument document;
+	
+	protected SetupPreferencesPane preferencesPane;
+	
 	static String[] s_prefReasSteps = { "Setup Project", "Add Attributes", 
 		"Attribute\nDomains", "Add\nAlternatives", "Alternative\nValues", 
 		"Setup Preferences", "View Result" }; 
@@ -42,8 +48,9 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 		"Add Multiple\nStakeholders", "Setup Preferences", "View Result" };
 
 	// TODO - make currentSelected come from AbstractDocument MetaData
-	public AbstractPaneTurner(JFrame parent, boolean isMultipleStakeholder) {
+	public AbstractPaneTurner(JFrame parent, AbstractDocument document, boolean isMultipleStakeholder) {
 		this.parent = parent;
+		this.document = document;
 		this.isMultipleStakeholder = isMultipleStakeholder;
 	
 		setupActions();
@@ -141,6 +148,19 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 
 		}
 		metaPanes[currentSelected].toggleColor();
+	}
+	
+	public boolean existChanges() {
+		return document.existChanges();
+	}
+
+	public void setSaved(boolean saved) {
+		document.setSaved(saved);
+		
+	}
+	
+	public void checkChangesInPreferences() {
+		preferencesPane.checkForUnsavedChanges();
 	}
 
 }

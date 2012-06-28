@@ -13,6 +13,8 @@ import mainGUI.SetupPreferencesPane;
 
 import dataStructures.Attribute;
 import dataStructures.AttributeKey;
+import dataStructures.Domain;
+import dataStructures.DomainValueList;
 import dataStructures.maps.AttributeMap;
 import guiElements.AbstractTextListener;
 
@@ -61,7 +63,7 @@ public class AttributeTuple extends AbstractTuple<Attribute> implements
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == xButton) {
 			Attribute a = map.get(key);
-			if (preferencesPane.getGraph() != null) {
+			if (preferencesPane != null && preferencesPane.getGraph() != null) {
 				preferencesPane.getGraph().removeVertex(a);
 			}
 			parentPanel.remove(this);
@@ -93,7 +95,8 @@ public class AttributeTuple extends AbstractTuple<Attribute> implements
 			if (a == null) {
 				newEntry = true;
 				System.out.println("here making the new Attribute with key: "+key);
-				a = new Attribute("", new AttributeKey(key), null);
+				AttributeKey attrKey = new AttributeKey(key);
+				a = new Attribute("", attrKey, null);
 			}
 			if (field == attributeName) {
 				a.setName(attributeName.getText());

@@ -35,7 +35,7 @@ import dataStructures.RunConfiguration;
 import dataStructures.TCPDocument;
 
 @SuppressWarnings("serial")
-public class PreferenceReasoner extends JApplet {
+public class PreferenceReasoner extends JApplet{
 	
 	private static AbstractPaneTurner paneTurner;
 	private static JFrame frame;
@@ -47,6 +47,7 @@ public class PreferenceReasoner extends JApplet {
 		// new JDialog: name your project
 		frame = new JFrame();
 		frame.setPreferredSize(new Dimension(900, 800));
+		frame.addWindowListener(new ReasonerWindowListener());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		paneTurner = null;
 		curFile = null;
@@ -89,13 +90,13 @@ public class PreferenceReasoner extends JApplet {
 		item.addActionListener(new AbstractAction("New") {
 			public void actionPerformed(ActionEvent e) {
 				boolean switchProject = true;
-				if (paneTurner != null ) {
+				if ( existChanges() ) {
 					//offer to save old abstractDocument before opening new one
 					switchProject = showSaveChangesDialog();
 				}
-				if (switchProject)
-					curFile = null;
+				if (switchProject) {
 					showNewDialog();
+				}
 			}
 		});
 
@@ -107,7 +108,7 @@ public class PreferenceReasoner extends JApplet {
 				//offer to save old abstractDocument before opening new one
 				boolean switchProject = true;
 				
-				if( paneTurner != null )
+				if( existChanges() )
 					switchProject = showSaveChangesDialog();
 				
 				if ( switchProject ) {
@@ -133,12 +134,22 @@ public class PreferenceReasoner extends JApplet {
 		frame.pack();
 	}
 	
+	
+	public static boolean existChanges() {
+		if (paneTurner != null) {
+			paneTurner.checkChangesInPreferences();
+			return paneTurner.existChanges();
+		}
+		
+		return false;
+	}
+	
 	/**
 	 * Opens a dialog asking the user if they would like to save changes to the current project
 	 * @return true if the user successfully saves the project or if they choose not to save,
 	 * 			returns false if the user cancels out of the action.
 	 */
-	private static boolean showSaveChangesDialog(){
+	public static boolean showSaveChangesDialog(){
 		int choice = JOptionPane.showConfirmDialog(frame,
 			    "You are about to leave the current project, would you like to save your changes?",
 			    "Save Changes",
@@ -147,9 +158,9 @@ public class PreferenceReasoner extends JApplet {
 			return showSaveDialog();
 		} else if (choice == JOptionPane.NO_OPTION) {
 			return true;
-		} else {
-			return false;
 		}
+		return false;
+		
 	}
 	
 	/**
@@ -175,20 +186,22 @@ public class PreferenceReasoner extends JApplet {
 		RunConfiguration config= nd.showDialog();
 		
 		if (config == null){
-			//do nothing
-		} else if ( config.cpSelected == true ){
-			if (paneTurner != null)
-				frame.remove(paneTurner);
+			return;
+		} 
+		
+		if (paneTurner != null)
+			frame.remove(paneTurner);
+		
+		if ( config.cpSelected == true ){
 			paneTurner = new PaneTurnerTCP(frame, new TCPDocument(config.multipleSelected), config.multipleSelected);
-			frame.getContentPane().add(paneTurner);
-			frame.pack();
 		} else {
-			if (paneTurner != null)
-				frame.remove(paneTurner);
-			paneTurner = new PaneTurnerCI(frame, new CIDocument(config.multipleSelected), config.multipleSelected);
-			frame.getContentPane().add(paneTurner);
-			frame.pack();
+			paneTurner = new PaneTurnerCI(frame, new CIDocument(config.multipleSelected), config.multipleSelected);	
 		}
+		
+		curFile = null;
+		
+		frame.getContentPane().add(paneTurner);
+		frame.pack();
 	}
 
 	/**
@@ -223,6 +236,7 @@ public class PreferenceReasoner extends JApplet {
 		}
 		
 		curFile = xmlfile;
+		paneTurner.setSaved(true);
 		return true;
 	}
 
@@ -295,4 +309,5 @@ public class PreferenceReasoner extends JApplet {
 		// same for TCPDocument
 		
 	}
+
 }

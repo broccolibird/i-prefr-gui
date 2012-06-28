@@ -38,7 +38,7 @@ import mainGUI.UpdatePane;
 @SuppressWarnings("serial")
 public class HierarchyPane extends UpdatePane implements ActionListener {
 	
-	private AbstractDocument abstractDocument;
+	private AbstractDocument document;
 	private RoleHierarchy graph;
 	
 	Factory<Integer> edgeFactory;
@@ -60,11 +60,11 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 	
 	
 	public HierarchyPane(AbstractDocument abstractDocument) {
-		this.abstractDocument = abstractDocument;
+		this.document = abstractDocument;
 		
 		RoleMap rm = abstractDocument.getRoleMap();
 		if( rm.getRoleHierarchy() == null) {
-			graph = new RoleHierarchy();
+			graph = new RoleHierarchy(document.getRoleMap());
 			layout = new StaticLayout(graph);
 			graph.setLayout(layout);
 			edgeFactory = new Factory<Integer>() {
@@ -158,7 +158,7 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 	
 	private void setupRoleBox() {
 		// make combobox with all attributes
-		Role[] allRoles = abstractDocument.getRoleMap().values()
+		Role[] allRoles = document.getRoleMap().values()
 				.toArray(new Role[0]);
 		roleBox = new JComboBox<Role>(allRoles);
 

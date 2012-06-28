@@ -5,14 +5,18 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
+import dataStructures.ChangeTracker;
+
 import mainGUI.PreferenceReasoner;
 
 @SuppressWarnings("serial")
-public class SuperkeyMap<A> extends TreeMap<Integer, A> {
+public class SuperkeyMap<A> extends TreeMap<Integer, A> 
+		implements ChangeTracker {
+	
 	private static int nextUniqueID = 0;
 	protected int uniqueID;
 	private ArrayList<Integer> keySuperset;
-	private boolean saved;
+	protected boolean saved;
 	
 	public static void setNextUniqueID(int newUniqueID){
 		nextUniqueID = newUniqueID;

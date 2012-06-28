@@ -332,7 +332,8 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 	private boolean showUnsavedChangesDialog() {
 		int choice = JOptionPane.showConfirmDialog(parent,
 			    "The action you have selected will cause any unsaved"+
-			    " changes to be lost. Would you like to save changes now?",
+			    " changes to "+curMember.toString()+"'s preferences to be lost.\n"+
+			    " Would you like to save changes now?",
 			    "Save unsaved preferences",
 			    JOptionPane.YES_NO_OPTION);
 		
@@ -346,7 +347,7 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 	 * Checks for unsaved changes in the current importance map
 	 * If they exist, ask user if they would like to save changes
 	 */
-	private void checkForUnsavedChanges() {
+	public void checkForUnsavedChanges() {
 		if(preferencesPanel.existUnsavedChanges()){
 			if(showUnsavedChangesDialog()){
 				if(curMember.getPreferenceFilePath() == null) {

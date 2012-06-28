@@ -2,9 +2,10 @@ package mainGUI;
 
 import java.io.File;
 
+import dataStructures.ChangeTracker;
 import dataStructures.Member;
 
-public abstract class PreferencePane extends UpdatePane{
+public abstract class PreferencePane extends UpdatePane {
 
 	public abstract void clearPane();
 	

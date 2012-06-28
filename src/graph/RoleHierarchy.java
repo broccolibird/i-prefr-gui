@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import dataStructures.Role;
+import dataStructures.maps.RoleMap;
 
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
@@ -36,8 +37,13 @@ import edu.uci.ics.jung.graph.Tree;
 @SuppressWarnings({ "serial", "rawtypes" })
 public class RoleHierarchy extends DirectedSparseGraph<Role,Integer>
 {
+	RoleMap map;
 	AbstractLayout<Role, Integer> layout;
 	int nextEdge;
+	
+	public RoleHierarchy(RoleMap map) {
+		this.map = map;
+	}
 	
 	public AbstractLayout<Role, Integer> getLayout() {
 		return layout;
@@ -86,8 +92,31 @@ public class RoleHierarchy extends DirectedSparseGraph<Role,Integer>
         vertices.get(source).getSecond().put(dest, edge);
         vertices.get(dest).getFirst().put(source, edge);
 
+        // new edge, role map has unsaved changes
+        map.setSaved(false);
         return true;
     }
+	
+	@Override
+	public boolean addVertex(Role vertex){
+		// new vertex, role map has unsaved changes
+		map.setSaved(false);
+		return super.addVertex(vertex);
+	}
+	
+	@Override
+	public boolean removeEdge(Integer edge) {
+		// edge removed, role map has unsaved changes
+		map.setSaved(false);
+		return super.removeEdge(edge);
+	}
+	
+	@Override
+	public boolean removeVertex(Role vertex) {
+		// vertex removed, role map has unsaved changes
+		map.setSaved(false);
+		return super.removeVertex(vertex);
+	}
 	
 	private boolean makesCycle(Role source, Role dest) {
 		Collection<Integer> outEdges =  getOutEdges(dest);

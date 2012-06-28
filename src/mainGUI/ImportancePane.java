@@ -152,6 +152,7 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 				map.put(thisKey, thisValue);
 			}
 			
+			// loaded preferences are already saved
 			map.setSaved(true);
 			
 			return true;
@@ -186,6 +187,7 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 		@Override
 		public boolean existUnsavedChanges() {
 			return map.existUnsavedChanges();
-		}	
+		}
+
 
 }

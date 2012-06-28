@@ -94,6 +94,8 @@ public class MemberTuple extends AbstractTuple<Member> implements
 					if (newEntry) {
 						map.put(key, m);
 					}
+					// Member info has changed, set map to unsaved
+					map.setSaved(false);
 					parentWindow.pack();
 				}
 			}

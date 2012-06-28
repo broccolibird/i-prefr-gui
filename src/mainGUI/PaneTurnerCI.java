@@ -9,12 +9,9 @@ import dataStructures.CIDocument;
 
 @SuppressWarnings("serial")
 public class PaneTurnerCI extends AbstractPaneTurner{
-	private CIDocument document;
 	
 	public PaneTurnerCI(JFrame parent, CIDocument document, boolean isMultipleStakeholder) {
-		super(parent, isMultipleStakeholder);
-		this.document = document;
-		this.isMultipleStakeholder = isMultipleStakeholder;
+		super(parent, document, isMultipleStakeholder);
 		
 		setRightComponent(initializeViewPanes());
 	}
@@ -39,7 +36,8 @@ public class PaneTurnerCI extends AbstractPaneTurner{
 			viewPanes[index++] = new StakeholderPane(parent, document, this);
 		} 
 		//TODO - import saved importanceMap!!
-		viewPanes[index++] = new SetupPreferencesPane(parent, document, isMultipleStakeholder);
+		preferencesPane = new SetupPreferencesPane(parent, document, isMultipleStakeholder);
+		viewPanes[index++] = preferencesPane;
 		//viewPanes[index++] = new ImportancePane(document.getAttributeMap(),parent,document.getImportanceMap());
 		viewPanes[index] = new ViewResultsPane(document,parent);
 		

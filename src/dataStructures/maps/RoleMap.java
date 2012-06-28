@@ -6,6 +6,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Set;
 import java.util.Map.Entry;
 
@@ -53,6 +54,7 @@ public class RoleMap extends SuperkeyMap<Role>{
 		map.put(0, m);
 		Role r = new Role("default", 0, map);
 		put(0, r);
+		setSaved(true); //default member should not be a "change"
 	}
 	
 	public boolean isMultipleStakeholder(){
@@ -65,6 +67,35 @@ public class RoleMap extends SuperkeyMap<Role>{
 	
 	public RoleHierarchy getRoleHierarchy() {
 		return roleHierarchy;
+	}
+	
+	@Override
+	public boolean existUnsavedChanges() {
+		// check if the map has unsaved changes
+		if(!saved) 
+			return true;
+		
+		// check if each role has unsaved changes
+		Collection<Role> allRoles = values();
+		for(Role role : allRoles){
+			if (role.getObject().existUnsavedChanges())
+				return true;
+		}
+		
+		// there are no unsaved changes
+		return false;
+		
+	}
+	
+	@Override
+	public void setSaved(boolean saved) {
+		this.saved = saved;
+		if(saved) {
+			Collection<Role> allRoles = values();
+			for(Role role : allRoles){
+				role.getObject().setSaved(saved);
+			}
+		}
 	}
 	
 	/**

@@ -221,7 +221,7 @@ public abstract class AbstractDocument {
 				e.printStackTrace();
 			}
 			
-			RoleHierarchy rh = new RoleHierarchy();
+			RoleHierarchy rh = new RoleHierarchy(roleMap);
 			StaticLayout sl = new StaticLayout(rh);
 			rh.setLayout(sl);
 			roleMap.setRoleHierarchy(rh);
@@ -287,6 +287,29 @@ public abstract class AbstractDocument {
 	
 	public abstract String getNetworkXML();
 	
+	public boolean existChanges() {
+		
+		boolean changes = metaData.existChanges();
+		changes |= attributeMap.existUnsavedChanges();
+		changes |= alternativeMap.existUnsavedChanges();
+		changes |= roleMap.existUnsavedChanges();
+		
+		System.out.println("changes:\n"+
+				"\tmetadata: "+ metaData.existChanges()+
+				"\n\tattribute: "+attributeMap.existUnsavedChanges()+
+				"\n\talternative: "+alternativeMap.existUnsavedChanges()+
+				"\n\trole: "+roleMap.existUnsavedChanges());
+		
+		return changes;
+	}
+	
+	public void setSaved(boolean saved) {
+		metaData.setSaved(true);
+		attributeMap.setSaved(true);
+		alternativeMap.setSaved(true);
+		roleMap.setSaved(true);	
+	}
+	
 	//Some protocol for writing 'toXML()' functions:
 	//all tags should be all caps for simplicity
 	//the depth of an element determines the number of tabs, as expected
@@ -308,4 +331,6 @@ public abstract class AbstractDocument {
 		doc += "</DOCUMENT>";
 		return doc;
 	}
+
+	
 }
