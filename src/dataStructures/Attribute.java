@@ -1,7 +1,8 @@
 package dataStructures;
 
+
 public class Attribute extends NameKeyObject<Domain> implements
-		Comparable<Attribute> {
+		Comparable<Attribute>, Vertex {
 	private AttributeKey attributeKey;
 	private boolean isUsed;
 

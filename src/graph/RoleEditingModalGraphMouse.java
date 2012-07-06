@@ -20,16 +20,13 @@ import javax.swing.plaf.basic.BasicIconFactory;
 
 import org.apache.commons.collections15.Factory;
 
-import dataStructures.maps.RoleMap;
+import dataStructures.Vertex;
 
-import edu.uci.ics.jung.graph.SparseMultigraph;
 import edu.uci.ics.jung.visualization.MultiLayerTransformer;
 import edu.uci.ics.jung.visualization.RenderContext;
-import edu.uci.ics.jung.visualization.annotations.AnnotatingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.AbstractModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.AnimatedPickingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.CrossoverScalingControl;
-import edu.uci.ics.jung.visualization.control.EditingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.EditingPopupGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.LabelEditingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
@@ -38,17 +35,16 @@ import edu.uci.ics.jung.visualization.control.RotatingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.ScalingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.ShearingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.TranslatingGraphMousePlugin;
-import edu.uci.ics.jung.visualization.control.EditingModalGraphMouse.ModeKeyAdapter;
-import edu.uci.ics.jung.visualization.control.ModalGraphMouse.Mode;
+import graph.jungClasses.AnnotatingGraphMousePlugin;
 
 public class RoleEditingModalGraphMouse<V, E> extends AbstractModalGraphMouse
 		implements ModalGraphMouse, ItemSelectable{
 	
-	protected Factory<V> vertexFactory;
+	protected Factory<Vertex> vertexFactory;
 	protected Factory<E> edgeFactory;
-	protected RoleEditingGraphMousePlugin<V,E> editingPlugin; //
+	protected VertexEditingGraphMousePlugin<E> editingPlugin; //
 	protected LabelEditingGraphMousePlugin<V,E> labelEditingPlugin;
-	protected RoleEditingPopupPlugin<V,E> popupEditingPlugin;
+	protected RoleEditingPopupPlugin<Vertex, E> popupEditingPlugin;
 	protected AnnotatingGraphMousePlugin<V,E> annotatingPlugin;
 	protected MultiLayerTransformer basicTransformer;
 	protected RenderContext<V,E> rc;
@@ -60,7 +56,7 @@ public class RoleEditingModalGraphMouse<V, E> extends AbstractModalGraphMouse
 	 *
 	 */
 	public RoleEditingModalGraphMouse(RenderContext<V,E> rc,
-			Factory<V> vertexFactory, Factory<E> edgeFactory) {
+			Factory<Vertex> vertexFactory, Factory<E> edgeFactory) {
 		this(rc, vertexFactory, edgeFactory, 1.1f, 1/1.1f);
 	}
 
@@ -70,7 +66,7 @@ public class RoleEditingModalGraphMouse<V, E> extends AbstractModalGraphMouse
 	 * @param out override value for scale out
 	 */
 	public RoleEditingModalGraphMouse(RenderContext<V,E> rc,
-			Factory<V> vertexFactory, Factory<E> edgeFactory, float in, float out) {
+			Factory<Vertex> vertexFactory, Factory<E> edgeFactory, float in, float out) {
 		super(in,out);
 		this.vertexFactory = vertexFactory;
 		this.edgeFactory = edgeFactory;
@@ -92,10 +88,10 @@ public class RoleEditingModalGraphMouse<V, E> extends AbstractModalGraphMouse
 		scalingPlugin = new ScalingGraphMousePlugin(new CrossoverScalingControl(), 0, in, out);
 		rotatingPlugin = new RotatingGraphMousePlugin();
 		shearingPlugin = new ShearingGraphMousePlugin();
-		editingPlugin = new RoleEditingGraphMousePlugin<V,E>(vertexFactory, edgeFactory);
+		editingPlugin = new VertexEditingGraphMousePlugin<E>(vertexFactory, edgeFactory);
 		labelEditingPlugin = new LabelEditingGraphMousePlugin<V,E>();
 		annotatingPlugin = new AnnotatingGraphMousePlugin<V,E>(rc);
-		popupEditingPlugin = new RoleEditingPopupPlugin<V,E>(vertexFactory, edgeFactory);
+		popupEditingPlugin = new RoleEditingPopupPlugin<Vertex,E>(vertexFactory, edgeFactory);
 		add(scalingPlugin);
 		setMode(Mode.EDITING);
 	}
@@ -303,7 +299,7 @@ public class RoleEditingModalGraphMouse<V, E> extends AbstractModalGraphMouse
 	/**
 	 * @return the editingPlugin
 	 */
-	public RoleEditingGraphMousePlugin<V, E> getEditingPlugin() {
+	public VertexEditingGraphMousePlugin<E> getEditingPlugin() {
 		return editingPlugin;
 	}
 
@@ -317,7 +313,7 @@ public class RoleEditingModalGraphMouse<V, E> extends AbstractModalGraphMouse
 	/**
 	 * @return the popupEditingPlugin
 	 */
-	public EditingPopupGraphMousePlugin<V, E> getPopupEditingPlugin() {
+	public EditingPopupGraphMousePlugin<Vertex, E> getPopupEditingPlugin() {
 		return popupEditingPlugin;
 	}
 }

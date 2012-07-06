@@ -24,7 +24,6 @@ import org.apache.commons.collections15.map.LazyMap;
 
 import dataStructures.AbstractDocument;
 import dataStructures.Attribute;
-import dataStructures.Member;
 import dataStructures.maps.EdgeStatementMap;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
@@ -184,7 +183,7 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 			if (!selectedAttribute.isUsed()) {
 //				System.out.println("setting gm attribute to: "
 //						+ selectedAttribute.getName());
-				graphMouse.getEditingPlugin().setAttribute(selectedAttribute);
+				graphMouse.getEditingPlugin().setVertex(selectedAttribute);
 			} else {
 //				System.out.println("attribute is already used");
 //				// maybe warn the user that their selection is not going to work
@@ -215,7 +214,7 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 
 	class VertexFactory implements Factory<Attribute> {
 		public Attribute create() {
-			return graphMouse.getEditingPlugin().getSelectedAttribute();
+			return (Attribute) graphMouse.getEditingPlugin().getSelectedVertex();
 		}
 	}
 

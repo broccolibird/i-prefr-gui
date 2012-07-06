@@ -19,6 +19,7 @@ import org.apache.commons.collections15.functors.ConstantTransformer;
 
 import dataStructures.AbstractDocument;
 import dataStructures.Role;
+import dataStructures.Vertex;
 import dataStructures.maps.MemberMap;
 import dataStructures.maps.RoleMap;
 
@@ -43,9 +44,9 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 	
 	Factory<Integer> edgeFactory;
 
-    Factory<Role> vertexFactory = new Factory<Role>() {
+    Factory<Vertex> vertexFactory = new Factory<Vertex>() {
 		public Role create() {
-			return graphMouse.getEditingPlugin().getSelectedRole();
+			return (Role) graphMouse.getEditingPlugin().getSelectedVertex();
 		}};
 		
 	private AbstractLayout<Role, Integer> layout;
@@ -102,6 +103,7 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
         
         vv.setGraphMouse(graphMouse);
         vv.addKeyListener(graphMouse.getModeKeyListener());
+        graph.setGraphMouse(graphMouse);
         
         // Add zoom controls
         final ScalingControl scaler = new CrossoverScalingControl();
@@ -133,7 +135,7 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 			Role selectedRole = (Role) roleBox
 					.getSelectedItem();
 			if (!selectedRole.isUsed()) {
-				graphMouse.getEditingPlugin().setRole(selectedRole);
+				graphMouse.getEditingPlugin().setVertex(selectedRole);
 			} else {
 //				System.out.println("stakeholder is already used");
 //				// maybe warn the user that their selection is not going to work

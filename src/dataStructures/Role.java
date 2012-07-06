@@ -1,5 +1,6 @@
 package dataStructures;
 
+
 import java.util.Collection;
 
 import dataStructures.maps.MemberMap;
@@ -11,7 +12,8 @@ import dataStructures.maps.MemberMap;
  * @author Kat
  *
  */
-public class Role extends NameKeyObject<MemberMap>{
+public class Role extends NameKeyObject<MemberMap>
+		implements Vertex {
 
 	// Role has been added to the RoleHierarchy graph
 	private boolean isUsed;

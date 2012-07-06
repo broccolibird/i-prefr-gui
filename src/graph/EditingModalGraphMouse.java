@@ -22,6 +22,7 @@ import javax.swing.plaf.basic.BasicIconFactory;
 
 import org.apache.commons.collections15.Factory;
 
+import dataStructures.Vertex;
 import dataStructures.maps.AttributeMap;
 import dataStructures.maps.EdgeStatementMap;
 import edu.uci.ics.jung.graph.SparseMultigraph;
@@ -58,7 +59,7 @@ public class EditingModalGraphMouse<V, E> extends AbstractModalGraphMouse
 
 	protected Factory<V> vertexFactory;
 	protected Factory<E> edgeFactory;
-	protected AttributeEditingPlugin<V, E> editingPlugin;
+	protected VertexEditingGraphMousePlugin<E> editingPlugin;
 	protected LabelEditingGraphMousePlugin<V, E> labelEditingPlugin;
 	protected AttributeEditingPopupPlugin<V, E> popupEditingPlugin;
 	protected AnnotationDialogMousePlugin<V, E> annotatingPlugin;
@@ -125,7 +126,7 @@ public class EditingModalGraphMouse<V, E> extends AbstractModalGraphMouse
 				new CrossoverScalingControl(), 0, in, out);
 		rotatingPlugin = new RotatingGraphMousePlugin();
 		shearingPlugin = new ShearingGraphMousePlugin();
-		editingPlugin = new AttributeEditingPlugin<V, E>(vertexFactory,
+		editingPlugin = new VertexEditingGraphMousePlugin<E>((Factory<Vertex>) vertexFactory,
 				edgeFactory);
 		labelEditingPlugin = new LabelEditingGraphMousePlugin<V, E>();
 		annotatingPlugin = new AnnotationDialogMousePlugin<V, E>(rc,parentFrame,attributeMap,graph,edgeLabelMap);
@@ -349,7 +350,7 @@ public class EditingModalGraphMouse<V, E> extends AbstractModalGraphMouse
 	/**
 	 * @return the editingPlugin
 	 */
-	public AttributeEditingPlugin<V, E> getEditingPlugin() {
+	public VertexEditingGraphMousePlugin<E> getEditingPlugin() {
 		return editingPlugin;
 	}
 
