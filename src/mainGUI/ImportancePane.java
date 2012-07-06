@@ -29,7 +29,6 @@ import org.xml.sax.SAXException;
 import dataStructures.Attribute;
 import dataStructures.AttributeList;
 import dataStructures.Importance;
-import dataStructures.Member;
 import dataStructures.maps.AttributeMap;
 import dataStructures.maps.ImportanceMap;
 

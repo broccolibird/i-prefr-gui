@@ -13,8 +13,6 @@ import mainGUI.SetupPreferencesPane;
 
 import dataStructures.Attribute;
 import dataStructures.AttributeKey;
-import dataStructures.Domain;
-import dataStructures.DomainValueList;
 import dataStructures.maps.AttributeMap;
 import guiElements.AbstractTextListener;
 
