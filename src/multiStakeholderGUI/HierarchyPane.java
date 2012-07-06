@@ -103,7 +103,7 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
         
         vv.setGraphMouse(graphMouse);
         vv.addKeyListener(graphMouse.getModeKeyListener());
-        graph.setGraphMouse(graphMouse);
+        //graph.setGraphMouse(graphMouse);
         
         // Add zoom controls
         final ScalingControl scaler = new CrossoverScalingControl();
