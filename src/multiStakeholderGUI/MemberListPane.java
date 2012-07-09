@@ -22,6 +22,12 @@ import dataStructures.Member;
 import dataStructures.Role;
 import dataStructures.maps.MemberMap;
 
+/**
+ * The MemberListPane is an UpdatePane which contains text fields
+ * to add new Members to a Role
+ * @author Kat Mitchell
+ *
+ */
 @SuppressWarnings("serial")
 public class MemberListPane extends UpdatePane implements ActionListener {
 
@@ -34,8 +40,17 @@ public class MemberListPane extends UpdatePane implements ActionListener {
 	
 	GridLayout layout;
 	
+	/**
+	 * number of MemberTuples removed from the Panel
+	 */
 	int removed;
 	
+	/**
+	 * Create a new MemberListPane
+	 * @param role
+	 * @param map
+	 * @param parentFrame
+	 */
 	public MemberListPane(Role role, MemberMap map, JFrame parentFrame) {
 		this.role = role;
 		this.map = map;
@@ -45,9 +60,13 @@ public class MemberListPane extends UpdatePane implements ActionListener {
 		createGUI();
 	}
 	
+	/**
+	 * Setup the GUI for this panel
+	 */
 	private void createGUI() {
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		
+		// Create label for Panel
 		JTextField roleTitle = new JTextField(role.getName());
 		roleTitle.setHorizontalAlignment(JTextField.CENTER);
 		roleTitle.setEditable(false);
@@ -55,6 +74,7 @@ public class MemberListPane extends UpdatePane implements ActionListener {
 		
 		add(Box.createRigidArea(new Dimension(0, 5)));
 		
+		// Setup layout for MemberTuples
 		memberListEntry = new JPanel();
 		layout = new GridLayout(0, COLUMNS, 10, 10);
 		memberListEntry.setLayout(layout);
@@ -69,19 +89,28 @@ public class MemberListPane extends UpdatePane implements ActionListener {
 		
 	}
 	
+	/**
+	 * Removes the MemberTuple from the Panel and updates
+	 * the removed variable
+	 */
 	public void remove(Component comp) {
 		memberListEntry.remove(comp);
 		removed++;
-		System.out.println("Removed: "+removed);
 		repaint();
-		//revalidate();
 	}
 	
-	public void addRow() {
+	/**
+	 * Add a new row of MemberTuples
+	 */
+	private void addRow() {
 		finishRow(COLUMNS);
 	}
 	
-	public void finishRow(int entries) {
+	/**
+	 * Add given number of MemberTuples to the existing row
+	 * @param entries
+	 */
+	private void finishRow(int entries) {
 		for(int i = 0; i < entries; i++) {
 			memberListEntry.add(new MemberTuple(
 					map, parentFrame, this));

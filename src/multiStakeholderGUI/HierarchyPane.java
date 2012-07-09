@@ -36,6 +36,13 @@ import graph.RoleEditingModalGraphMouse;
 
 import mainGUI.UpdatePane;
 
+/**
+ * HierarchyPane is an UpdatePane containing a graph in which to create
+ * the Stakeholder Hierarchy.
+ * 
+ * @author Kat Mitchell
+ *
+ */
 @SuppressWarnings("serial")
 public class HierarchyPane extends UpdatePane implements ActionListener {
 	
@@ -59,7 +66,10 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 	private JButton minus;
 	private JPanel controls;
 	
-	
+	/**
+	 * Creates the HierarchyPane based on the current Document
+	 * @param abstractDocument
+	 */
 	public HierarchyPane(AbstractDocument abstractDocument) {
 		this.document = abstractDocument;
 		
@@ -154,10 +164,18 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 		controls.add(roleBox);		
 	}
 	
+	/**
+	 * Returns the graph form of the RoleHierarchy 
+	 * @return RoleHierarchy
+	 */
 	public RoleHierarchy getGraph() {
 		return graph;
 	}
 	
+	/**
+	 * Creates the combobox containing all the Roles to be used
+	 * in the RoleHierarchy
+	 */
 	private void setupRoleBox() {
 		// make combobox with all attributes
 		Role[] allRoles = document.getRoleMap().values()

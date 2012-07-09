@@ -23,6 +23,13 @@ import dataStructures.AbstractDocument;
 import mainGUI.AbstractPaneTurner;
 import mainGUI.UpdatePane;
 
+/**
+ * PaneTurnerMS is a PaneTurner which flips through 
+ * the Multiple-stakeholder UpdatePanes and denotes 
+ * which sub-pane is open.
+ * @author Kat Mitchell
+ *
+ */
 @SuppressWarnings("serial")
 public class PaneTurnerMS extends JSplitPane {
 
@@ -41,6 +48,12 @@ public class PaneTurnerMS extends JSplitPane {
 	private AbstractDocument document;
 	private AbstractPaneTurner parentTurner;
 	
+	/**
+	 * Create a new PaneTurnerMS instance.
+	 * @param parent
+	 * @param document
+	 * @param parentTurner
+	 */
 	public PaneTurnerMS(JFrame parent, AbstractDocument document, AbstractPaneTurner parentTurner) {
 		this.parent = parent;
 		this.document = document;
@@ -54,6 +67,10 @@ public class PaneTurnerMS extends JSplitPane {
 		setPreferredSize(new Dimension(700, 800));
 	}
 	
+	/**
+	 * Initialize the Multiple-stakeholder Panels
+	 * @return viewPanes
+	 */
 	protected Component initializeViewPanes() {
 		viewPanes = new UpdatePane[metaPanes.length];
 		
@@ -70,11 +87,17 @@ public class PaneTurnerMS extends JSplitPane {
 		return viewPanes[currentSelected];
 	}
 	
+	/**
+	 * Creates the left chooser panel
+	 * @return chooser
+	 */
 	protected JPanel getChooser() {
 		JPanel chooser = new JPanel();
 		chooser.setLayout(new BoxLayout(chooser, BoxLayout.Y_AXIS));
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+		
+		// add prev/next buttons
 		nextButton = new JButton("Next");
 		prevButton = new JButton("Prev");
 		nextButton.addActionListener(next);
@@ -82,6 +105,8 @@ public class PaneTurnerMS extends JSplitPane {
 		buttonPanel.add(prevButton);
 		buttonPanel.add(nextButton);
 		chooser.add(buttonPanel);
+		
+		// add Pane Labels
 		String[] steps = { "Create Roles", "Create Role\nHierarchy", 
 				"Assign\nStakeholders"};
 		metaPanes = new SelectableTextPane[steps.length];
