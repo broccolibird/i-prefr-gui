@@ -5,54 +5,33 @@ package dataStructures;
  * 
  * @author Kat
  */
-public class Member {
-	private String name; 
-	private Integer key;
-	
-	// file location of user's preferences
-	private String preferenceFilePath;
+public class Member extends NameKeyObject<String> {
 	
 	public Member(String name, Integer key) {
-		this.name = name;
-		this.key = key;
-		preferenceFilePath = null;
+		super(name, key, null);
 	}
 	
 	public Member(String name, Integer key, String preferenceFilePath) {
-		this.name = name;
-		this.key = key;
-		this.preferenceFilePath = preferenceFilePath;
+		super(name, key, preferenceFilePath);
 	}
-
-	public String getName() {
-		return name;
-	}
-	
-	public void setName( String name) {
-		this.name = name;
-	}
-	
-	public Integer getKey() {
-		return key;
-	}
-	
+		
 	public String toString() {
 		return name;
 	}
 	
 	public String getPreferenceFilePath() {
-		return preferenceFilePath;
+		return super.getObject();
 	}
 	
 	public void setPreferenceFilePath(String preferenceFilePath) {
-		this.preferenceFilePath = preferenceFilePath;
+		setObject(preferenceFilePath);
 	}
 	
 	public String toXML() {
 		String xml = "\t\t\t<MEMBER ID = '"+key+"'>\n";
 		xml += "\t\t\t\t<NAME>"+name+"</NAME>\n";
-		if(preferenceFilePath != null)
-			xml += "\t\t\t\t<PREFERENCEFILE>"+preferenceFilePath+
+		if(object != null)
+			xml += "\t\t\t\t<PREFERENCEFILE>"+object+
 						"</PREFERENCEFILE>\n";
 		xml += "\t\t\t</MEMBER>\n";
 		
