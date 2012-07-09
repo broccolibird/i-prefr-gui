@@ -46,6 +46,7 @@ public class ViewResultsPane extends UpdatePane implements ActionListener {
 	protected JTextField rightDominanceSet;
 	protected JTextField dominanceField;
 	protected JTextArea resultsField;
+	protected JTextArea justificationField;
 
 	protected AlternativeList alreadyChosen;
 	private Alternative leftAlternative;
@@ -80,12 +81,15 @@ public class ViewResultsPane extends UpdatePane implements ActionListener {
 		JPanel resultsPanel = createResultsPanel();
 		
 		dominancePanel = createDominancePanel();
+		
+		JPanel justificationPanel = createJustificationPanel();
 
 		update();
 		panel.add(stakeholderPanel);
 		panel.add(consistencyPanel);
 		panel.add(dominancePanel);
 		panel.add(resultsPanel);
+		panel.add(justificationPanel);
 		return panel;
 	}
 	
@@ -149,17 +153,38 @@ public class ViewResultsPane extends UpdatePane implements ActionListener {
 		resultsPanel.setLayout(new BoxLayout(resultsPanel, BoxLayout.Y_AXIS));
 		topNextButton = new JButton("Top");
 		topNextButton.addActionListener(this);
+		
+		JPanel innerPanel = new JPanel();
 		resultsField = new JTextArea(3,38);
 		resultsField.setEditable(false);
 		resultsField.setText("list of results fetched one by one");
+		JLabel resultLabel = new JLabel("Results: ");
+		innerPanel.add(resultLabel);
+		innerPanel.add(resultsField);
+		
 		resultsPanel.add(topNextButton);
-		resultsPanel.add(resultsField);
+		resultsPanel.add(innerPanel);
 		return resultsPanel;
+	}
+	
+	protected JPanel createJustificationPanel() {
+		JPanel justificationPanel = new JPanel();
+		
+		justificationField = new JTextArea(3,36);
+		justificationField.setEditable(false);
+		justificationField.setText("result justification");
+		JLabel justificationLabel = new JLabel("Justification: ");
+		
+		justificationPanel.add(justificationLabel);
+		justificationPanel.add(justificationField);
+		
+		return justificationPanel;
 	}
 	
 	protected void resetResultFields() {
 		consistencyField.setText("result");
 		dominanceField.setText("result");
+		topNextButton.setText("Top");
 	}
 	
 	/**
