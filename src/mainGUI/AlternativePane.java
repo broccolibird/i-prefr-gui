@@ -33,18 +33,30 @@ public class AlternativePane extends UpdatePane implements ActionListener {
 	private JRadioButton useEntireSpace;
 	private JRadioButton specifySpace;
 
+	/**
+	 * Create new AlternativePane instance
+	 * @param alternativeMap
+	 * @param parent
+	 */
 	public AlternativePane(AlternativeMap alternativeMap, JFrame parent) {
 		this.parentFrame = parent;
 		this.map = alternativeMap;
 		this.add(initializeGUI());
 	}
 
+	/**
+	 * Setup GUI for AlternativePane
+	 * @return JPanel
+	 */
 	private JPanel initializeGUI() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		
 		alternativePanel = new JPanel();
 		alternativePanel.setLayout(new BoxLayout(alternativePanel,
 				BoxLayout.Y_AXIS));
+		
+		
 		panel.add(getRadioButtonPanel());
 		
 		plusButton = new JButton("+");
@@ -65,6 +77,10 @@ public class AlternativePane extends UpdatePane implements ActionListener {
 		return panel;
 	}
 
+	/**
+	 * Create radio buttons
+	 * @return radio button JPanel
+	 */
 	private JPanel getRadioButtonPanel() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -116,6 +132,9 @@ public class AlternativePane extends UpdatePane implements ActionListener {
 		return panel;
 	}
 
+	/**
+	 * Set correct radio button
+	 */
 	private void updateRadioButtons() {
 		if (map.useEntireAlternativeSpace()) {
 			useEntireSpace.setSelected(true);
@@ -145,6 +164,10 @@ public class AlternativePane extends UpdatePane implements ActionListener {
 		enableDisableAlternativePanel();
 	}
 	
+	/**
+	 * Enable or disable Alternative entry fields based on the current
+	 * radio button selection
+	 */
 	private void enableDisableAlternativePanel(){
 		Component[] components = alternativePanel.getComponents();
 		boolean enabled = !map.useEntireAlternativeSpace();

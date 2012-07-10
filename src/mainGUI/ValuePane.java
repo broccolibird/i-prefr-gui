@@ -24,6 +24,12 @@ public class ValuePane extends UpdatePane{
 	private JPanel valuePanel;
 	private JFrame parentFrame;
 
+	/**
+	 * Create a new ValuePane instance
+	 * @param alternativeMap
+	 * @param attributeMap
+	 * @param parent
+	 */
 	public ValuePane(AlternativeMap alternativeMap, AttributeMap attributeMap,
 			JFrame parent) {
 		this.parentFrame = parent;
@@ -32,6 +38,10 @@ public class ValuePane extends UpdatePane{
 		this.add(initializeGUI());
 	}
 
+	/**
+	 * Setup the ValuePane GUI
+	 * @return JPanel
+	 */
 	private JPanel initializeGUI() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));

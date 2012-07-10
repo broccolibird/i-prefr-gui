@@ -53,6 +53,12 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 	
 	JTextArea noMembers;
 	
+	/**
+	 * Create a new instance of SetupPreferencesPane
+	 * @param parent
+	 * @param document
+	 * @param isTCPPref
+	 */
 	public SetupPreferencesPane(JFrame parent, AbstractDocument document,
 			boolean isTCPPref){
 		this.parent = parent;
@@ -121,6 +127,9 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 		}
 	}
 	
+	/**
+	 * Sets up the GUI
+	 */
 	private void createGUI(){
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		

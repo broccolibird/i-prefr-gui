@@ -41,6 +41,11 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 	private JFrame parentFrame;
 	private JButton plusButton;
 		
+		/**
+		 * Create new instance of ImportancePane
+		 * @param attributeMap
+		 * @param parent
+		 */
 		public ImportancePane(AttributeMap attributeMap,JFrame parent) {
 			this.parentFrame=parent;
 			this.attributeMap=attributeMap;
@@ -48,6 +53,10 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 			this.add(initializeGUI());
 		}
 		
+		/**
+		 * Setup ImportancePane GUI
+		 * @return JPanel
+		 */
 		private JPanel initializeGUI(){
 			JPanel panel= new JPanel();
 			panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -92,6 +101,10 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 			}
 		}
 		
+		/**
+		 * Returns an array of all attributes in the AttributeMap
+		 * @return array of attributes
+		 */
 		private Attribute[] getAttributes(){
 			return (Attribute[])attributeMap.values().toArray(new Attribute[attributeMap.size()]);
 		}

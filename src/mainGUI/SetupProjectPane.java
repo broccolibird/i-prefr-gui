@@ -30,13 +30,21 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 	private JCheckBox sameNameCheckBox;
 	private JComboBox modelCheckerComboBox;
 
+	/**
+	 * Create a new instanceof the SetupProjectPane
+	 * @param metaData
+	 */
 	public SetupProjectPane(MetaData metaData) {
 		this.metaData = metaData;
-		this.add(createGUI());
+		this.add(initializeGUI());
 		setVisible(true);
 	}
 
-	private JPanel createGUI() {
+	/**
+	 * Setup the interface for this panel
+	 * @return JPanel
+	 */
+	private JPanel initializeGUI() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 

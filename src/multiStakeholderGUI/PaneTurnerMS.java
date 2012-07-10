@@ -119,6 +119,9 @@ public class PaneTurnerMS extends JSplitPane {
 		return chooser;
 	}
 
+	/**
+	 * Setup actions and shortcuts for previous/next buttons
+	 */
 	private void setupActions() {
 		next = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {

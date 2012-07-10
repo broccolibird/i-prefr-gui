@@ -28,16 +28,26 @@ public class AttributePane extends UpdatePane implements ActionListener {
 	private JFrame parentFrame;
 	private SetupPreferencesPane preferencesPane;
 
+	/**
+	 * Creates a new instance of AttributePane
+	 * @param oldMap
+	 * @param preferencesPane
+	 * @param parentFrame
+	 */
 	public AttributePane(AttributeMap oldMap,
 			SetupPreferencesPane preferencesPane, JFrame parentFrame) {
 		this.map = oldMap;
 		this.parentFrame = parentFrame;
 		this.preferencesPane = preferencesPane;
-		this.add(createGUI());
+		this.add(initializeGUI());
 		setVisible(true);
 	}
 
-	private JPanel createGUI() {
+	/**
+	 * Setup the GUI
+	 * @return JPanel
+	 */
+	private JPanel initializeGUI() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		attributePanel = new JPanel();

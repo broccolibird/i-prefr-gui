@@ -54,6 +54,11 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 	private JButton minus;
 	private JPanel controls;
 
+	/**
+	 * Create new SetupGraphPane instance
+	 * @param abstractDocument
+	 * @param parentFrame
+	 */
 	public SetupGraphPane(AbstractDocument abstractDocument, JFrame parentFrame) {
 		this.abstractDocument = abstractDocument;
 		this.parentFrame = parentFrame;
@@ -117,22 +122,14 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 			}
 		});
 
-		// JButton help = new JButton("Help");
-		// help.addActionListener(new ActionListener() {
-		//
-		// public void actionPerformed(ActionEvent e) {
-		// JOptionPane.showMessageDialog(vv, instructions);
-		// }});
-		// AnnotationControls<Number, Number> annotationControls = new
-		// AnnotationControls<Number, Number>(
-		// graphMouse.getAnnotatingPlugin());
-		// controls.add(help);
-
 		controls = new JPanel();
 		update();
 		add(controls, BorderLayout.SOUTH);
 	}
 
+	/**
+	 * Sets all previously used attributes to unused
+	 */
 	public void clearPane() {
 		Collection<Attribute> allUsedAttributes = graph.getVertices();
 		for( Attribute attr : allUsedAttributes ) {
@@ -151,10 +148,17 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 		controls.add(attributeBox);
 	}
 
+	/**
+	 * Returns the current graph
+	 * @return graph
+	 */
 	public Graph<Attribute, EdgeStatementMap> getGraph() {
 		return graph;
 	}
 
+	/**
+	 * Sets up combobox with all attributes
+	 */
 	private void setupAttributeBox() {
 		// make combobox with all attributes
 		Attribute[] allAttributes = abstractDocument.getAttributeMap().values()
