@@ -32,23 +32,34 @@ public class RolePane extends UpdatePane implements ActionListener{
 	private RoleHierarchy graph;
 	private RoleMap map;
 
-	
+	/**
+	 * Create new RolePane instance
+	 * @param map
+	 * @param graph
+	 * @param parentFrame
+	 */
 	public RolePane(RoleMap map, RoleHierarchy graph, JFrame parentFrame){
 		this.parentFrame = parentFrame;
 		this.graph = graph;
 		this.map = map;
 		
-		this.add(createGUI());
+		this.add(initializeGUI());
 		setVisible(true);
 	}
 	
-	private JPanel createGUI() {
+	/**
+	 * Setup RolePane GUI
+	 * @return JPanel
+	 */
+	private JPanel initializeGUI() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		
 		rolePanel = new JPanel();
-		rolePanel
-				.setLayout(new BoxLayout(rolePanel, BoxLayout.Y_AXIS));
+		rolePanel.setLayout(new BoxLayout(rolePanel, BoxLayout.Y_AXIS));
+		
 		update();
+		
 		plusButton = new JButton("+");
 		plusButton.addActionListener(this);
 		InputMap plusInputMap = plusButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -97,7 +108,8 @@ public class RolePane extends UpdatePane implements ActionListener{
 					rolePanel, graph));
 		RoleTuple tuple = (RoleTuple) rolePanel.add(
 				new RoleTuple(map, parentFrame, rolePanel, graph));
-		System.out.println("focus: "+tuple.getTextField().requestFocusInWindow());
+		tuple.getTextField().requestFocusInWindow();
+		
 		parentFrame.pack();
 
 	}

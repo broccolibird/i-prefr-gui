@@ -35,20 +35,20 @@ public class ViewResultsPane extends UpdatePane implements ActionListener {
 	public static final int TOP = 2;
 	public static final int NEXT = 3;
 	
-	protected AbstractDocument document;
+	private AbstractDocument document;
 	
-	protected JButton consistencyButton;
-	protected JButton dominanceButton;
-	protected JButton topNextButton;
+	private JButton consistencyButton;
+	private JButton dominanceButton;
+	private JButton topNextButton;
 	
-	protected JTextField consistencyField;
-	protected JTextField leftDominanceSet;
-	protected JTextField rightDominanceSet;
-	protected JTextField dominanceField;
-	protected JTextArea resultsField;
-	protected JTextArea justificationField;
+	private JTextField consistencyField;
+	private JTextField leftDominanceSet;
+	private JTextField rightDominanceSet;
+	private JTextField dominanceField;
+	private JTextArea resultsField;
+	private JTextArea justificationField;
 
-	protected AlternativeList alreadyChosen;
+	private AlternativeList alreadyChosen;
 	private Alternative leftAlternative;
 	private Alternative rightAlternative;
 	
@@ -59,9 +59,13 @@ public class ViewResultsPane extends UpdatePane implements ActionListener {
 	private Member curMember;
 	private boolean allMembers;
 
-	protected JFrame parentFrame;
+	private JFrame parentFrame;
 	
-	
+	/**
+	 * Create new ViewResultsPane instance
+	 * @param document
+	 * @param parentFrame
+	 */
 	public ViewResultsPane(AbstractDocument document, JFrame parentFrame) {
 		this.document = document;
 		this.parentFrame = parentFrame;
@@ -70,6 +74,10 @@ public class ViewResultsPane extends UpdatePane implements ActionListener {
 		setVisible(true);
 	}
 	
+	/**
+	 * Setup GUI
+	 * @return JPanel
+	 */
 	private JPanel initializeGUI() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -113,7 +121,11 @@ public class ViewResultsPane extends UpdatePane implements ActionListener {
 		parentFrame.pack();
 	}
 	
-	protected JPanel createConsistencyPanel() {
+	/**
+	 * Create the consistency panel
+	 * @return JPanel
+	 */
+	private JPanel createConsistencyPanel() {
 		JPanel consistencyPanel = new JPanel();
 		consistencyPanel.setLayout(new BoxLayout(consistencyPanel, BoxLayout.X_AXIS));
 		consistencyButton = new JButton("Consistency");
@@ -125,7 +137,11 @@ public class ViewResultsPane extends UpdatePane implements ActionListener {
 		return consistencyPanel;
 	}
 	
-	protected JPanel createDominancePanel() {
+	/**
+	 * Create Dominance Panel
+	 * @return JPanel
+	 */
+	private JPanel createDominancePanel() {
 		JPanel dominancePanel = new JPanel();
 		dominancePanel.setLayout(new BoxLayout(dominancePanel, BoxLayout.X_AXIS));
 		dominanceButton = new JButton("Dominance");
@@ -148,7 +164,11 @@ public class ViewResultsPane extends UpdatePane implements ActionListener {
 		return dominancePanel;
 	}
 	
-	protected JPanel createResultsPanel() {
+	/**
+	 * Create Results Panel
+	 * @return JPanel
+	 */
+	private JPanel createResultsPanel() {
 		JPanel resultsPanel = new JPanel();
 		resultsPanel.setLayout(new BoxLayout(resultsPanel, BoxLayout.Y_AXIS));
 		topNextButton = new JButton("Top");
@@ -167,7 +187,11 @@ public class ViewResultsPane extends UpdatePane implements ActionListener {
 		return resultsPanel;
 	}
 	
-	protected JPanel createJustificationPanel() {
+	/**
+	 * create Justification Panel
+	 * @return JPanel
+	 */
+	private JPanel createJustificationPanel() {
 		JPanel justificationPanel = new JPanel();
 		
 		justificationField = new JTextArea(3,36);
@@ -181,7 +205,10 @@ public class ViewResultsPane extends UpdatePane implements ActionListener {
 		return justificationPanel;
 	}
 	
-	protected void resetResultFields() {
+	/**
+	 * Clear results fields
+	 */
+	private void resetResultFields() {
 		consistencyField.setText("result");
 		dominanceField.setText("result");
 		topNextButton.setText("Top");
@@ -239,7 +266,11 @@ public class ViewResultsPane extends UpdatePane implements ActionListener {
 		}
 	}
 	
-	protected void sendQuery(int type) {
+	/**
+	 * Send Query to back end
+	 * @param query type
+	 */
+	private void sendQuery(int type) {
 		switch (type) {
 		case CONSISTENCY:
 			System.out.println("send cosistency query");
