@@ -36,6 +36,10 @@ public abstract class AbstractDocument {
 	
 	int roleEdge = 0;
 
+	/**
+	 * Create a new AbstractDocument
+	 * @param isMultiStakeholder
+	 */
 	public AbstractDocument(boolean isMultiStakeholder) {
 		attributeMap = new AttributeMap();
 		alternativeMap = new AlternativeMap();
@@ -43,6 +47,11 @@ public abstract class AbstractDocument {
 		metaData = new MetaData();
 	}
 	
+	/**
+	 * Create a new AbstractDocument based on a saved
+	 * document
+	 * @param doc
+	 */
 	public AbstractDocument(org.w3c.dom.Document doc){
 		
 		//first create the attributeMap
@@ -143,6 +152,12 @@ public abstract class AbstractDocument {
 		SuperkeyMap.setNextUniqueID(maxUniqueID+1);
 	}
 
+	/**
+	 * Create a RoleMap based on a document
+	 * @param doc
+	 * @param maxUniqueID
+	 * @return new maxUniqueID
+	 */
 	private int setupRoleMap(org.w3c.dom.Document doc, int maxUniqueID) {
 		//create the roleMap
 		int uniqueMapID = Integer.parseInt(Util.getOnlyChildText(doc, "STAKEHOLDERS", "UNIQUEMAPID"));
@@ -237,6 +252,12 @@ public abstract class AbstractDocument {
 		return maxUniqueID;
 	}
 	
+	/**
+	 * Creates a RoleHierarchy based on a document
+	 * @param thisRole
+	 * @param rh
+	 * @param sl
+	 */
 	private void createRoleHierarchy(Element thisRole, RoleHierarchy rh, StaticLayout sl){
 		String roleTitle = thisRole.getElementsByTagName("TITLE").item(0).getTextContent();
 		System.out.println("Title: "+ roleTitle);
@@ -267,18 +288,34 @@ public abstract class AbstractDocument {
 		
 	}
 	
+	/**
+	 * Returns the AttributeMap
+	 * @return attributeMap
+	 */
 	public AttributeMap getAttributeMap() {
 		return attributeMap;
 	}
 
+	/**
+	 * Returns the AlternativeMap
+	 * @return alternativeMap
+	 */
 	public AlternativeMap getAlternativeMap() {
 		return alternativeMap;
 	}
 
+	/**
+	 * Returns the RoleMap
+	 * @return roleMap
+	 */
 	public RoleMap getRoleMap(){
 		return roleMap;
 	}
 	
+	/**
+	 * Returns the MetaData
+	 * @return metaDAta
+	 */
 	public MetaData getMetaData() {
 		return metaData;
 	}
@@ -287,6 +324,11 @@ public abstract class AbstractDocument {
 	
 	public abstract String getNetworkXML();
 	
+	/**
+	 * Returns true if the Document or any of its subcomponents have
+	 * changed since the last save.
+	 * @return true if unsaved changes exist
+	 */
 	public boolean existChanges() {
 		
 		boolean changes = metaData.existChanges();
@@ -303,11 +345,17 @@ public abstract class AbstractDocument {
 		return changes;
 	}
 	
+	/**
+	 * Set all subcomponents to saved if saved is true
+	 * @param saved
+	 */
 	public void setSaved(boolean saved) {
-		metaData.setSaved(true);
-		attributeMap.setSaved(true);
-		alternativeMap.setSaved(true);
-		roleMap.setSaved(true);	
+		if(saved) {
+			metaData.setSaved(true);
+			attributeMap.setSaved(true);
+			alternativeMap.setSaved(true);
+			roleMap.setSaved(true);
+		}
 	}
 	
 	//Some protocol for writing 'toXML()' functions:
@@ -321,6 +369,11 @@ public abstract class AbstractDocument {
 	//tabs or newlines put onto them - those chars are added in the function
 	//ID attributes are used only for keys of a map value and not for other
 	//numeric identifiers, which should have specific tags
+	/**
+	 * Creates an xml string of the current document
+	 * @param xmlfile - file to be saved to
+	 * @return xml string
+	 */
 	public String toXML(File xmlfile) {
 		String doc = "<DOCUMENT>\n";
 		doc += metaData.toXML();
