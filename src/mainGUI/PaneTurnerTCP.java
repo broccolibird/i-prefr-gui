@@ -1,7 +1,6 @@
 package mainGUI;
 
 import java.awt.Component;
-import java.io.File;
 
 import javax.swing.JFrame;
 
@@ -48,8 +47,4 @@ public class PaneTurnerTCP extends AbstractPaneTurner{
 		return viewPanes[currentSelected];
 	}
 
-	@Override
-	public String toXML(File xmlfile) {
-		return document.toXML(xmlfile);
-	}
 }

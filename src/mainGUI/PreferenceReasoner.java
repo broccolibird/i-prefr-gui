@@ -134,7 +134,11 @@ public class PreferenceReasoner extends JApplet{
 		frame.pack();
 	}
 	
-	
+	/**
+	 * Returns true if the project has been changed
+	 * since opening/last save.
+	 * @return true if changes exist
+	 */
 	public static boolean existChanges() {
 		if (paneTurner != null) {
 			paneTurner.checkChangesInPreferences();
@@ -149,7 +153,7 @@ public class PreferenceReasoner extends JApplet{
 	 * @return true if the user successfully saves the project or if they choose not to save,
 	 * 			returns false if the user cancels out of the action.
 	 */
-	public static boolean showSaveChangesDialog(){
+	protected static boolean showSaveChangesDialog(){
 		int choice = JOptionPane.showConfirmDialog(frame,
 			    "You are about to leave the current project, would you like to save your changes?",
 			    "Save Changes",

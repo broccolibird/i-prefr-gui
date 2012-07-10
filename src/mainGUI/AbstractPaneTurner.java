@@ -48,6 +48,13 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 		"Add Multiple\nStakeholders", "Setup Preferences", "View Result" };
 
 	// TODO - make currentSelected come from AbstractDocument MetaData
+	
+	/**
+	 * Create a new instance of AbstractPaneTurner
+	 * @param parent
+	 * @param document
+	 * @param isMultipleStakeholder
+	 */
 	public AbstractPaneTurner(JFrame parent, AbstractDocument document, boolean isMultipleStakeholder) {
 		this.parent = parent;
 		this.document = document;
@@ -59,8 +66,19 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 
 	protected abstract Component initializeViewPanes();
 	
-	public abstract String toXML(File xmlfile);
+	/**
+	 * Creates and returns the xml representation of the project.
+	 * @param xmlfile
+	 * @return xml string representation of project
+	 */
+	public String toXML(File xmlfile){
+		return document.toXML(xmlfile);
+	}
 
+	/**
+	 * Create left-side chooser panel
+	 * @return chooser panel
+	 */
 	protected JPanel getChooser() {
 		JPanel chooser = new JPanel();
 		chooser.setLayout(new BoxLayout(chooser, BoxLayout.Y_AXIS));
@@ -91,6 +109,10 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 		return chooser;
 	}
 
+	/**
+	 * Sets up keyboard shortcuts for chooser panel's
+	 * previous and next buttons
+	 */
 	private void setupActions() {
 		next = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
@@ -129,6 +151,9 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 		parent.pack();
 	}
 	
+	/**
+	 * Switch view to the previous panel
+	 */
 	public void previous(){
 		metaPanes[currentSelected].toggleColor();
 		if (currentSelected > 0) {
@@ -139,6 +164,9 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 		metaPanes[currentSelected].toggleColor();
 	}
 	
+	/**
+	 * Switch view to the next panel
+	 */
 	public void next() {
 		metaPanes[currentSelected].toggleColor();
 		if (currentSelected < metaPanes.length - 1) {
@@ -150,15 +178,27 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 		metaPanes[currentSelected].toggleColor();
 	}
 	
+	/**
+	 * Returns true if the document contains changes.
+	 * @return true if the document contians changes
+	 */
 	public boolean existChanges() {
 		return document.existChanges();
 	}
 
+	/**
+	 * Set the document's saved value
+	 * @param saved
+	 */
 	public void setSaved(boolean saved) {
 		document.setSaved(saved);
 		
 	}
 	
+	/**
+	 * Checks for unsaved changes in the user preference input
+	 * pane.
+	 */
 	public void checkChangesInPreferences() {
 		preferencesPane.checkForUnsavedChanges();
 	}

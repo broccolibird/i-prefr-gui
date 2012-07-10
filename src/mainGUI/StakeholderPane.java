@@ -22,7 +22,7 @@ public class StakeholderPane extends UpdatePane {
 		this.parentTurner = parentTurner;
 		
 		setLayout(new BorderLayout());
-		this.add(createGUI(), BorderLayout.CENTER);
+		this.add(initializeGUI(), BorderLayout.CENTER);
 		
 		setVisible(true);
 	
@@ -34,7 +34,7 @@ public class StakeholderPane extends UpdatePane {
 
 	}
 
-	private JPanel createGUI(){
+	private JPanel initializeGUI(){
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
 		

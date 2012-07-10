@@ -51,17 +51,7 @@ public class MemberTuple extends AbstractTuple<Member> implements
 		this.add(xButton);
 		
 	}
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		
-		map.remove(key);
-		//memberName.setText("");
-		parentPanel.remove(this);
-		parentWindow.pack();
-		
-	}
-	
+
 	class MemberTextListener extends AbstractTextListener {
 
 		public MemberTextListener(JTextField field) {

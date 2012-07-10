@@ -66,11 +66,11 @@ public class ViewResultsPane extends UpdatePane implements ActionListener {
 		this.document = document;
 		this.parentFrame = parentFrame;
 		this.alreadyChosen = new AlternativeList();
-		this.add(createGUI());
+		this.add(initializeGUI());
 		setVisible(true);
 	}
 	
-	private JPanel createGUI() {
+	private JPanel initializeGUI() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
