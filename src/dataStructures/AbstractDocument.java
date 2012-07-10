@@ -27,6 +27,14 @@ import dataStructures.maps.SuperkeyMap;
 import dataStructures.maps.ValueMap;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 
+/**
+ * The Document contains all of the data for the project, 
+ * including: AttributeMap, AlternativeMap, RoleMap and 
+ * MetaData
+ * 
+ * @author Carl and Kat
+ *
+ */
 public abstract class AbstractDocument {
 
 	protected AttributeMap attributeMap;

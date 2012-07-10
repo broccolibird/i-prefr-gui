@@ -11,6 +11,12 @@ public class Alternative extends
 		NameKeyObject<ValueMap> implements
 		Comparable<Alternative> {
 
+	/**
+	 * Create a new Alternative instance
+	 * @param name
+	 * @param key
+	 * @param values
+	 */
 	public Alternative(String name, Integer key, ValueMap values) {
 		super(name, key, values);
 		//System.out.println("alternative created with name: "+name+" key: "+key+" value: "+values);
@@ -21,6 +27,11 @@ public class Alternative extends
 		return this.getKey().compareTo(other.getKey());
 	}
 	
+	/**
+	 * Create an xml representation of the Alternative
+	 * @param attributeMap
+	 * @return xml string representation of the Alternative
+	 */
 	public String toXML(AttributeMap attributeMap){
 		String alternative = "\t\t<ALTERNATIVE ID = '"+key.toString()+"'>\n";
 		alternative += "\t\t\t<NAME>"+name+"</NAME>\n";
@@ -37,6 +48,11 @@ public class Alternative extends
 		return alternative;
 	}
 	
+	/**
+	 * Return the expanded string representation of this Alternative
+	 * @param attributeMap
+	 * @return expanded string representation
+	 */
 	public String toExpandedString(AttributeMap attributeMap){
 		String toReturn = "";
 		Set<Entry<AttributeKey, DomainValue>> set = getObject().entrySet();
