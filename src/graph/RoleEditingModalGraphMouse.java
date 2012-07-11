@@ -24,6 +24,7 @@ import dataStructures.Vertex;
 
 import edu.uci.ics.jung.visualization.MultiLayerTransformer;
 import edu.uci.ics.jung.visualization.RenderContext;
+import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.AbstractModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.AnimatedPickingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.CrossoverScalingControl;
@@ -35,19 +36,20 @@ import edu.uci.ics.jung.visualization.control.RotatingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.ScalingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.ShearingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.TranslatingGraphMousePlugin;
-import graph.jungClasses.AnnotatingGraphMousePlugin;
+import graph.annotations.VertexAnnotatingGraphMousePlugin;
 
 public class RoleEditingModalGraphMouse<V, E> extends AbstractModalGraphMouse
 		implements ModalGraphMouse, ItemSelectable{
 	
 	protected Factory<Vertex> vertexFactory;
 	protected Factory<E> edgeFactory;
-	protected VertexEditingGraphMousePlugin<E> editingPlugin; //
+	protected VertexEditingGraphMousePlugin<E> editingPlugin; 
 	protected LabelEditingGraphMousePlugin<V,E> labelEditingPlugin;
 	protected RoleEditingPopupPlugin<Vertex, E> popupEditingPlugin;
-	protected AnnotatingGraphMousePlugin<V,E> annotatingPlugin;
+	protected VertexAnnotatingGraphMousePlugin<V,E> annotatingPlugin;
 	protected MultiLayerTransformer basicTransformer;
 	protected RenderContext<V,E> rc;
+	private VisualizationViewer vv;
 	
 	protected JFrame parentFrame;
 
@@ -55,9 +57,9 @@ public class RoleEditingModalGraphMouse<V, E> extends AbstractModalGraphMouse
 	 * create an instance with default values
 	 *
 	 */
-	public RoleEditingModalGraphMouse(RenderContext<V,E> rc,
+	public RoleEditingModalGraphMouse(VisualizationViewer vv,
 			Factory<Vertex> vertexFactory, Factory<E> edgeFactory) {
-		this(rc, vertexFactory, edgeFactory, 1.1f, 1/1.1f);
+		this(vv, vertexFactory, edgeFactory, 1.1f, 1/1.1f);
 	}
 
 	/**
@@ -65,12 +67,13 @@ public class RoleEditingModalGraphMouse<V, E> extends AbstractModalGraphMouse
 	 * @param in override value for scale in
 	 * @param out override value for scale out
 	 */
-	public RoleEditingModalGraphMouse(RenderContext<V,E> rc,
+	public RoleEditingModalGraphMouse(VisualizationViewer vv,
 			Factory<Vertex> vertexFactory, Factory<E> edgeFactory, float in, float out) {
 		super(in,out);
 		this.vertexFactory = vertexFactory;
 		this.edgeFactory = edgeFactory;
-		this.rc = rc;
+		this.rc = vv.getRenderContext();
+		this.vv = vv;
 		this.basicTransformer = rc.getMultiLayerTransformer();
 		loadPlugins();
 		setModeKeyListener(new ModeKeyAdapter(this));
@@ -90,7 +93,7 @@ public class RoleEditingModalGraphMouse<V, E> extends AbstractModalGraphMouse
 		shearingPlugin = new ShearingGraphMousePlugin();
 		editingPlugin = new VertexEditingGraphMousePlugin<E>(vertexFactory, edgeFactory);
 		labelEditingPlugin = new LabelEditingGraphMousePlugin<V,E>();
-		annotatingPlugin = new AnnotatingGraphMousePlugin<V,E>(rc);
+		annotatingPlugin = new VertexAnnotatingGraphMousePlugin<V,E>(vv);
 		popupEditingPlugin = new RoleEditingPopupPlugin<Vertex,E>(vertexFactory, edgeFactory);
 		add(scalingPlugin);
 		setMode(Mode.EDITING);
@@ -292,7 +295,7 @@ public class RoleEditingModalGraphMouse<V, E> extends AbstractModalGraphMouse
 	/**
 	 * @return the annotatingPlugin
 	 */
-	public AnnotatingGraphMousePlugin<V, E> getAnnotatingPlugin() {
+	public VertexAnnotatingGraphMousePlugin<V, E> getAnnotatingPlugin() {
 		return annotatingPlugin;
 	}
 

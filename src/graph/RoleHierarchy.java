@@ -3,43 +3,33 @@ package graph;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
 
 import dataStructures.Role;
+import dataStructures.SavedAnnotation;
 import dataStructures.maps.RoleMap;
 
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
-import edu.uci.ics.jung.algorithms.layout.StaticLayout;
-import edu.uci.ics.jung.algorithms.layout.TreeLayout;
 import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.graph.util.Pair;
-import edu.uci.ics.jung.graph.util.TreeUtils;
-import edu.uci.ics.jung.graph.DelegateTree;
-import edu.uci.ics.jung.graph.DirectedGraph;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
-import edu.uci.ics.jung.graph.Forest;
-import edu.uci.ics.jung.graph.GraphDecorator;
-import edu.uci.ics.jung.graph.Tree;
+import graph.annotations.VertexAnnotation;
 
-/**
- * An implementation of <code>Forest<V,E></code> that delegates to a specified <code>DirectedGraph</code>
- * instance.
- * @author Tom Nelson
- * 
- * Modified from the DelegateForest implementation in order to allow the user to
- * add edges to two existing vertices
+/** 
+ * Acyclic version of DirectedSparseGraph.
  * @author Katarina Mitchell
  *
  * @param <V> the vertex type
  * @param <E> the edge type
  */
-@SuppressWarnings({ "serial", "rawtypes" })
+@SuppressWarnings({ "serial" })
 public class RoleHierarchy extends DirectedSparseGraph<Role,Integer>
 {
 	RoleMap map;
 	AbstractLayout<Role, Integer> layout;
+	RoleEditingModalGraphMouse<Role, Integer> graphMouse;
+	
 	int nextEdge;
+	ArrayList<SavedAnnotation<Role,String>> savedAnnotations;
 	
 	public RoleHierarchy(RoleMap map) {
 		this.map = map;
@@ -51,6 +41,12 @@ public class RoleHierarchy extends DirectedSparseGraph<Role,Integer>
 	
 	public void setLayout(AbstractLayout<Role, Integer> layout2) {
 		this.layout = layout2;
+	}
+	
+	public void setGraphMouse(
+			RoleEditingModalGraphMouse<Role, Integer> graphMouse) {
+		this.graphMouse = graphMouse;
+		
 	}
 	
 	public int getNextEdge() {
@@ -133,7 +129,18 @@ public class RoleHierarchy extends DirectedSparseGraph<Role,Integer>
 		return false;
 	}
 	
-	 public String toXML() {
+	public void addSavedAnnotation(SavedAnnotation annotation) {
+		if(savedAnnotations == null)
+				savedAnnotations = new ArrayList<SavedAnnotation<Role,String>>();
+		
+		savedAnnotations.add(annotation);
+	}
+	
+	public ArrayList<SavedAnnotation<Role,String>> getSavedAnnotations() {
+		return savedAnnotations;
+	}
+	
+	public String toXML() {
 	    	String xml = "<ROLEHIERARCHY>\n";
 	    	
 	    	Collection<Role> roles = getVertices();
@@ -155,6 +162,13 @@ public class RoleHierarchy extends DirectedSparseGraph<Role,Integer>
 	    	xml += "\t\t\t<Y>"+coord.getY()+"</Y>\n";
 	    	xml += "\t\t</COORDINATES>\n";
 	    	
+	    	if(graphMouse != null){
+	    		VertexAnnotation annotation = graphMouse.getAnnotatingPlugin().getAnnotation(role);
+	    		System.out.println("Annotation: "+annotation);
+	    		if(annotation != null)
+	    			xml += "\t\t<ANNOTATION>"+annotation.getAnnotation()+"</ANNOTATION>\n";
+	    	}
+	    	
 	    	Collection<Role> predecessors = getPredecessors(role);
 	    	if ( predecessors.size() > 0) {
 	    		xml += "\t\t<SUPERIORS>\n";
@@ -166,5 +180,7 @@ public class RoleHierarchy extends DirectedSparseGraph<Role,Integer>
 	    	xml += "\t</ROLE>\n";
 	    	return xml;
 	    }
+
+	
 	    
 }

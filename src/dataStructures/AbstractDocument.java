@@ -268,21 +268,30 @@ public abstract class AbstractDocument {
 	 */
 	private void createRoleHierarchy(Element thisRole, RoleHierarchy rh, StaticLayout sl){
 		String roleTitle = thisRole.getElementsByTagName("TITLE").item(0).getTextContent();
-		System.out.println("Title: "+ roleTitle);
 		
 		int roleKey = Integer.parseInt(thisRole.getAttribute("ID"));
-		System.out.println("Key: " + roleKey);
 		
+		// retrieve role based on ID
 		Role roleToAdd = roleMap.get(roleKey);
+		
+		// add role to graph
 		rh.addVertex(roleToAdd);
 		
+		// set location of vertex
 		Element coordElem = (Element) thisRole.getElementsByTagName("COORDINATES").item(0);
 		double xcoord = Double.parseDouble(coordElem.getElementsByTagName("X").item(0).getTextContent());
 		double ycoord = Double.parseDouble(coordElem.getElementsByTagName("Y").item(0).getTextContent());
-		System.out.println("Coordinates: ("+ xcoord+","+ycoord+")");
+		Point2D location = new Point2D.Double(xcoord,ycoord);
+		sl.setLocation(roleToAdd, location);
 		
-		sl.setLocation(roleToAdd, new Point2D.Double(xcoord,ycoord));
+		// set annotation if it has one
+		NodeList annotationNL = thisRole.getElementsByTagName("ANNOTATION");
+		if (annotationNL.getLength() > 0) {
+			String annotation = annotationNL.item(0).getTextContent();
+			rh.addSavedAnnotation(new SavedAnnotation(annotation, roleToAdd, location));
+		}
 		
+		// link node to its superiors
 		NodeList superiorList = thisRole.getElementsByTagName("SUPERIOR");
 		for( int i=0; i<superiorList.getLength(); i++) {
 			Element parentElem = (Element) superiorList.item(i);
@@ -292,6 +301,7 @@ public abstract class AbstractDocument {
 			rh.addEdge(roleEdge++, parentRole, roleToAdd);
 		}
 		
+		// update nextEdge to unused value
 		rh.setNextEdge(roleEdge);
 		
 	}

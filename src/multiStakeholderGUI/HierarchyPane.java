@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
@@ -19,6 +20,7 @@ import org.apache.commons.collections15.functors.ConstantTransformer;
 
 import dataStructures.AbstractDocument;
 import dataStructures.Role;
+import dataStructures.SavedAnnotation;
 import dataStructures.Vertex;
 import dataStructures.maps.MemberMap;
 import dataStructures.maps.RoleMap;
@@ -33,6 +35,7 @@ import edu.uci.ics.jung.visualization.decorators.EdgeShape;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import graph.RoleHierarchy;
 import graph.RoleEditingModalGraphMouse;
+import graph.annotations.VertexAnnotatingGraphMousePlugin;
 
 import mainGUI.UpdatePane;
 
@@ -58,7 +61,7 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 		
 	private AbstractLayout<Role, Integer> layout;
 	private VisualizationViewer<Role, Integer> vv;
-	private final RoleEditingModalGraphMouse<Role, Integer> graphMouse;
+	private RoleEditingModalGraphMouse<Role, Integer> graphMouse;
 	
 	// remember GUI Elements so they can be redrawn in update()
 	private JComboBox<Role> roleBox;
@@ -107,29 +110,18 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
         final GraphZoomScrollPane panel = new GraphZoomScrollPane(vv);
         add(panel);
         
-        // 
         graphMouse = new RoleEditingModalGraphMouse<Role, Integer>(
-				vv.getRenderContext(), vertexFactory, edgeFactory);
+				vv, vertexFactory, edgeFactory);
+        
+        // Set graphmouse so that annotations can be saved to output file
+        graph.setGraphMouse(graphMouse);
         
         vv.setGraphMouse(graphMouse);
         vv.addKeyListener(graphMouse.getModeKeyListener());
-        //graph.setGraphMouse(graphMouse);
         
-        // Add zoom controls
-        final ScalingControl scaler = new CrossoverScalingControl();
-
-        plus = new JButton("+");
-        plus.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                scaler.scale(vv, 1.1f, vv.getCenter());
-            }
-        });
-        minus = new JButton("-");
-        minus.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                scaler.scale(vv, 1/1.1f, vv.getCenter());
-            }
-        });
+        addSavedAnnotations();
+        
+        addZoomControls();
                 
         // set up control panel
         controls = new JPanel();
@@ -161,7 +153,7 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 		controls.add(minus);
 		controls.add(graphMouse.getModeComboBox());
 		setupRoleBox();
-		controls.add(roleBox);		
+		controls.add(roleBox);	
 	}
 	
 	/**
@@ -192,7 +184,37 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 		if (allRoles.length > 0) {
 			roleBox.setSelectedIndex(0);
 		}
-		// attributeBox.setMaximumRowCount(3);
+	}
+	
+	private void addSavedAnnotations() {
+		ArrayList<SavedAnnotation<Role,String>> savedAnnotations = 
+				graph.getSavedAnnotations();
+		if(savedAnnotations != null) {
+			VertexAnnotatingGraphMousePlugin annotatingPlugin = 
+					graphMouse.getAnnotatingPlugin();
+			for(SavedAnnotation<Role,String> savedAnnotation: savedAnnotations) {
+				annotatingPlugin.addSavedAnnotation(savedAnnotation);
+			}
+		}
+		vv.repaint();
+	}
+	
+	private void addZoomControls() {
+		 // Add zoom controls
+        final ScalingControl scaler = new CrossoverScalingControl();
+
+        plus = new JButton("+");
+        plus.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                scaler.scale(vv, 1.1f, vv.getCenter());
+            }
+        });
+        minus = new JButton("-");
+        minus.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                scaler.scale(vv, 1/1.1f, vv.getCenter());
+            }
+        });
 	}
 	
 	class ComboBoxRenderer extends DefaultListCellRenderer {
