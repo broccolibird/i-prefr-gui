@@ -1,6 +1,7 @@
 package mainGUI;
 
 import java.awt.Component;
+import java.io.File;
 
 import javax.swing.JFrame;
 
@@ -10,7 +11,14 @@ import dataStructures.CIDocument;
 public class PaneTurnerCI extends AbstractPaneTurner{
 	
 	public PaneTurnerCI(JFrame parent, CIDocument document, boolean isMultipleStakeholder) {
-		super(parent, document, isMultipleStakeholder);
+		super(parent, document, isMultipleStakeholder, null);
+		
+		setRightComponent(initializeViewPanes());
+	}
+	
+	public PaneTurnerCI(JFrame parent, CIDocument document, boolean isMultipleStakeholder,
+			File currentFile) {
+		super(parent, document, isMultipleStakeholder, currentFile);
 		
 		setRightComponent(initializeViewPanes());
 	}

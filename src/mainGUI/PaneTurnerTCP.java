@@ -1,6 +1,7 @@
 package mainGUI;
 
 import java.awt.Component;
+import java.io.File;
 
 import javax.swing.JFrame;
 
@@ -10,7 +11,12 @@ import dataStructures.TCPDocument;
 public class PaneTurnerTCP extends AbstractPaneTurner{
 
 	public PaneTurnerTCP(JFrame parent, TCPDocument document, boolean multipleStakeholder) {
-		super(parent, document, multipleStakeholder);
+		super(parent, document, multipleStakeholder, null);
+		setRightComponent(initializeViewPanes());
+	}
+	public PaneTurnerTCP(JFrame parent, TCPDocument document, boolean multipleStakeholder,
+			File currentFile) {
+		super(parent, document, multipleStakeholder, currentFile);
 		setRightComponent(initializeViewPanes());
 	}
 

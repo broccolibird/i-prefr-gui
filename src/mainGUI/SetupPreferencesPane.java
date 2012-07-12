@@ -297,6 +297,21 @@ public class SetupPreferencesPane extends UpdatePane implements ActionListener {
 	 */
 	private void savePreferencesAs() {
 		JFileChooser chooser = new JFileChooser();
+		AbstractPaneTurner paneTurner = (AbstractPaneTurner) getParent();
+		
+		String suggestedName;
+		File currentFile = paneTurner.getCurrentFile();
+		if ( currentFile != null) {
+			suggestedName = currentFile.getAbsolutePath();
+		} else {
+			suggestedName = paneTurner.getProjectFileName();
+		}
+		int suffixIndex = suggestedName.lastIndexOf('.');
+		suggestedName = (suffixIndex >= 0) ? 
+				suggestedName.substring(0, suffixIndex) : suggestedName;
+		suggestedName += "-preference-"+curMember.getName()+".xml";
+		
+		chooser.setSelectedFile(new File(suggestedName));
 		int option = chooser.showSaveDialog(this);
 		if (option == JFileChooser.APPROVE_OPTION) {
 			File file = chooser.getSelectedFile();

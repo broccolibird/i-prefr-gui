@@ -75,7 +75,7 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 		filenameField = new JTextField(35);
 		filenameField.setText(metaData.getFilename());
 		filenameField.getDocument().addDocumentListener(this);
-		if(selected != 0) // same name selected
+		if(selected == null || selected == 1) // same name selected
 			filenameField.setEnabled(false);
 		panel.add(filenameField);
 		

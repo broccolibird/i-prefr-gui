@@ -41,6 +41,8 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 	protected SetupProjectPane projectPane;
 	protected SetupPreferencesPane preferencesPane;
 	
+	private File currentFile;
+	
 	static String[] s_prefReasSteps = { "Setup Project", "Add Attributes", 
 		"Attribute\nDomains", "Add\nAlternatives", "Alternative\nValues", 
 		"Setup Preferences", "View Result" }; 
@@ -56,10 +58,12 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 	 * @param document
 	 * @param isMultipleStakeholder
 	 */
-	public AbstractPaneTurner(JFrame parent, AbstractDocument document, boolean isMultipleStakeholder) {
+	public AbstractPaneTurner(JFrame parent, AbstractDocument document, boolean isMultipleStakeholder,
+			File currentFile) {
 		this.parent = parent;
 		this.document = document;
 		this.isMultipleStakeholder = isMultipleStakeholder;
+		this.currentFile = currentFile;
 	
 		setupActions();
 		setLeftComponent(getChooser());
@@ -213,6 +217,21 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 	
 	public void setProjectFileName(String fileName){
 		projectPane.setSavedFileName(fileName);
+	}
+
+	/**
+	 * Set the project file
+	 * @param curFile
+	 */
+	public void setCurrentFile(File curFile) {
+		this.currentFile = curFile;
+	}
+	
+	/**
+	 * @return the current project file
+	 */
+	public File getCurrentFile() {
+		return currentFile;
 	}
 
 }

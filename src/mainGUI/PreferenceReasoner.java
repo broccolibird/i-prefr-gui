@@ -40,8 +40,6 @@ public class PreferenceReasoner extends JApplet{
 	private static AbstractPaneTurner paneTurner;
 	private static JFrame frame;
 	public static boolean loading;
-	
-	private static File curFile;
 
 	public static void main(String[] args) {
 		// new JDialog: name your project
@@ -50,7 +48,6 @@ public class PreferenceReasoner extends JApplet{
 		frame.addWindowListener(new ReasonerWindowListener());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		paneTurner = null;
-		curFile = null;
 		
 		// Setup menu options
 		JMenu fileMenu = new JMenu("File");
@@ -65,10 +62,10 @@ public class PreferenceReasoner extends JApplet{
 				if(paneTurner == null) {
 					JOptionPane.showMessageDialog(frame, "Please create a project before saving.",
 							"Project does not exist", JOptionPane.PLAIN_MESSAGE);
-				} else if (curFile == null){
+				} else if (paneTurner.getCurrentFile() == null){
 					showSaveDialog();
 				} else {
-					save(curFile);
+					save(paneTurner.getCurrentFile());
 				}
 			}
 		});
@@ -112,7 +109,6 @@ public class PreferenceReasoner extends JApplet{
 					switchProject = showSaveChangesDialog();
 				
 				if ( switchProject ) {
-					curFile = null;
 					//use a chooser to get the file to open
 					JFileChooser chooser = new JFileChooser();
 				    FileNameExtensionFilter filter = new FileNameExtensionFilter(
@@ -207,8 +203,6 @@ public class PreferenceReasoner extends JApplet{
 			paneTurner = new PaneTurnerCI(frame, new CIDocument(config.multipleSelected), config.multipleSelected);	
 		}
 		
-		curFile = null;
-		
 		frame.getContentPane().add(paneTurner);
 		frame.pack();
 	}
@@ -244,8 +238,8 @@ public class PreferenceReasoner extends JApplet{
 		    e.printStackTrace();
 		}
 		
-		curFile = xmlfile;
-		paneTurner.setProjectFileName(curFile.getName());
+		paneTurner.setCurrentFile(xmlfile);
+		paneTurner.setProjectFileName(paneTurner.getCurrentFile().getName());
 		paneTurner.setSaved(true);
 		return true;
 	}
@@ -268,8 +262,6 @@ public class PreferenceReasoner extends JApplet{
 					"Error Loading File", JOptionPane.PLAIN_MESSAGE);
 			return;
 		} 
-		
-		curFile = file;
 		
 		// retrieve network type from document
 		NodeList nList = doc.getElementsByTagName("NETWORK");
@@ -303,14 +295,14 @@ public class PreferenceReasoner extends JApplet{
 			//frame.removeAll();
 			CIDocument oldCIDocument = new CIDocument(doc);
 			loading = false;
-			paneTurner = new PaneTurnerCI(frame, oldCIDocument, isMultiStakeholder);
+			paneTurner = new PaneTurnerCI(frame, oldCIDocument, isMultiStakeholder, file);
 			frame.getContentPane().add(paneTurner);
 			frame.pack();
 		}else if(networkType.equals("TCP")){
 			//frame.removeAll();
 			TCPDocument oldTCPDocument = new TCPDocument(doc);
 			loading = false;
-			paneTurner = new PaneTurnerTCP(frame, oldTCPDocument, isMultiStakeholder);
+			paneTurner = new PaneTurnerTCP(frame, oldTCPDocument, isMultiStakeholder, file);
 			frame.getContentPane().add(paneTurner);
 			frame.pack();
 		}
