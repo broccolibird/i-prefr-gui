@@ -21,7 +21,7 @@ public class MetaData {
 	private boolean existChanges;
 
 	public MetaData() {
-		this("untitled", "unnamed", new ModelCheckerOption(
+		this("untitled.xml", "untitled", new ModelCheckerOption(
 				ModelCheckerOption.MODEL_CHECKER_0), new GregorianCalendar(),new OptionMap());
 		existChanges = false;
 	}

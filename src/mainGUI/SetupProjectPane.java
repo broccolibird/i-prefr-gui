@@ -74,13 +74,11 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 
 		filenameField = new JTextField(35);
 		filenameField.getDocument().addDocumentListener(this);
-		if(!sameNameCheckBox.isSelected()){
-			filenameField.setText(metaData.getFilename());
-		}else{
-			filenameField.setText(metaData.getProjectName());
-		}
+		filenameField.setText(metaData.getFilename());
 		filenameField.setEnabled(false);
 		panel.add(filenameField);
+		
+		// Add Model Checker options
 		panel.add(new JLabel("Selected Model Checker"));
 
 		ModelCheckerOption[] options = ModelCheckerOption.getAllOptions();
@@ -100,6 +98,7 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 
 		panel.add(modelCheckerComboBox);
 
+		// Add project date label
 		panel.add(new JLabel("Project created on: "
 				+ metaData.getCreationDate().get(Calendar.MONTH) + "/"
 				+ metaData.getCreationDate().get(Calendar.DATE) + "/"
@@ -131,7 +130,7 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 			} else {
 				selectSameName(true);
 				filenameField.setEnabled(false);
-				filenameField.setText(projectNameField.getText());
+				filenameField.setText(projectNameField.getText()+".xml");
 			}
 		}
 	}
@@ -157,8 +156,8 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 			metaData.setProjectName(projectName);
 
 			if (sameNameCheckBox.isSelected()) {
-				filenameField.setText(projectName);
-				metaData.setFilename(projectName);
+				filenameField.setText(projectName+".xml");
+				metaData.setFilename(projectName+".xml");
 			}
 
 		} else if (e.getDocument() == filenameField.getDocument()) {

@@ -173,6 +173,11 @@ public class PreferenceReasoner extends JApplet{
 	 */
 	private static boolean showSaveDialog(){
 		JFileChooser chooser = new JFileChooser();
+		
+		// suggest filename used on SetupProjectPane
+		String filename = paneTurner.getProjectFileName();
+		chooser.setSelectedFile(new File(filename));
+		
 		int option = chooser.showSaveDialog(paneTurner);
 		if (option == JFileChooser.APPROVE_OPTION) {
 			File file = chooser.getSelectedFile();

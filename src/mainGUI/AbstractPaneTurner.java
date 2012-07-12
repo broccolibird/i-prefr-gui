@@ -179,8 +179,7 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 	}
 	
 	/**
-	 * Returns true if the document contains changes.
-	 * @return true if the document contians changes
+	 * @return true if the document contains changes
 	 */
 	public boolean existChanges() {
 		return document.existChanges();
@@ -201,6 +200,14 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 	 */
 	public void checkChangesInPreferences() {
 		preferencesPane.checkForUnsavedChanges();
+	}
+	
+	/**
+	 * Returns filename input by user on the SetupProjectPane
+	 * @return filename
+	 */
+	public String getProjectFileName() {
+		return document.getMetaData().getFilename();
 	}
 
 }
