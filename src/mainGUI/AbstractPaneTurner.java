@@ -38,6 +38,7 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 	
 	protected AbstractDocument document;
 	
+	protected SetupProjectPane projectPane;
 	protected SetupPreferencesPane preferencesPane;
 	
 	static String[] s_prefReasSteps = { "Setup Project", "Add Attributes", 
@@ -208,6 +209,10 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 	 */
 	public String getProjectFileName() {
 		return document.getMetaData().getFilename();
+	}
+	
+	public void setProjectFileName(String fileName){
+		projectPane.setSavedFileName(fileName);
 	}
 
 }

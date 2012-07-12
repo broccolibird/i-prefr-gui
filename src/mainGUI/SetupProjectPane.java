@@ -73,9 +73,10 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 		panel.add(filenameHeader);
 
 		filenameField = new JTextField(35);
-		filenameField.getDocument().addDocumentListener(this);
 		filenameField.setText(metaData.getFilename());
-		filenameField.setEnabled(false);
+		filenameField.getDocument().addDocumentListener(this);
+		if(selected != 0) // same name selected
+			filenameField.setEnabled(false);
 		panel.add(filenameField);
 		
 		// Add Model Checker options
@@ -118,6 +119,19 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 		}else{
 			metaData.getDisplayOptions().put(OptionMap.SAME_NAME, 0);
 		}		
+	}
+	
+	/**
+	 * Set File Name field after saving project changes
+	 * @param fileName
+	 */
+	public void setSavedFileName(String fileName) {
+		if(!(fileName.equals(filenameField.getText()) ||
+				fileName.equals(projectNameField.getText()+".xml"))){
+			sameNameCheckBox.setSelected(false);
+		}
+		filenameField.setText(fileName);
+		metaData.setSaved(true);
 	}
 
 	@Override

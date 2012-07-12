@@ -64,7 +64,6 @@ public class MetaData {
 	}
 
 	public void setFilename(String filename) {
-		// System.out.println("filename set to "+filename);
 		this.filename = filename;
 		existChanges = true;
 	}
@@ -74,7 +73,6 @@ public class MetaData {
 	}
 
 	public void setProjectName(String projectName) {
-		// System.out.println("project name set to "+projectName);
 		this.projectName = projectName;
 		existChanges = true;
 	}
@@ -107,6 +105,9 @@ public class MetaData {
 				+ creationDate.get(Calendar.YEAR);
 	}
 	
+	/**
+	 * @return MetaData in XML String format
+	 */
 	public String toXML(){
 		String metaData = "\t<METADATA>\n";
 		metaData += "\t\t<FILENAME>"+filename+"</FILENAME>\n";

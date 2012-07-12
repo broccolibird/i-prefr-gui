@@ -245,6 +245,7 @@ public class PreferenceReasoner extends JApplet{
 		}
 		
 		curFile = xmlfile;
+		paneTurner.setProjectFileName(curFile.getName());
 		paneTurner.setSaved(true);
 		return true;
 	}

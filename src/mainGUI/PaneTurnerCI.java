@@ -19,7 +19,8 @@ public class PaneTurnerCI extends AbstractPaneTurner{
 	protected Component initializeViewPanes() {
 		int index = 0;
 		viewPanes = new UpdatePane[metaPanes.length];
-		viewPanes[index++] = new SetupProjectPane(document.getMetaData());
+		projectPane = new SetupProjectPane(document.getMetaData());
+		viewPanes[index++] = projectPane;
 
 		// pass the reference in to the AttributePane which creates
 		// AttributeTuples the AttributeTuple deletes an Attribute vertex from

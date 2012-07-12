@@ -30,7 +30,8 @@ public class PaneTurnerTCP extends AbstractPaneTurner{
 		viewPanes[index++] = preferencesPane;
 		viewPanes[index] = new ViewResultsPane(document,parent);
 		
-		viewPanes[0] = new SetupProjectPane(document.getMetaData());
+		projectPane = new SetupProjectPane(document.getMetaData());
+		viewPanes[0] = projectPane;
 
 		// pass the reference in to the AttributePane which creates
 		// AttributeTuples the AttributeTuple deletes an Attribute vertex from
