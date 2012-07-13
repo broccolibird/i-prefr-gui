@@ -237,5 +237,12 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 	public File getCurrentFile() {
 		return currentFile;
 	}
+	
+	/**
+	 * calls update on the current panel
+	 */
+	public void updateRightPane() {
+		viewPanes[currentSelected].update();
+	}
 
 }

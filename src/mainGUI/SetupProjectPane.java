@@ -1,5 +1,6 @@
 package mainGUI;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -109,7 +110,9 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 
 	@Override
 	public void update() {
-		// Do nothing
+		projectNameField.requestFocusInWindow();
+		projectNameField.select(0, projectNameField.getSelectionEnd());
+		projectNameField.setSelectionColor(new Color(0, 0, 0, 25));
 	}
 	
 	private void selectSameName(boolean selected){

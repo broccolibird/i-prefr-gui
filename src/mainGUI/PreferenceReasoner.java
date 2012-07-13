@@ -205,6 +205,8 @@ public class PreferenceReasoner extends JApplet{
 		
 		frame.getContentPane().add(paneTurner);
 		frame.pack();
+		
+		paneTurner.updateRightPane();
 	}
 
 	/**
