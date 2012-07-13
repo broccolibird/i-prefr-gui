@@ -95,7 +95,7 @@ public class RolePane extends UpdatePane implements ActionListener{
 	public void update() {
 		rolePanel.removeAll();
 		JPanel label = new JPanel();
-		// TODO - is this necessary to set the layout?
+		
 		label.setLayout(new BoxLayout(label, BoxLayout.X_AXIS));
 		JLabel name = new JLabel("Role Name");
 		label.add(name);
@@ -108,9 +108,9 @@ public class RolePane extends UpdatePane implements ActionListener{
 					rolePanel, graph));
 		RoleTuple tuple = (RoleTuple) rolePanel.add(
 				new RoleTuple(map, parentFrame, rolePanel, graph));
-		tuple.getTextField().requestFocusInWindow();
+		
 		
 		parentFrame.pack();
-
+		tuple.getTextField().requestFocusInWindow();
 	}
 }

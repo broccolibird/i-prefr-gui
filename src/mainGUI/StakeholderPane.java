@@ -37,7 +37,8 @@ public class StakeholderPane extends UpdatePane {
 	
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
+		paneTurner.requestFocusInWindow();
+		paneTurner.updateRightPane();
 
 	}
 

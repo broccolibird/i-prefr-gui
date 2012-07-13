@@ -27,6 +27,8 @@ import mainGUI.UpdatePane;
  * PaneTurnerMS is a PaneTurner which flips through 
  * the Multiple-stakeholder UpdatePanes and denotes 
  * which sub-pane is open.
+ * 
+ * @author Carl
  * @author Kat Mitchell
  *
  */
@@ -125,12 +127,11 @@ public class PaneTurnerMS extends JSplitPane {
 	private void setupActions() {
 		next = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println(currentSelected);
 				metaPanes[currentSelected].toggleColor();
 				if (currentSelected < metaPanes.length - 1) {
 					currentSelected++;
-					viewPanes[currentSelected].update();
 					setRightComponent(viewPanes[currentSelected]);
+					viewPanes[currentSelected].update();
 				} else if (currentSelected == metaPanes.length - 1){
 					parentTurner.next();
 				} 
@@ -139,12 +140,11 @@ public class PaneTurnerMS extends JSplitPane {
 		};
 		prev = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println(currentSelected);
 				metaPanes[currentSelected].toggleColor();
 				if (currentSelected > 0) {
 					currentSelected--;
-					viewPanes[currentSelected].update();
 					setRightComponent(viewPanes[currentSelected]);
+					viewPanes[currentSelected].update();
 				} else if ( currentSelected == 0 ) {
 					parentTurner.previous();
 				}
@@ -172,5 +172,12 @@ public class PaneTurnerMS extends JSplitPane {
 
 		getActionMap().put("next", next);
 		getActionMap().put("prev", prev);
+	}
+	
+	/**
+	 * calls update on the current panel
+	 */
+	public void updateRightPane() {
+		viewPanes[currentSelected].update();
 	}
 }
