@@ -145,6 +145,7 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 				selectSameName(true);
 				filenameField.setEnabled(false);
 				filenameField.setText(projectNameField.getText()+".xml");
+				metaData.setFilename(filenameField.getText());
 			}
 		}
 	}

@@ -215,6 +215,10 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 		return document.getMetaData().getFilename();
 	}
 	
+	/**
+	 * Set filename on the SetupProjectPane
+	 * @param fileName
+	 */
 	public void setProjectFileName(String fileName){
 		projectPane.setSavedFileName(fileName);
 	}
