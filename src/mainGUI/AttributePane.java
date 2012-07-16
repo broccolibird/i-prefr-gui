@@ -26,19 +26,19 @@ public class AttributePane extends UpdatePane implements ActionListener {
 	private JPanel attributePanel;
 	private JButton plusButton;
 	private JFrame parentFrame;
-	private SetupPreferencesPane preferencesPane;
+	private PreferencePane preferencePane;
 
 	/**
 	 * Creates a new instance of AttributePane
 	 * @param oldMap
-	 * @param preferencesPane
+	 * @param preferencePane
 	 * @param parentFrame
 	 */
 	public AttributePane(AttributeMap oldMap,
-			SetupPreferencesPane preferencesPane, JFrame parentFrame) {
+			PreferencePane preferencePane, JFrame parentFrame) {
 		this.map = oldMap;
 		this.parentFrame = parentFrame;
-		this.preferencesPane = preferencesPane;
+		this.preferencePane = preferencePane;
 		this.add(initializeGUI());
 		setVisible(true);
 	}
@@ -79,7 +79,7 @@ public class AttributePane extends UpdatePane implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (plusButton == e.getSource()) {
 			AttributeTuple tuple = (AttributeTuple) attributePanel.add(new AttributeTuple(
-					map, parentFrame, attributePanel, preferencesPane));
+					map, parentFrame, attributePanel, preferencePane));
 			tuple.getTextField().requestFocusInWindow();
 			pack();
 		}
@@ -105,9 +105,9 @@ public class AttributePane extends UpdatePane implements ActionListener {
 		Collection<Entry<Integer, Attribute>> set = map.entrySet();
 		for (Entry<Integer, Attribute> p : set)
 			attributePanel.add(new AttributeTuple(p.getKey(), map, parentFrame,
-					attributePanel, preferencesPane));
+					attributePanel, preferencePane));
 		AttributeTuple tuple = (AttributeTuple) attributePanel.add(new AttributeTuple(map, 
-									parentFrame, attributePanel, preferencesPane));
+									parentFrame, attributePanel, preferencePane));
 		tuple.getTextField().requestFocusInWindow();
 		parentFrame.pack();
 	}

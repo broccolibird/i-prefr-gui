@@ -39,7 +39,7 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 	protected AbstractDocument document;
 	
 	protected SetupProjectPane projectPane;
-	protected SetupPreferencesPane preferencesPane;
+	protected PreferencePane preferencesPane;
 	
 	private File currentFile;
 	

@@ -3,6 +3,8 @@ package mainGUI;
 
 import guiElements.tuples.ImportanceTuple;
 
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
@@ -12,10 +14,12 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Map.Entry;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -26,6 +30,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import dataStructures.AbstractDocument;
 import dataStructures.Attribute;
 import dataStructures.AttributeList;
 import dataStructures.Importance;
@@ -38,66 +43,96 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 	private AttributeMap attributeMap;
 	private ImportanceMap map;
 	private JPanel importancePanel;
-	private JFrame parentFrame;
 	private JButton plusButton;
+	private Component glue;
 		
 		/**
 		 * Create new instance of ImportancePane
 		 * @param attributeMap
 		 * @param parent
 		 */
-		public ImportancePane(AttributeMap attributeMap,JFrame parent) {
-			this.parentFrame=parent;
-			this.attributeMap=attributeMap;
+		public ImportancePane(JFrame parent, AbstractDocument document) {
+			super(parent, document);
+			this.attributeMap = document.getAttributeMap();
 			this.map = new ImportanceMap();
-			this.add(initializeGUI());
+			this.glue = Box.createGlue();
+			createGUI();
 		}
 		
-		/**
-		 * Setup ImportancePane GUI
-		 * @return JPanel
-		 */
-		private JPanel initializeGUI(){
-			JPanel panel= new JPanel();
-			panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-			importancePanel = new JPanel();
-			importancePanel.setLayout(new BoxLayout(importancePanel, BoxLayout.Y_AXIS));
-			update();
-			panel.add(importancePanel);
-			plusButton = new JButton("+");
-			plusButton.addActionListener(this);
-			panel.add(plusButton);
-			return panel;
+		private void createGUI(){
+			setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+			
+			initializePreferencePanel();
+			
+			createFileControls();
+			
+			createNoMemberField();
+			
+			super.update();
+			
+			add(fileControls);
+			add(Box.createRigidArea(new Dimension(10, 10)));
+			add(preferencePanel);
+			add(glue);
 		}
 
 		@Override
 		public void update() {
-			importancePanel.removeAll();
+			updatePreferencePanel();
+			super.update();
+		}
+		
+
+		@Override
+		protected void initializePreferencePanel() {
+			preferencePanel = new JPanel();
+			preferencePanel.setLayout(new BoxLayout(preferencePanel, BoxLayout.Y_AXIS));
 			
 			JTextField columnName = new JTextField("Conditional Importance Expression");
+			columnName.setMaximumSize(new Dimension(450, 20));
+			columnName.setPreferredSize(new Dimension(450, 20));
+			columnName.setAlignmentX(CENTER_ALIGNMENT);
 			columnName.setEditable(false);
-			importancePanel.add(columnName);
+			preferencePanel.add(columnName);
 			
+			importancePanel = new JPanel();
+			importancePanel.setLayout(new BoxLayout(importancePanel, BoxLayout.PAGE_AXIS));
+			
+			updatePreferencePanel();
+			
+			JScrollPane importanceScrollPane = new JScrollPane(importancePanel);
+			
+			preferencePanel.add(importanceScrollPane);
+			plusButton = new JButton("+");
+			plusButton.addActionListener(this);
+			plusButton.setAlignmentX(CENTER_ALIGNMENT);
+			preferencePanel.add(plusButton);
+		}
+		
+		protected void updatePreferencePanel() {
+			importancePanel.removeAll();
 			
 			//for every map entry, add a tuple to the table,then one more
 			Collection<Entry<Integer, Importance>> set = map.entrySet();
 			System.out.println("set size: "+set.size());
 			Attribute[] allAttributes = getAttributes();
 			for (Entry<Integer, Importance> p : set)
-				importancePanel.add(new ImportanceTuple(p.getKey(),map,parentFrame,importancePanel,allAttributes));
-			importancePanel.add(new ImportanceTuple(map,parentFrame,importancePanel,allAttributes));
-			parentFrame.pack();
+				importancePanel.add(new ImportanceTuple(p.getKey(),map,parent,importancePanel,allAttributes));
+			importancePanel.add(new ImportanceTuple(map,parent,importancePanel,allAttributes));
+			parent.pack();	
 		}
 
 		public void clearPane() {
-			// nothing to clear
+			this.map = new ImportanceMap();
 		}
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (plusButton == e.getSource()) {
-				importancePanel.add(new ImportanceTuple(map,parentFrame,importancePanel,getAttributes()));
-				parentFrame.pack();
+				importancePanel.add(new ImportanceTuple(map,parent,importancePanel,getAttributes()));
+				parent.pack();
+			} else {
+				super.actionPerformed(e);
 			}
 		}
 		
@@ -170,6 +205,10 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 			return true;
 		}
 
+		/**
+		 * Save member preferences to provided file
+		 * @return true if the file was saved successfully
+		 */
 		public boolean saveMemberPreferences(File preferenceFile) {
 			String xmlRepresentation = map.toXML();
 			
@@ -181,6 +220,7 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 			}
 			catch (IOException e) {
 			    e.printStackTrace();
+			    // save failed, return false
 			    return false;
 			}
 			
@@ -200,6 +240,5 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 		public boolean existUnsavedChanges() {
 			return map.existUnsavedChanges();
 		}
-
 
 }

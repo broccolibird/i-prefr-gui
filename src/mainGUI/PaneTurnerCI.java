@@ -43,7 +43,7 @@ public class PaneTurnerCI extends AbstractPaneTurner{
 		if( isMultipleStakeholder ){
 			viewPanes[index++] = new StakeholderPane(parent, document, this);
 		} 
-		preferencesPane = new SetupPreferencesPane(parent, document, isMultipleStakeholder);
+		preferencesPane = new ImportancePane(parent, document);
 		viewPanes[index++] = preferencesPane;
 		//viewPanes[index++] = new ImportancePane(document.getAttributeMap(),parent,document.getImportanceMap());
 		viewPanes[index] = new ViewResultsPane(document,parent);

@@ -1,6 +1,5 @@
 package mainGUI;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -43,10 +42,7 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 	private SparseMultigraph<Attribute, EdgeStatementMap> graph;
 	private AbstractLayout<Attribute, EdgeStatementMap> layout;
 	private VisualizationViewer<Attribute, EdgeStatementMap> vv;
-	private AbstractDocument abstractDocument;
-	@SuppressWarnings("unused")
-	private JFrame parentFrame;
-	private final EditingModalGraphMouse<Attribute, EdgeStatementMap> graphMouse;
+	private EditingModalGraphMouse<Attribute, EdgeStatementMap> graphMouse;
 
 	// remember GUI Elements so they can be redrawn in update()
 	private JComboBox attributeBox;
@@ -59,10 +55,27 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 	 * @param abstractDocument
 	 * @param parentFrame
 	 */
-	public SetupGraphPane(AbstractDocument abstractDocument, JFrame parentFrame) {
-		this.abstractDocument = abstractDocument;
-		this.parentFrame = parentFrame;
+	public SetupGraphPane(JFrame parent, AbstractDocument document) {
+		super(parent, document);
 
+		createGUI();
+	}
+	
+	private void createGUI() {
+		initializePreferencePanel();
+		
+		createFileControls();
+		
+		createNoMemberField();
+		
+		super.update();
+		
+		add(fileControls);
+		add(preferencePanel);
+		add(noMembers);
+	}
+
+	private JPanel setupGraph() {
 		// create a simple graph for the demo
 		graph = new SparseMultigraph<Attribute, EdgeStatementMap>();
 
@@ -89,15 +102,14 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 		vv.setVertexToolTipTransformer(vv.getRenderContext()
 				.getVertexLabelTransformer());
 
-		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		final GraphZoomScrollPane panel = new GraphZoomScrollPane(vv);
-		add(panel);
+		
 		Factory<Attribute> vertexFactory = new VertexFactory();
 		Factory<EdgeStatementMap> edgeFactory = new EdgeFactory();
 
 		graphMouse = new EditingModalGraphMouse<Attribute, EdgeStatementMap>(
-				vv.getRenderContext(), vertexFactory, edgeFactory, parentFrame,
-				abstractDocument.getAttributeMap(),graph,edgeLabelMap);
+				vv.getRenderContext(), vertexFactory, edgeFactory, parent,
+				document.getAttributeMap(),graph,edgeLabelMap);
 
 		// the EditingGraphMouse will pass mouse event coordinates to the
 		// vertexLocations function to set the locations of the vertices as
@@ -107,7 +119,14 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 		vv.addKeyListener(graphMouse.getModeKeyListener());
 
 		graphMouse.setMode(ModalGraphMouse.Mode.EDITING);
-
+		
+		return panel;
+	}
+	
+	/**
+	 * create graph scale control buttons
+	 */
+	private void createScaleControl() {
 		final ScalingControl scaler = new CrossoverScalingControl();
 		plus = new JButton("+");
 		plus.addActionListener(new ActionListener() {
@@ -123,10 +142,8 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 		});
 
 		controls = new JPanel();
-		update();
-		add(controls, BorderLayout.SOUTH);
 	}
-
+	
 	/**
 	 * Sets all previously used attributes to unused
 	 */
@@ -140,6 +157,27 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 	
 	@Override
 	public void update() {
+		updatePreferencePanel();
+		super.update();
+	}
+	
+	@Override
+	protected void initializePreferencePanel() {
+		JPanel graphPanel = setupGraph();
+
+		createScaleControl();
+		
+		updatePreferencePanel();
+		
+		preferencePanel = new JPanel();
+		preferencePanel.setLayout(new BoxLayout(preferencePanel, BoxLayout.PAGE_AXIS));
+		preferencePanel.add(graphPanel);
+		preferencePanel.add(controls);
+		
+	}
+	
+	@Override
+	public void updatePreferencePanel() {		
 		controls.removeAll();
 		controls.add(plus);
 		controls.add(minus);
@@ -161,7 +199,7 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 	 */
 	private void setupAttributeBox() {
 		// make combobox with all attributes
-		Attribute[] allAttributes = abstractDocument.getAttributeMap().values()
+		Attribute[] allAttributes = document.getAttributeMap().values()
 				.toArray(new Attribute[0]);
 		attributeBox = new JComboBox(allAttributes);
 
@@ -192,6 +230,8 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 //				System.out.println("attribute is already used");
 //				// maybe warn the user that their selection is not going to work
 			}
+		} else {
+			super.actionPerformed(e);
 		}
 
 	}
