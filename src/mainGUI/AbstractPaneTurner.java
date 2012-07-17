@@ -19,6 +19,11 @@ import javax.swing.KeyStroke;
 
 import dataStructures.AbstractDocument;
 
+/**
+ * AbstractPaneTurner is an extension of JSplitPane which shows
+ * a menu (metaPanes) with previous and next buttons on the left and content
+ * panels (viewPanes) on the right.
+ */
 @SuppressWarnings("serial")
 public abstract class AbstractPaneTurner extends JSplitPane {
 

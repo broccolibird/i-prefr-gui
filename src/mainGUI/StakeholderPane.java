@@ -9,6 +9,11 @@ import dataStructures.AbstractDocument;
 
 import multiStakeholderGUI.PaneTurnerMS;
 
+/**
+ * The StakeholderPane is an UpdatePane that contains a
+ * sub-paneTurner and all panels necessary to input
+ * information for multiple stakeholders.
+ */
 @SuppressWarnings("serial")
 public class StakeholderPane extends UpdatePane {
 

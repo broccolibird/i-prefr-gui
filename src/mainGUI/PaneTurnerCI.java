@@ -7,6 +7,10 @@ import javax.swing.JFrame;
 
 import dataStructures.CIDocument;
 
+/**
+ * The PaneTurnerCI class is a PaneTurner populated with 
+ * CI-Net input panels.
+ */
 @SuppressWarnings("serial")
 public class PaneTurnerCI extends AbstractPaneTurner{
 	
@@ -45,7 +49,6 @@ public class PaneTurnerCI extends AbstractPaneTurner{
 		} 
 		preferencesPane = new ImportancePane(parent, document);
 		viewPanes[index++] = preferencesPane;
-		//viewPanes[index++] = new ImportancePane(document.getAttributeMap(),parent,document.getImportanceMap());
 		viewPanes[index] = new ViewResultsPane(document,parent);
 		
 		

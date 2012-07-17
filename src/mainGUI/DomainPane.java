@@ -13,6 +13,10 @@ import javax.swing.JTextField;
 import dataStructures.Attribute;
 import dataStructures.maps.AttributeMap;
 
+/**
+ * The DomainPane is an UpdatePane with fields for entry of
+ * Attribute Domains.
+ */
 @SuppressWarnings("serial")
 public class DomainPane extends UpdatePane {
 

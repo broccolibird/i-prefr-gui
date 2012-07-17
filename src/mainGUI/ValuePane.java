@@ -17,6 +17,10 @@ import dataStructures.Attribute;
 import dataStructures.maps.AlternativeMap;
 import dataStructures.maps.AttributeMap;
 
+/**
+ * The ValuePane is an UpdatePane with fields for entry of
+ * Alternative Values.
+ */
 @SuppressWarnings("serial")
 public class ValuePane extends UpdatePane{
 	private AlternativeMap alternativeMap;

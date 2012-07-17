@@ -28,6 +28,11 @@ import dataStructures.Role;
 import dataStructures.maps.MemberMap;
 import dataStructures.maps.RoleMap;
 
+/**
+ * The ViewResultsPane is an UpdatePane which compiles all previous
+ * input, queries the PreferenceReasoner back-end, and displays
+ * the query results.
+ */
 @SuppressWarnings("serial")
 public class ViewResultsPane extends UpdatePane implements ActionListener {
 	public static final int CONSISTENCY = 0;

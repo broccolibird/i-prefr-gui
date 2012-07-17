@@ -37,6 +37,10 @@ import dataStructures.Importance;
 import dataStructures.maps.AttributeMap;
 import dataStructures.maps.ImportanceMap;
 
+/**
+ * The ImportancePane is a PreferencePane with fields for entry
+ * of a stakeholder's importances.
+ */
 @SuppressWarnings("serial")
 public class ImportancePane extends PreferencePane implements ActionListener{
 
@@ -109,6 +113,7 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 			preferencePanel.add(plusButton);
 		}
 		
+		@Override
 		protected void updatePreferencePanel() {
 			importancePanel.removeAll();
 			
@@ -122,7 +127,10 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 			parent.pack();	
 		}
 
-		public void clearPane() {
+		/**
+		 * Resets the importance map.
+		 */
+		public void clearPreferenceData() {
 			this.map = new ImportanceMap();
 		}
 		
@@ -155,6 +163,7 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 			} catch (ParserConfigurationException | SAXException | 
 						IOException e) {
 				e.printStackTrace();
+				return false;
 			}
 			
 			// create the importanceMap
@@ -199,16 +208,13 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 				map.put(thisKey, thisValue);
 			}
 			
-			// loaded preferences are already saved
+			// set loaded importance map as saved
 			map.setSaved(true);
 			
 			return true;
 		}
 
-		/**
-		 * Save member preferences to provided file
-		 * @return true if the file was saved successfully
-		 */
+		@Override
 		public boolean saveMemberPreferences(File preferenceFile) {
 			String xmlRepresentation = map.toXML();
 			

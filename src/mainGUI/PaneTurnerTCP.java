@@ -7,6 +7,10 @@ import javax.swing.JFrame;
 
 import dataStructures.TCPDocument;
 
+/**
+ * The PaneTurnerTCP class is a PaneTurner populated with 
+ * TCP-Net input panels.
+ */
 @SuppressWarnings("serial")
 public class PaneTurnerTCP extends AbstractPaneTurner{
 
@@ -14,6 +18,7 @@ public class PaneTurnerTCP extends AbstractPaneTurner{
 		super(parent, document, multipleStakeholder, null);
 		setRightComponent(initializeViewPanes());
 	}
+	
 	public PaneTurnerTCP(JFrame parent, TCPDocument document, boolean multipleStakeholder,
 			File currentFile) {
 		super(parent, document, multipleStakeholder, currentFile);
@@ -31,7 +36,6 @@ public class PaneTurnerTCP extends AbstractPaneTurner{
 		
 		// the graph used in the SetupGraphPane must be linked to each
 		// AttributeTuple, so get a reference to it
-		//viewPanes[index] = new SetupGraphPane(document,parent);
 		preferencesPane = new SetupGraphPane(parent, document);
 		viewPanes[index++] = preferencesPane;
 		viewPanes[index] = new ViewResultsPane(document,parent);

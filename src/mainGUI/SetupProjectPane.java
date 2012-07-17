@@ -20,6 +20,10 @@ import dataStructures.MetaData;
 import dataStructures.ModelCheckerOption;
 import dataStructures.maps.OptionMap;
 
+/**
+ * The SetupProjectPane is an UpdatePane with entry fields and
+ * display fields for project MetaData.
+ */
 @SuppressWarnings("serial")
 public class SetupProjectPane extends UpdatePane implements DocumentListener,
 		ItemListener, ActionListener {
@@ -29,10 +33,10 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 	private JTextField projectNameField;
 	private JTextField filenameField;
 	private JCheckBox sameNameCheckBox;
-	private JComboBox modelCheckerComboBox;
+	private JComboBox<ModelCheckerOption> modelCheckerComboBox;
 
 	/**
-	 * Create a new instanceof the SetupProjectPane
+	 * Create a new instance of the SetupProjectPane
 	 * @param metaData
 	 */
 	public SetupProjectPane(MetaData metaData) {
@@ -84,7 +88,7 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 		panel.add(new JLabel("Selected Model Checker"));
 
 		ModelCheckerOption[] options = ModelCheckerOption.getAllOptions();
-		modelCheckerComboBox = new JComboBox(options);
+		modelCheckerComboBox = new JComboBox<ModelCheckerOption>(options);
 		modelCheckerComboBox.addActionListener(this);
 		ModelCheckerOption oldOption = metaData.getSelectedModelChecker();
 		if(oldOption!=null){
@@ -115,6 +119,11 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 		projectNameField.setSelectionColor(new Color(0, 0, 0, 25));
 	}
 	
+	/**
+	 * Selects the same name checkbox in the GUI and
+	 * adds the selection to the metaData optionMap.
+	 * @param selected
+	 */
 	private void selectSameName(boolean selected){
 		sameNameCheckBox.setSelected(selected);
 		if(selected){
@@ -187,10 +196,11 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		JComboBox cb = (JComboBox) e.getSource();
-		ModelCheckerOption selectedOption = (ModelCheckerOption) cb
-				.getSelectedItem();
-		metaData.setSelectedModelChecker(selectedOption);
+		if (e.getSource() == modelCheckerComboBox) {
+			ModelCheckerOption selectedOption = (ModelCheckerOption) modelCheckerComboBox
+					.getSelectedItem();
+			metaData.setSelectedModelChecker(selectedOption);
+		}
 	}
 
 }

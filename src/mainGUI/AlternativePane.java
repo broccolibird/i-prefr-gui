@@ -24,6 +24,10 @@ import javax.swing.KeyStroke;
 import dataStructures.Alternative;
 import dataStructures.maps.AlternativeMap;
 
+/**
+ * AlternativePane is an UpdatePane with fields for entry of
+ * Preference Network Alternatives.
+ */
 @SuppressWarnings("serial")
 public class AlternativePane extends UpdatePane implements ActionListener {
 	private AlternativeMap map;
@@ -56,7 +60,6 @@ public class AlternativePane extends UpdatePane implements ActionListener {
 		alternativePanel.setLayout(new BoxLayout(alternativePanel,
 				BoxLayout.Y_AXIS));
 		
-		
 		panel.add(getRadioButtonPanel());
 		
 		plusButton = new JButton("+");
@@ -85,6 +88,7 @@ public class AlternativePane extends UpdatePane implements ActionListener {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
+		// create radio buttons
 		useEntireSpace = new JRadioButton("Use Entire Possible Alternative Space");
 		useEntireSpace.addActionListener(this);
 		useEntireSpace.setMnemonic(KeyEvent.VK_U);
@@ -93,10 +97,12 @@ public class AlternativePane extends UpdatePane implements ActionListener {
 		specifySpace.addActionListener(this);	
 		specifySpace.setMnemonic(KeyEvent.VK_S);
 
+		// add radio buttons to button group
 		ButtonGroup group = new ButtonGroup();
 		group.add(useEntireSpace);
 		group.add(specifySpace);
 
+		// add radio buttons to appropriate panels
 		JPanel useEntirePanel = new JPanel();
 		useEntirePanel
 				.setLayout(new BoxLayout(useEntirePanel, BoxLayout.X_AXIS));
@@ -177,6 +183,10 @@ public class AlternativePane extends UpdatePane implements ActionListener {
 		plusButton.setEnabled(enabled);
 	}
 
+	/**
+	 * Handles actions performed on the plus button and
+	 * radio buttons.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object source = e.getSource();

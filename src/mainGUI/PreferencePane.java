@@ -26,7 +26,12 @@ import dataStructures.Role;
 import dataStructures.maps.MemberMap;
 import dataStructures.maps.RoleMap;
 
-
+/**
+ * PreferencePane is an UpdatePane in which stakeholders 
+ * enter preferences over the previously created
+ * Attributes.
+ */
+@SuppressWarnings("serial")
 public abstract class PreferencePane extends UpdatePane implements ActionListener{
 
 	JFrame parent;
@@ -34,7 +39,7 @@ public abstract class PreferencePane extends UpdatePane implements ActionListene
 	
 	boolean isMultipleStakeholder;
 	
-	JComboBox stakeholderBox;
+	JComboBox<Member> stakeholderBox;
 	JPanel stakeholderControls;
 	JTextField curFile;
 	JPanel fileControls;
@@ -55,14 +60,35 @@ public abstract class PreferencePane extends UpdatePane implements ActionListene
 		this.isMultipleStakeholder = document.getRoleMap().isMultipleStakeholder();
 	}
 	
-	public abstract void clearPane();
+	/**
+	 * Resets all maps and graphs associated 
+	 * with Preference input.
+	 */
+	public abstract void clearPreferenceData();
 	
+	/**
+	 * Loads member preferences from given file.
+	 * @param file
+	 * @return true if preferences were loaded successfully
+	 */
 	public abstract boolean loadMemberPreferences(File file);
 	
+	/**
+	 * Update GUI associated with specific panel/ Preference
+	 * Network type.
+	 */
 	protected abstract void updatePreferencePanel();
 	
+	/**
+	 * Saves the member's preferences to the provided file.
+	 * @param preferenceFile
+	 * @return true if the file was saved sucessfully
+	 */
 	public abstract boolean saveMemberPreferences(File preferenceFile);
 	
+	/**
+	 * @return true if the panel contains any changes
+	 */
 	public abstract boolean existUnsavedChanges();
 	
 	/**
@@ -195,7 +221,12 @@ public abstract class PreferencePane extends UpdatePane implements ActionListene
 		fileControls.add(curFile);
 	}
 	
-	public void createNoMemberField() {
+	/**
+	 * Creates a field to be displayed when there are 
+	 * no Role Members in the project and preferences
+	 * cannot be made.
+	 */
+	protected void createNoMemberField() {
 		// Create text area to show to user when there are no members in the project
 		noMembers = new JTextArea("There are currently no stakeholders in your project.\n"+
 				"Please create a stakeholder to input preferences.");
@@ -229,7 +260,7 @@ public abstract class PreferencePane extends UpdatePane implements ActionListene
 	 */
 	private void clearMemberPreferences() {
 		// sets attributes to unused
-		clearPane();
+		clearPreferenceData();
 		remove(preferencePanel);
 			
 		initializePreferencePanel();

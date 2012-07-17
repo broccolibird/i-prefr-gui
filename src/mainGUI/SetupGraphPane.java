@@ -36,6 +36,10 @@ import edu.uci.ics.jung.visualization.control.ScalingControl;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import graph.EditingModalGraphMouse;
 
+/**
+ * The SetupGraphPane is a PreferencePane which displays a graphical
+ * entry field used to set up a stakeholder's preferences.
+ */
 @SuppressWarnings("serial")
 public class SetupGraphPane extends PreferencePane implements ActionListener {
 
@@ -45,7 +49,7 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 	private EditingModalGraphMouse<Attribute, EdgeStatementMap> graphMouse;
 
 	// remember GUI Elements so they can be redrawn in update()
-	private JComboBox attributeBox;
+	private JComboBox<Attribute> attributeBox;
 	private JButton plus;
 	private JButton minus;
 	private JPanel controls;
@@ -147,7 +151,7 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 	/**
 	 * Sets all previously used attributes to unused
 	 */
-	public void clearPane() {
+	public void clearPreferenceData() {
 		Collection<Attribute> allUsedAttributes = graph.getVertices();
 		for( Attribute attr : allUsedAttributes ) {
 			attr.setUsed(false);
@@ -201,7 +205,7 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 		// make combobox with all attributes
 		Attribute[] allAttributes = document.getAttributeMap().values()
 				.toArray(new Attribute[0]);
-		attributeBox = new JComboBox(allAttributes);
+		attributeBox = new JComboBox<Attribute>(allAttributes);
 
 		// make renderer that greys out already-used attributes
 		ComboBoxRenderer renderer = new ComboBoxRenderer();
@@ -245,9 +249,9 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 		}
 
 		@Override
-		public Component getListCellRendererComponent(JList arg0, Object value,
-				int arg2, boolean arg3, boolean arg4) {
-			super.getListCellRendererComponent(arg0, value, arg2, arg3, arg4);
+		public Component getListCellRendererComponent(JList<?> list, Object value,
+				int index, boolean isSelected, boolean cellHasFocus) {
+			super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 			Attribute a = (Attribute) value;
 			if (a != null && a.isUsed())
 				this.setForeground(Color.LIGHT_GRAY);

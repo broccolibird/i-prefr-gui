@@ -19,6 +19,10 @@ import dataStructures.Attribute;
 import dataStructures.maps.AttributeMap;
 import guiElements.tuples.AttributeTuple;
 
+/**
+ * The AttributePane is an UpdatePane with fields for entry of
+ * Preference Network Attributes.
+ */
 @SuppressWarnings("serial")
 public class AttributePane extends UpdatePane implements ActionListener {
 
@@ -30,7 +34,7 @@ public class AttributePane extends UpdatePane implements ActionListener {
 
 	/**
 	 * Creates a new instance of AttributePane
-	 * @param oldMap
+	 * @param old AttributeMap
 	 * @param preferencePane
 	 * @param parentFrame
 	 */
@@ -75,6 +79,9 @@ public class AttributePane extends UpdatePane implements ActionListener {
 		return panel;
 	}
 
+	/**
+	 * Handles actions performed on the plus button
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (plusButton == e.getSource()) {
