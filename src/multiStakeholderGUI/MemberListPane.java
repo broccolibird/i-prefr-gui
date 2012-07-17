@@ -25,8 +25,6 @@ import dataStructures.maps.MemberMap;
 /**
  * The MemberListPane is an UpdatePane which contains text fields
  * to add new Members to a Role
- * @author Kat Mitchell
- *
  */
 @SuppressWarnings("serial")
 public class MemberListPane extends UpdatePane implements ActionListener {
@@ -40,9 +38,7 @@ public class MemberListPane extends UpdatePane implements ActionListener {
 	
 	GridLayout layout;
 	
-	/**
-	 * number of MemberTuples removed from the Panel
-	 */
+	/** number of MemberTuples removed from the Panel */
 	int removed;
 	
 	/**
@@ -118,6 +114,9 @@ public class MemberListPane extends UpdatePane implements ActionListener {
 	}
 	
 	@Override
+	/**
+	 * Handles actions performed on the plus button
+	 */
 	public void actionPerformed(ActionEvent e) {
 		if (plusButton == e.getSource()) {
 			removed = removed % COLUMNS;
@@ -150,9 +149,6 @@ public class MemberListPane extends UpdatePane implements ActionListener {
 			else
 				finishRow(COLUMNS - numMembers%COLUMNS);
 		}
-		
-		
-		
 		
 	}
 

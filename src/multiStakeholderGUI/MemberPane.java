@@ -15,11 +15,8 @@ import dataStructures.Role;
 import dataStructures.maps.RoleMap;
 
 /**
- * MemberPane is an UpdatePane which contains fields to enter names of members
- * within each Role
- * 
- * @author Kat Mitchell
- *
+ * MemberPane is an UpdatePane which contains a MemberListPane for each
+ * Role within the project.
  */
 @SuppressWarnings("serial")
 public class MemberPane extends UpdatePane {
@@ -41,16 +38,19 @@ public class MemberPane extends UpdatePane {
 	}
 
 	/**
-	 * Setup the GUI for this pnel
-	 * @return
+	 * @return JPanel
 	 */
 	private JPanel initializeGUI() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		
 		stakeholderPanel = new JPanel();
 		stakeholderPanel.setLayout(new BoxLayout(stakeholderPanel, BoxLayout.Y_AXIS));
+		
 		update();
+		
 		panel.add(stakeholderPanel);
+		
 		return panel;
 	}
  

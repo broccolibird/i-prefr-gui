@@ -42,9 +42,6 @@ import mainGUI.UpdatePane;
 /**
  * HierarchyPane is an UpdatePane containing a graph in which to create
  * the Stakeholder Hierarchy.
- * 
- * @author Kat Mitchell
- *
  */
 @SuppressWarnings("serial")
 public class HierarchyPane extends UpdatePane implements ActionListener {
@@ -73,20 +70,21 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 	 * Creates the HierarchyPane based on the current Document
 	 * @param abstractDocument
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public HierarchyPane(AbstractDocument abstractDocument) {
 		this.document = abstractDocument;
 		
 		RoleMap rm = abstractDocument.getRoleMap();
-		if( rm.getRoleHierarchy() == null) {
+		if( rm.getRoleHierarchy() == null) { // create new RoleHierarchy
 			graph = new RoleHierarchy(document.getRoleMap());
-			layout = new StaticLayout(graph);
+			layout = new StaticLayout<Role, Integer>(graph);
 			graph.setLayout(layout);
 			edgeFactory = new Factory<Integer>() {
 				int i=0;
 				public Integer create() {
 					return i++;
 				}};
-		} else {
+		} else { // load existing RoleHierarchy
 			graph = rm.getRoleHierarchy();
 			layout = graph.getLayout();
 			edgeFactory = new Factory<Integer>() {
@@ -121,7 +119,7 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
         
         addSavedAnnotations();
         
-        addZoomControls();
+        createZoomControls();
                 
         // set up control panel
         controls = new JPanel();
@@ -130,17 +128,16 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 	}
 	
 	@Override
+	/**
+	 * Handles actions performed on Role combobox
+	 */
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		if (e.getSource() == roleBox) {
 
 			Role selectedRole = (Role) roleBox
 					.getSelectedItem();
 			if (!selectedRole.isUsed()) {
 				graphMouse.getEditingPlugin().setVertex(selectedRole);
-			} else {
-//				System.out.println("stakeholder is already used");
-//				// maybe warn the user that their selection is not going to work
 			}
 		}
 		
@@ -186,11 +183,14 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 		}
 	}
 	
+	/**
+	 * Adds annotations from a saved project on to the hierarchy
+	 */
 	private void addSavedAnnotations() {
 		ArrayList<SavedAnnotation<Role,String>> savedAnnotations = 
 				graph.getSavedAnnotations();
 		if(savedAnnotations != null) {
-			VertexAnnotatingGraphMousePlugin annotatingPlugin = 
+			VertexAnnotatingGraphMousePlugin<Role, Integer> annotatingPlugin = 
 					graphMouse.getAnnotatingPlugin();
 			for(SavedAnnotation<Role,String> savedAnnotation: savedAnnotations) {
 				annotatingPlugin.addSavedAnnotation(savedAnnotation);
@@ -199,7 +199,10 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 		vv.repaint();
 	}
 	
-	private void addZoomControls() {
+	/**
+	 * Creates actions for graph zoom controls
+	 */
+	private void createZoomControls() {
 		 // Add zoom controls
         final ScalingControl scaler = new CrossoverScalingControl();
 
@@ -226,9 +229,9 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 		}
 
 		@Override
-		public Component getListCellRendererComponent(JList arg0, Object value,
-				int arg2, boolean arg3, boolean arg4) {
-			super.getListCellRendererComponent(arg0, value, arg2, arg3, arg4);
+		public Component getListCellRendererComponent(JList<?> list, Object value,
+				int index, boolean isSelected, boolean cellHasFocus) {
+			super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 			Role r = (Role) value;
 			if (r != null && r.isUsed())
 				this.setForeground(Color.LIGHT_GRAY);

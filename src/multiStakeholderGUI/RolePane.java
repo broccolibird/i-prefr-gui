@@ -23,6 +23,10 @@ import dataStructures.maps.RoleMap;
 
 import mainGUI.UpdatePane;
 
+/**
+ * An UpdatePane containing entry tuples for Role titles.
+ *
+ */
 @SuppressWarnings("serial")
 public class RolePane extends UpdatePane implements ActionListener{
 
@@ -77,6 +81,9 @@ public class RolePane extends UpdatePane implements ActionListener{
 	}
 
 	@Override
+	/**
+	 * Handles actions performed on plus button
+	 */
 	public void actionPerformed(ActionEvent e) {
 		if (plusButton == e.getSource()) {
 			RoleTuple tuple = (RoleTuple) rolePanel.add(new RoleTuple(map, parentFrame,
@@ -93,10 +100,12 @@ public class RolePane extends UpdatePane implements ActionListener{
 	
 	@Override
 	public void update() {
+		// clear panel
 		rolePanel.removeAll();
-		JPanel label = new JPanel();
 		
+		JPanel label = new JPanel();
 		label.setLayout(new BoxLayout(label, BoxLayout.X_AXIS));
+		
 		JLabel name = new JLabel("Role Name");
 		label.add(name);
 		rolePanel.add(label);

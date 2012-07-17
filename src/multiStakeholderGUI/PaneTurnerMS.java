@@ -27,10 +27,6 @@ import mainGUI.UpdatePane;
  * PaneTurnerMS is a PaneTurner which flips through 
  * the Multiple-stakeholder UpdatePanes and denotes 
  * which sub-pane is open.
- * 
- * @author Carl
- * @author Kat Mitchell
- *
  */
 @SuppressWarnings("serial")
 public class PaneTurnerMS extends JSplitPane {
