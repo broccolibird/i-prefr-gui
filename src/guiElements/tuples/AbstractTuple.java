@@ -8,6 +8,13 @@ import javax.swing.JPanel;
 
 import dataStructures.maps.SuperkeyMap;
 
+/**
+ * The AbstractTuple class associates an input field with the object(s)
+ * it represents, such that any change to the input field has a direct
+ * affect on the object.
+ *
+ * @param <A>
+ */
 @SuppressWarnings("serial")
 public abstract class AbstractTuple<A> extends JPanel implements ActionListener{
 	protected Integer key;
@@ -35,7 +42,11 @@ public abstract class AbstractTuple<A> extends JPanel implements ActionListener{
 	
 	
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
+	/**
+	 * Removes the object from its parent panel
+	 * and map.
+	 */
+	public void actionPerformed(ActionEvent e) {
 		parentPanel.remove(this);
 		map.remove(key);
 		parentWindow.pack();
