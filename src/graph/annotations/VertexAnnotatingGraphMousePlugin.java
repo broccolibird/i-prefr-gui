@@ -39,8 +39,6 @@ import edu.uci.ics.jung.visualization.picking.PickedState;
  * of the graph. It utilizes a VertexAnnotationManager
  * so that VertexAnnotation is used in place of the original Annotation class.
  * 
- * @author Katarina Mitchell
- * 
  * @param <V>
  * @param <E>
  */
@@ -118,7 +116,6 @@ public class VertexAnnotatingGraphMousePlugin<V,E> extends AbstractGraphMousePlu
         this.vv = vv;
         this.basicTransformer = rc.getMultiLayerTransformer();
         this.additionalModifiers = additionalModifiers;
-//        this.annotationPaintable = new AnnotationPaintable(rc);
         this.annotationManager = new VertexAnnotationManager(rc);
         this.cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
     }
@@ -137,18 +134,11 @@ public class VertexAnnotatingGraphMousePlugin<V,E> extends AbstractGraphMousePlu
         this.annotationColor = lensColor;
     }
 
-    /**
-     * Sets the location for an Annotation.
-     * Will either pop up a dialog to prompt for text
-     * input for a text annotation, or begin the process
-     * of drawing a Shape annotation
-     * 
-	 * @param e the event
-	 */
 	/**
 	 * selects a single vertex, or if one is selected and pop up button is
 	 * pressed, opens VertexAnnotationDialog to annotate that vertex
 	 * 
+	 * @param e the event
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void mousePressed(MouseEvent e) {
@@ -206,8 +196,7 @@ public class VertexAnnotatingGraphMousePlugin<V,E> extends AbstractGraphMousePlu
 	}
 
     /**
-	 * Completes the process of adding a Shape annotation
-	 * and removed the transient paintable
+	 * Completes the process of adding an annotation.
 	 * 
 	 */
     @SuppressWarnings({ "unchecked", "rawtypes" })
