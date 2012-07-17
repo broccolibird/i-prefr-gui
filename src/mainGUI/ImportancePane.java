@@ -77,7 +77,7 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 			add(fileControls);
 			add(Box.createRigidArea(new Dimension(10, 10)));
 			add(preferencePanel);
-			add(glue);
+			add(noMembers);
 		}
 
 		@Override
@@ -105,6 +105,7 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 			updatePreferencePanel();
 			
 			JScrollPane importanceScrollPane = new JScrollPane(importancePanel);
+			importanceScrollPane.setBorder(null);
 			
 			preferencePanel.add(importanceScrollPane);
 			plusButton = new JButton("+");
