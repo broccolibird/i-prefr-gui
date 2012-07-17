@@ -26,7 +26,7 @@ import guiElements.tuples.AttributeTuple;
 @SuppressWarnings("serial")
 public class AttributePane extends UpdatePane implements ActionListener {
 
-	private AttributeMap map;
+	private AttributeMap attributeMap;
 	private JPanel attributePanel;
 	private JButton plusButton;
 	private JFrame parentFrame;
@@ -34,13 +34,13 @@ public class AttributePane extends UpdatePane implements ActionListener {
 
 	/**
 	 * Creates a new instance of AttributePane
-	 * @param old AttributeMap
+	 * @param attributeMap 
 	 * @param preferencePane
 	 * @param parentFrame
 	 */
-	public AttributePane(AttributeMap oldMap,
+	public AttributePane(AttributeMap attributeMap,
 			PreferencePane preferencePane, JFrame parentFrame) {
-		this.map = oldMap;
+		this.attributeMap = attributeMap;
 		this.parentFrame = parentFrame;
 		this.preferencePane = preferencePane;
 		this.add(initializeGUI());
@@ -86,7 +86,7 @@ public class AttributePane extends UpdatePane implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (plusButton == e.getSource()) {
 			AttributeTuple tuple = (AttributeTuple) attributePanel.add(new AttributeTuple(
-					map, parentFrame, attributePanel, preferencePane));
+					attributeMap, parentFrame, attributePanel, preferencePane));
 			tuple.getTextField().requestFocusInWindow();
 			pack();
 		}
@@ -109,11 +109,11 @@ public class AttributePane extends UpdatePane implements ActionListener {
 		attributePanel.add(label);
 
 		// for every map entry, add a tuple to the table,then one more
-		Collection<Entry<Integer, Attribute>> set = map.entrySet();
+		Collection<Entry<Integer, Attribute>> set = attributeMap.entrySet();
 		for (Entry<Integer, Attribute> p : set)
-			attributePanel.add(new AttributeTuple(p.getKey(), map, parentFrame,
+			attributePanel.add(new AttributeTuple(p.getKey(), attributeMap, parentFrame,
 					attributePanel, preferencePane));
-		AttributeTuple tuple = (AttributeTuple) attributePanel.add(new AttributeTuple(map, 
+		AttributeTuple tuple = (AttributeTuple) attributePanel.add(new AttributeTuple(attributeMap, 
 									parentFrame, attributePanel, preferencePane));
 		tuple.getTextField().requestFocusInWindow();
 		parentFrame.pack();

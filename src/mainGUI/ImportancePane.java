@@ -52,8 +52,8 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 		
 		/**
 		 * Create new instance of ImportancePane
-		 * @param attributeMap
 		 * @param parent
+		 * @param document
 		 */
 		public ImportancePane(JFrame parent, AbstractDocument document) {
 			super(parent, document);

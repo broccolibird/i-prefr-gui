@@ -15,11 +15,10 @@ import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import graph.annotations.VertexAnnotation;
 
 /** 
- * Acyclic version of DirectedSparseGraph.
+ * Acyclic version of DirectedSparseGraph with Role vertices and
+ * Integer value edges.
+ * 
  * @author Katarina Mitchell
- *
- * @param <V> the vertex type
- * @param <E> the edge type
  */
 @SuppressWarnings({ "serial" })
 public class RoleHierarchy extends DirectedSparseGraph<Role,Integer>
@@ -129,7 +128,7 @@ public class RoleHierarchy extends DirectedSparseGraph<Role,Integer>
 		return false;
 	}
 	
-	public void addSavedAnnotation(SavedAnnotation annotation) {
+	public void addSavedAnnotation(SavedAnnotation<Role,String> annotation) {
 		if(savedAnnotations == null)
 				savedAnnotations = new ArrayList<SavedAnnotation<Role,String>>();
 		
@@ -153,7 +152,8 @@ public class RoleHierarchy extends DirectedSparseGraph<Role,Integer>
 	    	return xml;
 	 }
 	 
-	 private String roleToXML(Role role) {
+	 @SuppressWarnings("unchecked")
+	private String roleToXML(Role role) {
 	    	String xml = "\t<ROLE ID='"+role.getKey()+"'>\n";
 	    	xml += "\t\t<TITLE>"+role.getName()+"</TITLE>\n";
 	    	xml += "\t\t<COORDINATES>\n";
@@ -163,7 +163,7 @@ public class RoleHierarchy extends DirectedSparseGraph<Role,Integer>
 	    	xml += "\t\t</COORDINATES>\n";
 	    	
 	    	if(graphMouse != null){
-	    		VertexAnnotation annotation = graphMouse.getAnnotatingPlugin().getAnnotation(role);
+	    		VertexAnnotation<Role, String> annotation = graphMouse.getAnnotatingPlugin().getAnnotation(role);
 	    		System.out.println("Annotation: "+annotation);
 	    		if(annotation != null)
 	    			xml += "\t\t<ANNOTATION>"+annotation.getAnnotation()+"</ANNOTATION>\n";

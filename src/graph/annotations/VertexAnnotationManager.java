@@ -103,7 +103,7 @@ public class VertexAnnotationManager {
 	 * returns the annotation for the given vertex
 	 *  -- created by Carl
 	 * @param vertex
-	 * @return
+	 * @return annotation for provided vertex
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public VertexAnnotation getAnnotation(Vertex vertex){

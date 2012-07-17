@@ -56,8 +56,8 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 
 	/**
 	 * Create new SetupGraphPane instance
-	 * @param abstractDocument
-	 * @param parentFrame
+	 * @param document
+	 * @param parent
 	 */
 	public SetupGraphPane(JFrame parent, AbstractDocument document) {
 		super(parent, document);
