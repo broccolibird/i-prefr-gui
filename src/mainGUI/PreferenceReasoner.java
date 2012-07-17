@@ -45,8 +45,8 @@ public class PreferenceReasoner extends JApplet{
 		// new JDialog: name your project
 		frame = new JFrame();
 		frame.setPreferredSize(new Dimension(900, 800));
-		frame.addWindowListener(new ReasonerWindowListener());
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.addWindowListener(new ReasonerWindowListener(frame));
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		paneTurner = null;
 		
 		// Setup menu options

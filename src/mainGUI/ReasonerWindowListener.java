@@ -3,8 +3,16 @@ package mainGUI;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+import javax.swing.JFrame;
+
 public class ReasonerWindowListener implements WindowListener{
 
+	JFrame frame;
+	
+	public ReasonerWindowListener(JFrame frame){
+		this.frame = frame;
+	}
+	
 	@Override
 	public void windowActivated(WindowEvent e) {}
 
@@ -15,7 +23,8 @@ public class ReasonerWindowListener implements WindowListener{
 	public void windowClosing(WindowEvent e) {
 		if ( PreferenceReasoner.existChanges() ) {
 			//offer to save
-			PreferenceReasoner.showSaveChangesDialog();
+			if(PreferenceReasoner.showSaveChangesDialog())
+				frame.dispose();
 		}
 		
 	}
