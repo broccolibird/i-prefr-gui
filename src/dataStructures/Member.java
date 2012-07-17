@@ -2,11 +2,15 @@ package dataStructures;
 
 /**
  * Contains information pertaining to each stakeholder
- * 
- * @author Kat
  */
 public class Member extends NameKeyObject<String> {
 	
+	/**
+	 * Create a new Member instance with a null
+	 * preference file path.
+	 * @param name
+	 * @param key
+	 */
 	public Member(String name, Integer key) {
 		super(name, key, null);
 	}
@@ -19,14 +23,23 @@ public class Member extends NameKeyObject<String> {
 		return name;
 	}
 	
+	/**
+	 * @return preference file path
+	 */
 	public String getPreferenceFilePath() {
 		return super.getObject();
 	}
 	
+	/**
+	 * @param preferenceFilePath
+	 */
 	public void setPreferenceFilePath(String preferenceFilePath) {
 		setObject(preferenceFilePath);
 	}
 	
+	/**
+	 * @return xml string representation of this member
+	 */
 	public String toXML() {
 		String xml = "\t\t\t<MEMBER ID = '"+key+"'>\n";
 		xml += "\t\t\t\t<NAME>"+name+"</NAME>\n";

@@ -30,10 +30,7 @@ import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 /**
  * The Document contains all of the data for the project, 
  * including: AttributeMap, AlternativeMap, RoleMap and 
- * MetaData
- * 
- * @author Carl and Kat
- *
+ * MetaData.
  */
 public abstract class AbstractDocument {
 
@@ -338,8 +335,9 @@ public abstract class AbstractDocument {
 		return metaData;
 	}
 	
-	public abstract boolean isCINetworkType();
-	
+	/**
+	 * @return xml string representation of the network data
+	 */
 	public abstract String getNetworkXML();
 	
 	/**

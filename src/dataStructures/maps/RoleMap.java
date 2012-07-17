@@ -13,11 +13,6 @@ import java.util.Map.Entry;
 import dataStructures.Member;
 import dataStructures.Role;
 
-/**
- * 
- * @author Kat
- *
- */
 @SuppressWarnings("serial")
 public class RoleMap extends SuperkeyMap<Role>{
 	

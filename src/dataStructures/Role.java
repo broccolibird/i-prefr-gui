@@ -8,9 +8,6 @@ import dataStructures.maps.MemberMap;
 /**
  * Contains information about each Role, including a SuperkeyMap of
  * stakeholders (members)
- * 
- * @author Kat
- *
  */
 public class Role extends NameKeyObject<MemberMap>
 		implements Vertex {

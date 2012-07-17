@@ -3,11 +3,10 @@ package dataStructures;
 import java.awt.geom.Point2D;
 
 /**
- * SavedAnnotation is used for storing annotations that are 
- * to be reinstated in a graph.
+ * SavedAnnotation is used for storing annotations from
+ * an opened project file that are to be reinstated in
+ * a graph.
  * 
- * @author Katarina Mitchell
- *
  * @param <V>
  * @param <T>
  */

@@ -1,9 +1,8 @@
 package dataStructures;
 
 /**
- * Object used to pass project details upon creating a new project
- * 
- * @author Kat
+ * Object used to pass project details from the new project
+ * dialog to the main window upon creating a new project
  *
  */
 public class RunConfiguration {

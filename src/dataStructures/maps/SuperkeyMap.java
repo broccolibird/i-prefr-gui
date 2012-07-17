@@ -5,13 +5,10 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
-import dataStructures.ChangeTracker;
-
 import mainGUI.PreferenceReasoner;
 
 @SuppressWarnings("serial")
-public class SuperkeyMap<A> extends TreeMap<Integer, A> 
-		implements ChangeTracker {
+public class SuperkeyMap<A> extends TreeMap<Integer, A> {
 	
 	private static int nextUniqueID = 0;
 	protected int uniqueID;
