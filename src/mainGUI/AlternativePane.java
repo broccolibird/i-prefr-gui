@@ -116,25 +116,6 @@ public class AlternativePane extends UpdatePane implements ActionListener {
 		panel.add(useEntirePanel);
 		panel.add(specifyPanel);
 		
-		// Add keyboard shortcuts for radio buttons
-		InputMap panelInputMap = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-		panelInputMap.put(KeyStroke.getKeyStroke("U"), "selectUseEntire");
-		panelInputMap.put(KeyStroke.getKeyStroke("S"), "selectSpecify");
-		
-		panel.getActionMap().put("selectUseEntire", new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				useEntireSpace.doClick();
-			}
-		});
-		
-		panel.getActionMap().put("selectSpecify", new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e){
-				specifySpace.doClick();
-			}
-		});
-		
 		return panel;
 	}
 
