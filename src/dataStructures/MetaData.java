@@ -17,10 +17,13 @@ public class MetaData {
 	private GregorianCalendar creationDate;
 	private ModelCheckerOption selectedModelChecker;
 	private OptionMap displayOptions;
+	
+	private boolean existChanges;
 
 	public MetaData() {
-		this("untitled", "unnamed", new ModelCheckerOption(
+		this("untitled.xml", "untitled", new ModelCheckerOption(
 				ModelCheckerOption.MODEL_CHECKER_0), new GregorianCalendar(),new OptionMap());
+		existChanges = false;
 	}
 
 	public MetaData(String filename, String projectName,
@@ -30,6 +33,8 @@ public class MetaData {
 		this.selectedModelChecker = selectedModelChecker;
 		this.creationDate = creationDate;
 		this.displayOptions = optionMap;
+		
+		existChanges = false;
 	}
 	
 	public MetaData(String filename, String projectName,
@@ -50,6 +55,8 @@ public class MetaData {
 			e.printStackTrace();
 		}
 		creationDate = cal;
+		
+		existChanges = false;
 	}
 
 	public String getFilename() {
@@ -57,8 +64,8 @@ public class MetaData {
 	}
 
 	public void setFilename(String filename) {
-		// System.out.println("filename set to "+filename);
 		this.filename = filename;
+		existChanges = true;
 	}
 
 	public String getProjectName() {
@@ -66,8 +73,8 @@ public class MetaData {
 	}
 
 	public void setProjectName(String projectName) {
-		// System.out.println("project name set to "+projectName);
 		this.projectName = projectName;
+		existChanges = true;
 	}
 
 	public ModelCheckerOption getSelectedModelChecker() {
@@ -76,6 +83,7 @@ public class MetaData {
 
 	public void setSelectedModelChecker(ModelCheckerOption selectedModelChecker) {
 		this.selectedModelChecker = selectedModelChecker;
+		existChanges = true;
 	}
 
 	public GregorianCalendar getCreationDate() {
@@ -84,6 +92,7 @@ public class MetaData {
 
 	public void setCreationDate(GregorianCalendar creationDate) {
 		this.creationDate = creationDate;
+		existChanges = true;
 	}
 
 	public OptionMap getDisplayOptions() {
@@ -96,6 +105,9 @@ public class MetaData {
 				+ creationDate.get(Calendar.YEAR);
 	}
 	
+	/**
+	 * @return MetaData in XML String format
+	 */
 	public String toXML(){
 		String metaData = "\t<METADATA>\n";
 		metaData += "\t\t<FILENAME>"+filename+"</FILENAME>\n";
@@ -105,5 +117,23 @@ public class MetaData {
 		metaData += displayOptions.toXML();
 		metaData += "\t</METADATA>\n";
 		return metaData;
+	}
+
+	/**
+	 * Returns true if meta data has been changed since the last save
+	 * @return true if MetaData has been changed since the last save
+	 */
+	public boolean existChanges() {
+		return existChanges;
+	}
+
+	/**
+	 * Clears existing changes when saved is set to true
+	 * @param saved
+	 */
+	public void setSaved(boolean saved) {
+		if(saved == true)
+			existChanges = false;
+		
 	}
 }

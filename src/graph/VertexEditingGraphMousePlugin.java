@@ -6,7 +6,7 @@ import java.awt.geom.Point2D;
 
 import org.apache.commons.collections15.Factory;
 
-import dataStructures.Attribute;
+import dataStructures.Vertex;
 import edu.uci.ics.jung.algorithms.layout.GraphElementAccessor;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.DirectedGraph;
@@ -16,23 +16,22 @@ import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.EditingGraphMousePlugin;
 
-public class AttributeEditingPlugin<V, E> extends EditingGraphMousePlugin<V, E> {
-	private Attribute attributeToCreate;
-	
+public class VertexEditingGraphMousePlugin<E> extends EditingGraphMousePlugin<Vertex, E> {
 
-	public AttributeEditingPlugin(Factory<V> vertexFactory,
-			Factory<E> edgeFactory) {
+	private Vertex vertexToCreate;
+	
+	public VertexEditingGraphMousePlugin(Factory<Vertex> vertexFactory, Factory<E> edgeFactory) {
 		super(vertexFactory, edgeFactory);
 	}
-
-	public Attribute getSelectedAttribute() {
-		return attributeToCreate;
+	
+	public Vertex getSelectedVertex() {
+		return vertexToCreate;
 	}
-
-	public void setAttribute(Attribute toCreate) {
-		this.attributeToCreate = toCreate;
+	
+	public void setVertex(Vertex toCreate){
+		this.vertexToCreate = toCreate;
 	}
-
+	
 	/**
 	 * If startVertex is non-null, and the mouse is released over an existing
 	 * vertex, create an undirected edge from startVertex to the vertex under
@@ -42,20 +41,20 @@ public class AttributeEditingPlugin<V, E> extends EditingGraphMousePlugin<V, E> 
 	@SuppressWarnings("unchecked")
 	public void mouseReleased(MouseEvent e) {
 		if (checkModifiers(e)) {
-			final VisualizationViewer<V, E> vv = (VisualizationViewer<V, E>) e
+			final VisualizationViewer<Vertex, E> vv = (VisualizationViewer<Vertex, E>) e
 					.getSource();
 			final Point2D p = e.getPoint();
-			Layout<V, E> layout = vv.getModel().getGraphLayout();
-			GraphElementAccessor<V, E> pickSupport = vv.getPickSupport();
+			Layout<Vertex, E> layout = vv.getModel().getGraphLayout();
+			GraphElementAccessor<Vertex, E> pickSupport = vv.getPickSupport();
 			if (pickSupport != null) {
-				final V vertex = pickSupport.getVertex(layout, p.getX(),
+				final Vertex vertex = pickSupport.getVertex(layout, p.getX(),
 						p.getY());
 				// CARL - added a check that startVertex!=vertex - otherwise can
 				// throw illegal argument exception
 				if (vertex != null && startVertex != null
 						&& vertex != startVertex) {
 					E newEdge = edgeFactory.create();
-					Graph<V, E> graph = vv.getGraphLayout().getGraph();
+					Graph<Vertex, E> graph = vv.getGraphLayout().getGraph();
 					graph.addEdge(newEdge, startVertex, vertex,
 							edgeIsDirected);
 					vv.repaint();
@@ -81,12 +80,12 @@ public class AttributeEditingPlugin<V, E> extends EditingGraphMousePlugin<V, E> 
 	@SuppressWarnings("unchecked")
 	public void mousePressed(MouseEvent e) {
 		if (checkModifiers(e)) {
-			final VisualizationViewer<V, E> vv = (VisualizationViewer<V, E>) e
+			final VisualizationViewer<Vertex, E> vv = (VisualizationViewer<Vertex, E>) e
 					.getSource();
 			final Point2D p = e.getPoint();
-			GraphElementAccessor<V, E> pickSupport = vv.getPickSupport();
+			GraphElementAccessor<Vertex, E> pickSupport = vv.getPickSupport();
 			if (pickSupport != null) {
-				Graph<V, E> graph = vv.getModel().getGraphLayout().getGraph();
+				Graph<Vertex, E> graph = vv.getModel().getGraphLayout().getGraph();
 				// set default edge type
 				if (graph instanceof DirectedGraph) {
 					edgeIsDirected = EdgeType.DIRECTED;
@@ -94,7 +93,7 @@ public class AttributeEditingPlugin<V, E> extends EditingGraphMousePlugin<V, E> 
 					edgeIsDirected = EdgeType.UNDIRECTED;
 				}
 
-				final V vertex = pickSupport.getVertex(vv.getModel()
+				final Vertex vertex = pickSupport.getVertex(vv.getModel()
 						.getGraphLayout(), p.getX(), p.getY());
 				System.out.println("pX: " + p.getX() + " pY: " + p.getY());
 				if (vertex != null) { // get ready to make an edge
@@ -113,17 +112,17 @@ public class AttributeEditingPlugin<V, E> extends EditingGraphMousePlugin<V, E> 
 
 					// CARL - if the vertex is null but there is an attribute to
 					// create, then make a vertex out of the attribute
-				} else if (attributeToCreate != null) {
-					V newVertex = vertexFactory.create();
-					Layout<V, E> layout = vv.getModel().getGraphLayout();
+				} else if (vertexToCreate != null) {
+					Vertex newVertex = vertexFactory.create();
+					Layout<Vertex, E> layout = vv.getModel().getGraphLayout();
 					graph.addVertex(newVertex);
 					layout.setLocation(newVertex,
 							vv.getRenderContext().getMultiLayerTransformer()
 									.inverseTransform(e.getPoint()));
 
 					// consume this attribute
-					attributeToCreate.setUsed(true);
-					attributeToCreate = null;
+					vertexToCreate.setUsed(true);
+					vertexToCreate = null;
 
 				}
 

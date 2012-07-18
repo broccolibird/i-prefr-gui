@@ -36,16 +36,18 @@ public class ExistingAlternativeDialog extends JDialog implements ActionListener
 		
 		Alternative[] allAlternatives = map.values().toArray(new Alternative[0]);
 		int selectedIndex = 0;
-		for(int i=0;i<allAlternatives.length;i++){
-			if (allAlternatives[i].equals(singleAlternative)){
-				selectedIndex = i;
-				break;
+		if(singleAlternative != null) {
+			for(int i=0;i<allAlternatives.length;i++){
+				if (allAlternatives[i].equals(singleAlternative)){
+					selectedIndex = i;
+					break;
+				}
 			}
 		}
 		// set up the boxes
 		box = new JComboBox(allAlternatives);
-		box.setSelectedIndex(selectedIndex);
 		box.addActionListener(this);
+		box.setSelectedIndex(selectedIndex);
 		panel.add(box);
 
 		okButton = new JButton("ok");

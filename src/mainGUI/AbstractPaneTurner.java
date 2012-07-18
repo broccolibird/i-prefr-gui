@@ -4,6 +4,7 @@ import guiElements.SelectableTextPane;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.io.File;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -16,6 +17,13 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
 
+import dataStructures.AbstractDocument;
+
+/**
+ * AbstractPaneTurner is an extension of JSplitPane which shows
+ * a menu (metaPanes) with previous and next buttons on the left and content
+ * panels (viewPanes) on the right.
+ */
 @SuppressWarnings("serial")
 public abstract class AbstractPaneTurner extends JSplitPane {
 
@@ -30,19 +38,57 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 	protected SelectableTextPane[] metaPanes;
 	protected UpdatePane[] viewPanes;
 	protected int currentSelected;
+	
+	protected boolean isMultipleStakeholder;
+	
+	protected AbstractDocument document;
+	
+	protected SetupProjectPane projectPane;
+	protected PreferencePane preferencesPane;
+	
+	private File currentFile;
+	
+	static String[] s_prefReasSteps = { "Setup Project", "Add Attributes", 
+		"Attribute\nDomains", "Add\nAlternatives", "Alternative\nValues", 
+		"Setup Preferences", "View Result" }; 
+	static String[] s_plusMulStakeSteps = { "Setup Project", "Add Attributes", 
+		"Attribute\nDomains", "Add\nAlternatives", "Alternative\nValues", 
+		"Add Multiple\nStakeholders", "Setup Preferences", "View Result" };
 
 	// TODO - make currentSelected come from AbstractDocument MetaData
-	public AbstractPaneTurner(JFrame parent) {
+	
+	/**
+	 * Create a new instance of AbstractPaneTurner
+	 * @param parent
+	 * @param document
+	 * @param isMultipleStakeholder
+	 */
+	public AbstractPaneTurner(JFrame parent, AbstractDocument document, boolean isMultipleStakeholder,
+			File currentFile) {
 		this.parent = parent;
-
+		this.document = document;
+		this.isMultipleStakeholder = isMultipleStakeholder;
+		this.currentFile = currentFile;
+	
 		setupActions();
 		setLeftComponent(getChooser());
 	}
 
-	protected abstract Component intitializeViewPanes();
+	protected abstract Component initializeViewPanes();
 	
-	public abstract String toXML();
+	/**
+	 * Creates and returns the xml representation of the project.
+	 * @param xmlfile
+	 * @return xml string representation of project
+	 */
+	public String toXML(File xmlfile){
+		return document.toXML(xmlfile);
+	}
 
+	/**
+	 * Create left-side chooser panel
+	 * @return chooser panel
+	 */
 	protected JPanel getChooser() {
 		JPanel chooser = new JPanel();
 		chooser.setLayout(new BoxLayout(chooser, BoxLayout.Y_AXIS));
@@ -55,9 +101,14 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 		buttonPanel.add(prevButton);
 		buttonPanel.add(nextButton);
 		chooser.add(buttonPanel);
-		String[] steps = { "Setup Project", "Add Attributes",
-				"Attribute \nDomains", "Add \nAlternatives",
-				"Alternative \nValues", "Setup Preferences", "View Result" };
+		
+		String[] steps = null;
+		
+		if( isMultipleStakeholder ) {
+			steps = s_plusMulStakeSteps;
+		}else {
+			steps = s_prefReasSteps;
+		} 
 		metaPanes = new SelectableTextPane[steps.length];
 		for (int i = 0; i < steps.length; i++) {
 			metaPanes[i] = new SelectableTextPane(steps[i]);
@@ -68,27 +119,19 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 		return chooser;
 	}
 
+	/**
+	 * Sets up keyboard shortcuts for chooser panel's
+	 * previous and next buttons
+	 */
 	private void setupActions() {
 		next = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
-				metaPanes[currentSelected].toggleColor();
-				if (currentSelected < metaPanes.length - 1) {
-					currentSelected++;
-					viewPanes[currentSelected].update();
-					setRightComponent(viewPanes[currentSelected]);
-				}
-				metaPanes[currentSelected].toggleColor();
+				next();
 			}
 		};
 		prev = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
-				metaPanes[currentSelected].toggleColor();
-				if (currentSelected > 0) {
-					currentSelected--;
-					viewPanes[currentSelected].update();
-					setRightComponent(viewPanes[currentSelected]);
-				}
-				metaPanes[currentSelected].toggleColor();
+				previous();
 			}
 		};
 		KeyStroke down = KeyStroke.getKeyStroke("DOWN");
@@ -116,6 +159,95 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 
 	public void pack() {
 		parent.pack();
+	}
+	
+	/**
+	 * Switch view to the previous panel
+	 */
+	public void previous(){
+		metaPanes[currentSelected].toggleColor();
+		if (currentSelected > 0) {
+			currentSelected--;
+			setRightComponent(viewPanes[currentSelected]);
+			viewPanes[currentSelected].update();
+		}
+		metaPanes[currentSelected].toggleColor();
+	}
+	
+	/**
+	 * Switch view to the next panel
+	 */
+	public void next() {
+		metaPanes[currentSelected].toggleColor();
+		if (currentSelected < metaPanes.length - 1) {
+			currentSelected++;
+			setRightComponent(viewPanes[currentSelected]);
+			viewPanes[currentSelected].update();
+
+		}
+		metaPanes[currentSelected].toggleColor();
+	}
+	
+	/**
+	 * @return true if the document contains changes
+	 */
+	public boolean existChanges() {
+		return document.existChanges();
+	}
+
+	/**
+	 * Set the document's saved value
+	 * @param saved
+	 */
+	public void setSaved(boolean saved) {
+		document.setSaved(saved);
+		
+	}
+	
+	/**
+	 * Checks for unsaved changes in the user preference input
+	 * pane.
+	 */
+	public void checkChangesInPreferences() {
+		preferencesPane.checkForUnsavedChanges();
+	}
+	
+	/**
+	 * Returns filename input by user on the SetupProjectPane
+	 * @return filename
+	 */
+	public String getProjectFileName() {
+		return document.getMetaData().getFilename();
+	}
+	
+	/**
+	 * Set filename on the SetupProjectPane
+	 * @param fileName
+	 */
+	public void setProjectFileName(String fileName){
+		projectPane.setSavedFileName(fileName);
+	}
+
+	/**
+	 * Set the project file
+	 * @param curFile
+	 */
+	public void setCurrentFile(File curFile) {
+		this.currentFile = curFile;
+	}
+	
+	/**
+	 * @return the current project file
+	 */
+	public File getCurrentFile() {
+		return currentFile;
+	}
+	
+	/**
+	 * calls update on the current panel
+	 */
+	public void updateRightPane() {
+		viewPanes[currentSelected].update();
 	}
 
 }

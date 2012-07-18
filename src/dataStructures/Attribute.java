@@ -1,7 +1,8 @@
 package dataStructures;
 
+
 public class Attribute extends NameKeyObject<Domain> implements
-		Comparable<Attribute> {
+		Comparable<Attribute>, Vertex {
 	private AttributeKey attributeKey;
 	private boolean isUsed;
 
@@ -39,9 +40,11 @@ public class Attribute extends NameKeyObject<Domain> implements
 		attribute += "\t\t\t<ISUSED>"+isUsed+"</ISUSED>\n";
 		attribute += "\t\t\t<NAME>"+name+"</NAME>\n";
 		attribute += "\t\t\t<DOMAIN>\n";
-		DomainValueList allValues = getObject().getDomainValueList();
-		for(DomainValue dv : allValues){
-		attribute += "\t\t\t\t<DOMAINVALUE>"+dv.getValue().toString()+"</DOMAINVALUE>\n";		
+		if(getObject() != null) {
+			DomainValueList allValues = getObject().getDomainValueList();
+			for(DomainValue dv : allValues){
+			attribute += "\t\t\t\t<DOMAINVALUE>"+dv.getValue().toString()+"</DOMAINVALUE>\n";		
+			}
 		}
 		attribute += "\t\t\t</DOMAIN>\n";
 		attribute += "\t\t</ATTRIBUTE>\n";

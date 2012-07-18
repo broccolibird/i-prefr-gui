@@ -5,21 +5,29 @@ import guiElements.tuples.AlternativeTuple;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.Map.Entry;
 
+import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.InputMap;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 
 import dataStructures.Alternative;
 import dataStructures.maps.AlternativeMap;
 
+/**
+ * AlternativePane is an UpdatePane with fields for entry of
+ * Preference Network Alternatives.
+ */
 @SuppressWarnings("serial")
 public class AlternativePane extends UpdatePane implements ActionListener {
 	private AlternativeMap map;
@@ -29,41 +37,72 @@ public class AlternativePane extends UpdatePane implements ActionListener {
 	private JRadioButton useEntireSpace;
 	private JRadioButton specifySpace;
 
+	/**
+	 * Create new AlternativePane instance
+	 * @param alternativeMap
+	 * @param parent
+	 */
 	public AlternativePane(AlternativeMap alternativeMap, JFrame parent) {
 		this.parentFrame = parent;
 		this.map = alternativeMap;
 		this.add(initializeGUI());
 	}
 
+	/**
+	 * Setup GUI for AlternativePane
+	 * @return JPanel
+	 */
 	private JPanel initializeGUI() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		
 		alternativePanel = new JPanel();
 		alternativePanel.setLayout(new BoxLayout(alternativePanel,
 				BoxLayout.Y_AXIS));
+		
 		panel.add(getRadioButtonPanel());
-		update();
-		panel.add(alternativePanel);
+		
 		plusButton = new JButton("+");
 		plusButton.addActionListener(this);
+		InputMap plusInputMap = plusButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		plusInputMap.put(KeyStroke.getKeyStroke("ENTER"), "selectPlus");
+		plusButton.getActionMap().put("selectPlus", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				plusButton.doClick();				
+			}
+		});
+		
+		
+		update();
+		panel.add(alternativePanel);
 		panel.add(plusButton);
 		return panel;
 	}
 
+	/**
+	 * Create radio buttons
+	 * @return radio button JPanel
+	 */
 	private JPanel getRadioButtonPanel() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-		useEntireSpace = new JRadioButton();
+		// create radio buttons
+		useEntireSpace = new JRadioButton("Use Entire Possible Alternative Space");
 		useEntireSpace.addActionListener(this);
+		useEntireSpace.setMnemonic(KeyEvent.VK_U);
+		
+		specifySpace = new JRadioButton("Specify Specific Alternatives");
+		specifySpace.addActionListener(this);	
+		specifySpace.setMnemonic(KeyEvent.VK_S);
 
-		specifySpace = new JRadioButton();
-		specifySpace.addActionListener(this);
-
+		// add radio buttons to button group
 		ButtonGroup group = new ButtonGroup();
 		group.add(useEntireSpace);
 		group.add(specifySpace);
 
+		// add radio buttons to appropriate panels
 		JPanel useEntirePanel = new JPanel();
 		useEntirePanel
 				.setLayout(new BoxLayout(useEntirePanel, BoxLayout.X_AXIS));
@@ -71,16 +110,18 @@ public class AlternativePane extends UpdatePane implements ActionListener {
 		specifyPanel.setLayout(new BoxLayout(specifyPanel, BoxLayout.X_AXIS));
 
 		useEntirePanel.add(useEntireSpace);
-		useEntirePanel.add(new JLabel("Use Entire Possible Alternative Space"));
 
 		specifyPanel.add(specifySpace);
-		specifyPanel.add(new JLabel("Specify Specific Alternatives"));
 
 		panel.add(useEntirePanel);
 		panel.add(specifyPanel);
+		
 		return panel;
 	}
 
+	/**
+	 * Set correct radio button
+	 */
 	private void updateRadioButtons() {
 		if (map.useEntireAlternativeSpace()) {
 			useEntireSpace.setSelected(true);
@@ -103,31 +144,37 @@ public class AlternativePane extends UpdatePane implements ActionListener {
 		for (Entry<Integer, Alternative> p : set)
 			alternativePanel.add(new AlternativeTuple(p.getKey(), map,
 					parentFrame, alternativePanel));
-		alternativePanel.add(new AlternativeTuple(map, parentFrame,
-				alternativePanel));
+		AlternativeTuple tuple = (AlternativeTuple) alternativePanel.add(
+				new AlternativeTuple(map, parentFrame, alternativePanel));
+		tuple.getTextField().requestFocusInWindow();
 		parentFrame.pack();
 		enableDisableAlternativePanel();
 	}
 	
+	/**
+	 * Enable or disable Alternative entry fields based on the current
+	 * radio button selection
+	 */
 	private void enableDisableAlternativePanel(){
 		Component[] components = alternativePanel.getComponents();
-		if (map.useEntireAlternativeSpace()) {
-			for (Component c : components) {
-				c.setEnabled(false);
-			}
-		}else{
-			for (Component c : components) {
-				c.setEnabled(true);
-			}
+		boolean enabled = !map.useEntireAlternativeSpace();
+		for (Component c : components) {
+			c.setEnabled(enabled);
 		}
+		plusButton.setEnabled(enabled);
 	}
 
+	/**
+	 * Handles actions performed on the plus button and
+	 * radio buttons.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object source = e.getSource();
 		if (plusButton == source) {
-			alternativePanel.add(new AlternativeTuple(map, parentFrame,
-					alternativePanel));
+			AlternativeTuple tuple = (AlternativeTuple) alternativePanel.add(
+					new AlternativeTuple(map, parentFrame, alternativePanel));
+			tuple.getTextField().requestFocusInWindow();
 			pack();
 		} else if (source == useEntireSpace) {
 			map.setUseEntireAlternativeSpace(true);

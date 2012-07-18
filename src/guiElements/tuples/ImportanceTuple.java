@@ -118,6 +118,9 @@ public class ImportanceTuple extends AbstractTuple<Importance> implements
 //				System.out.println("testing map permenance: ");
 //				printList(justList);
 			}
+			// made change to importance, map has changes
+			map.setSaved(false);
+			
 		}
 
 		public void mouseEntered(MouseEvent arg0) {

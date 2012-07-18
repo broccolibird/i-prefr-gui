@@ -2,9 +2,19 @@ package dataStructures;
 
 public class TCPDocument extends AbstractDocument{
 	
-	public TCPDocument(){
-		super();
+	/**
+	 * Create new TCPDocument instance
+	 * @param isMultiStakeholder
+	 */
+	public TCPDocument(boolean isMultiStakeholder){
+		super(isMultiStakeholder);
 	}
+	
+	/**
+	 * Create new TCPDocument instance based on saved
+	 * document
+	 * @param doc
+	 */
 	public TCPDocument(org.w3c.dom.Document doc){
 		super(doc);
 		//TODO - parse network into graph, pass graph into GUI

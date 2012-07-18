@@ -88,6 +88,8 @@ public class DomainTuple extends AbstractTuple<Attribute> implements
 			if (field == domainField) {
 				Domain d = a.getObject();
 				d.setValues(domainField.getText());
+				//change in domain, unsaved changes in attribute map
+				map.setSaved(false);
 				parentWindow.pack();
 			}
 		}

@@ -1,5 +1,6 @@
 package mainGUI;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -19,6 +20,10 @@ import dataStructures.MetaData;
 import dataStructures.ModelCheckerOption;
 import dataStructures.maps.OptionMap;
 
+/**
+ * The SetupProjectPane is an UpdatePane with entry fields and
+ * display fields for project MetaData.
+ */
 @SuppressWarnings("serial")
 public class SetupProjectPane extends UpdatePane implements DocumentListener,
 		ItemListener, ActionListener {
@@ -28,15 +33,23 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 	private JTextField projectNameField;
 	private JTextField filenameField;
 	private JCheckBox sameNameCheckBox;
-	private JComboBox modelCheckerComboBox;
+	private JComboBox<ModelCheckerOption> modelCheckerComboBox;
 
+	/**
+	 * Create a new instance of the SetupProjectPane
+	 * @param metaData
+	 */
 	public SetupProjectPane(MetaData metaData) {
 		this.metaData = metaData;
-		this.add(createGUI());
+		this.add(initializeGUI());
 		setVisible(true);
 	}
 
-	private JPanel createGUI() {
+	/**
+	 * Setup the interface for this panel
+	 * @return JPanel
+	 */
+	private JPanel initializeGUI() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
@@ -65,18 +78,17 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 		panel.add(filenameHeader);
 
 		filenameField = new JTextField(35);
+		filenameField.setText(metaData.getFilename());
 		filenameField.getDocument().addDocumentListener(this);
-		if(!sameNameCheckBox.isSelected()){
-			filenameField.setText(metaData.getFilename());
-		}else{
-			filenameField.setText(metaData.getProjectName());
-		}
-		filenameField.setEnabled(false);
+		if(selected == null || selected == 1) // same name selected
+			filenameField.setEnabled(false);
 		panel.add(filenameField);
+		
+		// Add Model Checker options
 		panel.add(new JLabel("Selected Model Checker"));
 
 		ModelCheckerOption[] options = ModelCheckerOption.getAllOptions();
-		modelCheckerComboBox = new JComboBox(options);
+		modelCheckerComboBox = new JComboBox<ModelCheckerOption>(options);
 		modelCheckerComboBox.addActionListener(this);
 		ModelCheckerOption oldOption = metaData.getSelectedModelChecker();
 		if(oldOption!=null){
@@ -92,6 +104,7 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 
 		panel.add(modelCheckerComboBox);
 
+		// Add project date label
 		panel.add(new JLabel("Project created on: "
 				+ metaData.getCreationDate().get(Calendar.MONTH) + "/"
 				+ metaData.getCreationDate().get(Calendar.DATE) + "/"
@@ -101,9 +114,16 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 
 	@Override
 	public void update() {
-		// Do nothing
+		projectNameField.requestFocusInWindow();
+		projectNameField.select(0, projectNameField.getSelectionEnd());
+		projectNameField.setSelectionColor(new Color(0, 0, 0, 25));
 	}
 	
+	/**
+	 * Selects the same name checkbox in the GUI and
+	 * adds the selection to the metaData optionMap.
+	 * @param selected
+	 */
 	private void selectSameName(boolean selected){
 		sameNameCheckBox.setSelected(selected);
 		if(selected){
@@ -111,6 +131,19 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 		}else{
 			metaData.getDisplayOptions().put(OptionMap.SAME_NAME, 0);
 		}		
+	}
+	
+	/**
+	 * Set File Name field after saving project changes
+	 * @param fileName
+	 */
+	public void setSavedFileName(String fileName) {
+		if(!(fileName.equals(filenameField.getText()) ||
+				fileName.equals(projectNameField.getText()+".xml"))){
+			sameNameCheckBox.setSelected(false);
+		}
+		filenameField.setText(fileName);
+		metaData.setSaved(true);
 	}
 
 	@Override
@@ -123,7 +156,8 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 			} else {
 				selectSameName(true);
 				filenameField.setEnabled(false);
-				filenameField.setText(projectNameField.getText());
+				filenameField.setText(projectNameField.getText()+".xml");
+				metaData.setFilename(filenameField.getText());
 			}
 		}
 	}
@@ -149,8 +183,8 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 			metaData.setProjectName(projectName);
 
 			if (sameNameCheckBox.isSelected()) {
-				filenameField.setText(projectName);
-				metaData.setFilename(projectName);
+				filenameField.setText(projectName+".xml");
+				metaData.setFilename(projectName+".xml");
 			}
 
 		} else if (e.getDocument() == filenameField.getDocument()) {
@@ -162,10 +196,11 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		JComboBox cb = (JComboBox) e.getSource();
-		ModelCheckerOption selectedOption = (ModelCheckerOption) cb
-				.getSelectedItem();
-		metaData.setSelectedModelChecker(selectedOption);
+		if (e.getSource() == modelCheckerComboBox) {
+			ModelCheckerOption selectedOption = (ModelCheckerOption) modelCheckerComboBox
+					.getSelectedItem();
+			metaData.setSelectedModelChecker(selectedOption);
+		}
 	}
 
 }

@@ -13,6 +13,10 @@ import javax.swing.JTextField;
 import dataStructures.Attribute;
 import dataStructures.maps.AttributeMap;
 
+/**
+ * The DomainPane is an UpdatePane with fields for entry of
+ * Attribute Domains.
+ */
 @SuppressWarnings("serial")
 public class DomainPane extends UpdatePane {
 
@@ -20,14 +24,23 @@ public class DomainPane extends UpdatePane {
 	protected JPanel domainPanel;
 	protected JFrame parentFrame;
 
+	/**
+	 * Create a new instance of DomainPane
+	 * @param oldMap
+	 * @param parentFrame
+	 */
 	public DomainPane(AttributeMap oldMap, JFrame parentFrame) {
 		this.map = oldMap;
 		this.parentFrame = parentFrame;
-		this.add(createGUI());
+		this.add(initializeGUI());
 		setVisible(true);
 	}
 
-	private JPanel createGUI() {
+	/**
+	 * Setup GUI for DomainPane
+	 * @return JPanel
+	 */
+	private JPanel initializeGUI() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		domainPanel = new JPanel();

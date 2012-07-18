@@ -17,13 +17,13 @@ public class ImportanceMap extends SuperkeyMap<Importance>{
 	}
 
 	public String toXML(){
-		String importances = "\t\t<IMPORTANCES>\n";
-		importances += "\t\t\t<UNIQUEMAPID>"+uniqueID+"</UNIQUEMAPID>\n";
+		String importances = "<IMPORTANCES>\n";
+		importances += "\t<UNIQUEMAPID>"+uniqueID+"</UNIQUEMAPID>\n";
 		Set<Entry<Integer, Importance>> allAttributes = entrySet();
 		for(Entry<Integer, Importance> entry : allAttributes){
 			importances += entry.getValue().toXML();
 		}
-		importances += "\t\t</IMPORTANCES>\n";
+		importances += "</IMPORTANCES>\n";
 		return importances;
 	}
 	

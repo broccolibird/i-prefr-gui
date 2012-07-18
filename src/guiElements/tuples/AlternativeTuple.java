@@ -12,6 +12,7 @@ import javax.swing.event.DocumentEvent;
 
 import dataStructures.Alternative;
 import dataStructures.maps.AlternativeMap;
+import dataStructures.maps.ValueMap;
 
 @SuppressWarnings("serial")
 public class AlternativeTuple extends AbstractTuple<Alternative> implements
@@ -30,6 +31,10 @@ public class AlternativeTuple extends AbstractTuple<Alternative> implements
 		initializeGUI();
 	}
 
+	public JTextField getTextField(){
+		return alternativeName;
+	}
+	
 	@Override
 	public void initializeGUI() {
 		alternativeName = new JTextField(20);
@@ -71,7 +76,7 @@ public class AlternativeTuple extends AbstractTuple<Alternative> implements
 			Alternative a = map.get(key);
 			if (a == null) {
 				newEntry = true;
-				a = new Alternative("", key, null);
+				a = new Alternative("", key, new ValueMap());
 			}
 			if (field == alternativeName) {
 				a.setName(alternativeName.getText());

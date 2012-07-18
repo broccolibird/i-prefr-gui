@@ -1,13 +1,15 @@
 package mainGUI;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.Collection;
 import java.util.HashMap;
 
+import javax.swing.BoxLayout;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -34,34 +36,59 @@ import edu.uci.ics.jung.visualization.control.ScalingControl;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import graph.EditingModalGraphMouse;
 
+/**
+ * The SetupGraphPane is a PreferencePane which displays a graphical
+ * entry field used to set up a stakeholder's preferences.
+ */
 @SuppressWarnings("serial")
-public class SetupGraphPane extends UpdatePane implements ActionListener {
+public class SetupGraphPane extends PreferencePane implements ActionListener {
 
 	private SparseMultigraph<Attribute, EdgeStatementMap> graph;
 	private AbstractLayout<Attribute, EdgeStatementMap> layout;
 	private VisualizationViewer<Attribute, EdgeStatementMap> vv;
-	private AbstractDocument abstractDocument;
-	@SuppressWarnings("unused")
-	private JFrame parentFrame;
-	private final EditingModalGraphMouse<Attribute, EdgeStatementMap> graphMouse;
+	private EditingModalGraphMouse<Attribute, EdgeStatementMap> graphMouse;
 
 	// remember GUI Elements so they can be redrawn in update()
-	private JComboBox attributeBox;
+	private JComboBox<Attribute> attributeBox;
 	private JButton plus;
 	private JButton minus;
 	private JPanel controls;
 
-	public SetupGraphPane(AbstractDocument abstractDocument, JFrame parentFrame) {
-		this.abstractDocument = abstractDocument;
-		this.parentFrame = parentFrame;
+	/**
+	 * Create new SetupGraphPane instance
+	 * @param document
+	 * @param parent
+	 */
+	public SetupGraphPane(JFrame parent, AbstractDocument document) {
+		super(parent, document);
 
+		createGUI();
+	}
+	
+	private void createGUI() {
+		initializePreferencePanel();
+		
+		createFileControls();
+		
+		createNoMemberField();
+		
+		super.update();
+		
+		add(fileControls);
+		add(preferencePanel);
+		add(noMembers);
+	}
+
+	private JPanel setupGraph() {
 		// create a simple graph for the demo
 		graph = new SparseMultigraph<Attribute, EdgeStatementMap>();
 
-		this.layout = new StaticLayout<Attribute, EdgeStatementMap>(graph,
-				new Dimension(600, 600));
+		Dimension preferredSize = new Dimension(550, 570);
+		layout = new StaticLayout<Attribute, EdgeStatementMap>(graph,
+				preferredSize);
 
-		vv = new VisualizationViewer<Attribute, EdgeStatementMap>(layout);
+		vv = new VisualizationViewer<Attribute, EdgeStatementMap>(layout, 
+				preferredSize);
 		vv.setBackground(Color.white);
 
 		vv.getRenderContext().setVertexLabelTransformer(
@@ -82,13 +109,13 @@ public class SetupGraphPane extends UpdatePane implements ActionListener {
 				.getVertexLabelTransformer());
 
 		final GraphZoomScrollPane panel = new GraphZoomScrollPane(vv);
-		add(panel);
+		
 		Factory<Attribute> vertexFactory = new VertexFactory();
 		Factory<EdgeStatementMap> edgeFactory = new EdgeFactory();
 
 		graphMouse = new EditingModalGraphMouse<Attribute, EdgeStatementMap>(
-				vv.getRenderContext(), vertexFactory, edgeFactory, parentFrame,
-				abstractDocument.getAttributeMap(),graph,edgeLabelMap);
+				vv.getRenderContext(), vertexFactory, edgeFactory, parent,
+				document.getAttributeMap(),graph,edgeLabelMap);
 
 		// the EditingGraphMouse will pass mouse event coordinates to the
 		// vertexLocations function to set the locations of the vertices as
@@ -98,7 +125,14 @@ public class SetupGraphPane extends UpdatePane implements ActionListener {
 		vv.addKeyListener(graphMouse.getModeKeyListener());
 
 		graphMouse.setMode(ModalGraphMouse.Mode.EDITING);
-
+		
+		return panel;
+	}
+	
+	/**
+	 * create graph scale control buttons
+	 */
+	private void createScaleControl() {
 		final ScalingControl scaler = new CrossoverScalingControl();
 		plus = new JButton("+");
 		plus.addActionListener(new ActionListener() {
@@ -113,24 +147,43 @@ public class SetupGraphPane extends UpdatePane implements ActionListener {
 			}
 		});
 
-		// JButton help = new JButton("Help");
-		// help.addActionListener(new ActionListener() {
-		//
-		// public void actionPerformed(ActionEvent e) {
-		// JOptionPane.showMessageDialog(vv, instructions);
-		// }});
-		// AnnotationControls<Number, Number> annotationControls = new
-		// AnnotationControls<Number, Number>(
-		// graphMouse.getAnnotatingPlugin());
-		// controls.add(help);
-
 		controls = new JPanel();
-		update();
-		add(controls, BorderLayout.SOUTH);
 	}
-
+	
+	/**
+	 * Sets all previously used attributes to unused
+	 */
+	public void clearPreferenceData() {
+		Collection<Attribute> allUsedAttributes = graph.getVertices();
+		for( Attribute attr : allUsedAttributes ) {
+			attr.setUsed(false);
+		}
+		update();
+	}
+	
 	@Override
 	public void update() {
+		updatePreferencePanel();
+		super.update();
+	}
+	
+	@Override
+	protected void initializePreferencePanel() {
+		JPanel graphPanel = setupGraph();
+
+		createScaleControl();
+		
+		updatePreferencePanel();
+		
+		preferencePanel = new JPanel();
+		preferencePanel.setLayout(new BoxLayout(preferencePanel, BoxLayout.PAGE_AXIS));
+		preferencePanel.add(graphPanel);
+		preferencePanel.add(controls);
+		
+	}
+	
+	@Override
+	public void updatePreferencePanel() {		
 		controls.removeAll();
 		controls.add(plus);
 		controls.add(minus);
@@ -139,15 +192,22 @@ public class SetupGraphPane extends UpdatePane implements ActionListener {
 		controls.add(attributeBox);
 	}
 
+	/**
+	 * Returns the current graph
+	 * @return graph
+	 */
 	public Graph<Attribute, EdgeStatementMap> getGraph() {
 		return graph;
 	}
 
+	/**
+	 * Sets up combobox with all attributes
+	 */
 	private void setupAttributeBox() {
 		// make combobox with all attributes
-		Attribute[] allAttributes = abstractDocument.getAttributeMap().values()
+		Attribute[] allAttributes = document.getAttributeMap().values()
 				.toArray(new Attribute[0]);
-		attributeBox = new JComboBox(allAttributes);
+		attributeBox = new JComboBox<Attribute>(allAttributes);
 
 		// make renderer that greys out already-used attributes
 		ComboBoxRenderer renderer = new ComboBoxRenderer();
@@ -171,11 +231,13 @@ public class SetupGraphPane extends UpdatePane implements ActionListener {
 			if (!selectedAttribute.isUsed()) {
 //				System.out.println("setting gm attribute to: "
 //						+ selectedAttribute.getName());
-				graphMouse.getEditingPlugin().setAttribute(selectedAttribute);
+				graphMouse.getEditingPlugin().setVertex(selectedAttribute);
 			} else {
 //				System.out.println("attribute is already used");
 //				// maybe warn the user that their selection is not going to work
 			}
+		} else {
+			super.actionPerformed(e);
 		}
 
 	}
@@ -189,9 +251,9 @@ public class SetupGraphPane extends UpdatePane implements ActionListener {
 		}
 
 		@Override
-		public Component getListCellRendererComponent(JList arg0, Object value,
-				int arg2, boolean arg3, boolean arg4) {
-			super.getListCellRendererComponent(arg0, value, arg2, arg3, arg4);
+		public Component getListCellRendererComponent(JList<?> list, Object value,
+				int index, boolean isSelected, boolean cellHasFocus) {
+			super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 			Attribute a = (Attribute) value;
 			if (a != null && a.isUsed())
 				this.setForeground(Color.LIGHT_GRAY);
@@ -202,7 +264,7 @@ public class SetupGraphPane extends UpdatePane implements ActionListener {
 
 	class VertexFactory implements Factory<Attribute> {
 		public Attribute create() {
-			return graphMouse.getEditingPlugin().getSelectedAttribute();
+			return (Attribute) graphMouse.getEditingPlugin().getSelectedVertex();
 		}
 	}
 
@@ -210,6 +272,24 @@ public class SetupGraphPane extends UpdatePane implements ActionListener {
 		public EdgeStatementMap create() {
 			return new EdgeStatementMap();
 		}
+	}
+
+	@Override
+	public boolean loadMemberPreferences(File file) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean saveMemberPreferences(File preferenceFile) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean existUnsavedChanges() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

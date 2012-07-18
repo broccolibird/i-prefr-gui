@@ -101,6 +101,8 @@ public class ValueTuple extends AbstractTuple<Alternative> implements
 					} else if(selectedValue!=null){
 						valueMap.put(selectedValue.getAttributeKey(),
 								selectedValue);
+						// set the map as unsaved because an attribute has changed
+						map.setSaved(false); 
 					}
 					break;
 				}
