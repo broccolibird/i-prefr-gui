@@ -25,6 +25,8 @@ public class ReasonerWindowListener implements WindowListener{
 			//offer to save
 			if(PreferenceReasoner.showSaveChangesDialog())
 				frame.dispose();
+		} else {
+			frame.dispose();
 		}
 		
 	}
