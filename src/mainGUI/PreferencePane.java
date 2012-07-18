@@ -331,6 +331,20 @@ public abstract class PreferencePane extends UpdatePane implements ActionListene
 	    FileNameExtensionFilter filter = new FileNameExtensionFilter(
 	    		"XML (*.xml)","xml");
 	    chooser.setFileFilter(filter);
+	    
+	    // suggest a starting folder based on the project
+	    // file location
+ 		String suggestedLocation;
+ 		AbstractPaneTurner paneTurner = (AbstractPaneTurner) getParent();
+ 		File currentFile = paneTurner.getCurrentFile();
+ 		if ( currentFile != null) {
+ 			suggestedLocation = currentFile.getAbsolutePath();
+ 			int suffixIndex = suggestedLocation.lastIndexOf('/');
+ 	 		suggestedLocation = (suffixIndex >= 0) ? 
+ 	 				suggestedLocation.substring(0, suffixIndex) : suggestedLocation;
+ 	 		chooser.setSelectedFile(new File(suggestedLocation));
+ 		}
+	 		
 	    int option = chooser.showOpenDialog(this);
 		if (option == JFileChooser.APPROVE_OPTION) {
 			File file = chooser.getSelectedFile();
