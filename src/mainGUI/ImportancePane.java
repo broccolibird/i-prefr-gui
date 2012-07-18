@@ -240,6 +240,10 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 			
 			map.setSaved(true);
 			
+			// set role map as unsaved as preferences have been
+			// added to a member, but not yet saved to the project
+			document.getRoleMap().setSaved(false);
+			
 			return true;
 		}
 

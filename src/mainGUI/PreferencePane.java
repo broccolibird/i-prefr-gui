@@ -34,25 +34,25 @@ import dataStructures.maps.RoleMap;
 @SuppressWarnings("serial")
 public abstract class PreferencePane extends UpdatePane implements ActionListener{
 
-	JFrame parent;
-	AbstractDocument document;
+	protected JFrame parent;
+	protected AbstractDocument document;
 	
 	boolean isMultipleStakeholder;
 	
-	JComboBox<Member> stakeholderBox;
-	JPanel stakeholderControls;
-	JTextField curFile;
-	JPanel fileControls;
+	private JComboBox<Member> stakeholderBox;
+	private JPanel stakeholderControls;
+	private JTextField curFile;
+	protected JPanel fileControls;
 	
-	JPanel preferencePanel;
-	Member curMember;
+	protected JPanel preferencePanel;
+	private Member curMember;
 	
-	JButton save;
-	JButton saveAs;
-	JButton load;
-	JButton clear;
+	private JButton save;
+	private JButton saveAs;
+	private JButton load;
+	private JButton clear;
 	
-	JTextArea noMembers;
+	protected JTextArea noMembers;
 	
 	public PreferencePane(JFrame parent, AbstractDocument document){
 		this.parent = parent;
