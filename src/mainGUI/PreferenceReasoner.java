@@ -302,23 +302,20 @@ public class PreferenceReasoner extends JApplet{
 			frame.remove(paneTurner);
 		
 		if(networkType.equals("CI")){
-			//frame.removeAll();
 			CIDocument oldCIDocument = new CIDocument(doc);
 			loading = false;
 			paneTurner = new PaneTurnerCI(frame, oldCIDocument, isMultiStakeholder, file);
 			frame.getContentPane().add(paneTurner);
 			frame.pack();
 		}else if(networkType.equals("TCP")){
-			//frame.removeAll();
 			TCPDocument oldTCPDocument = new TCPDocument(doc);
 			loading = false;
 			paneTurner = new PaneTurnerTCP(frame, oldTCPDocument, isMultiStakeholder, file);
 			frame.getContentPane().add(paneTurner);
 			frame.pack();
 		}
-
-		// ...
-		// same for TCPDocument
+		
+		paneTurner.setSaved(true);
 		
 	}
 
