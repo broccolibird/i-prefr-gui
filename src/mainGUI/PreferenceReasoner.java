@@ -59,14 +59,7 @@ public class PreferenceReasoner extends JApplet{
 		item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK));
 		item.addActionListener(new AbstractAction("Save") {
 			public void actionPerformed(ActionEvent e) {
-				if(paneTurner == null) {
-					JOptionPane.showMessageDialog(frame, "Please create a project before saving.",
-							"Project does not exist", JOptionPane.PLAIN_MESSAGE);
-				} else if (paneTurner.getCurrentFile() == null){
-					showSaveDialog();
-				} else {
-					save(paneTurner.getCurrentFile());
-				}
+				save();
 			}
 		});
 		
@@ -155,7 +148,7 @@ public class PreferenceReasoner extends JApplet{
 			    "Save Changes",
 			    JOptionPane.YES_NO_CANCEL_OPTION);
 		if (choice == JOptionPane.YES_OPTION) {
-			return showSaveDialog();
+			return save();
 		} else if (choice == JOptionPane.NO_OPTION) {
 			return true;
 		}
@@ -209,6 +202,21 @@ public class PreferenceReasoner extends JApplet{
 		paneTurner.updateRightPane();
 	}
 
+	/**
+	 * @return true if the project was saved successfully
+	 */
+	public static boolean save() {
+		if(paneTurner == null) {
+			JOptionPane.showMessageDialog(frame, "Please create a project before saving.",
+					"Project does not exist", JOptionPane.PLAIN_MESSAGE);
+			return false;
+		} else if (paneTurner.getCurrentFile() == null){
+			return showSaveDialog();
+		} else {
+			return save(paneTurner.getCurrentFile());
+		}
+	}
+	
 	/**
 	 * Saves an xml representation of the project to the
 	 * given file.
