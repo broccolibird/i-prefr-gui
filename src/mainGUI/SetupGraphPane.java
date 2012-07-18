@@ -83,10 +83,12 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 		// create a simple graph for the demo
 		graph = new SparseMultigraph<Attribute, EdgeStatementMap>();
 
-		this.layout = new StaticLayout<Attribute, EdgeStatementMap>(graph,
-				new Dimension(550, 550));
+		Dimension preferredSize = new Dimension(550, 570);
+		layout = new StaticLayout<Attribute, EdgeStatementMap>(graph,
+				preferredSize);
 
-		vv = new VisualizationViewer<Attribute, EdgeStatementMap>(layout);
+		vv = new VisualizationViewer<Attribute, EdgeStatementMap>(layout, 
+				preferredSize);
 		vv.setBackground(Color.white);
 
 		vv.getRenderContext().setVertexLabelTransformer(
