@@ -48,8 +48,7 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 	private ImportanceMap map;
 	private JPanel importancePanel;
 	private JButton plusButton;
-	private Component glue;
-		
+	
 		/**
 		 * Create new instance of ImportancePane
 		 * @param parent
@@ -59,7 +58,6 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 			super(parent, document);
 			this.attributeMap = document.getAttributeMap();
 			this.map = new ImportanceMap();
-			this.glue = Box.createGlue();
 			createGUI();
 		}
 		
