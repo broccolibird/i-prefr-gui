@@ -10,9 +10,12 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
 
+import javax.help.*;
 import javax.swing.AbstractAction;
 import javax.swing.JApplet;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -116,8 +119,20 @@ public class PreferenceReasoner extends JApplet{
 			}
 		});
 
+		JMenu helpMenu = new JMenu("?");
+		
+		//setup help
+		JMenuItem help = new JMenuItem("Help");
+		HelpSet hs = getHelpSet("javahelp/Sample.hs");
+		HelpBroker hb = hs.createHelpBroker();
+		CSH.setHelpIDString(help, "top");
+		help.addActionListener(new CSH.DisplayHelpFromSource(hb));
+		help.setMnemonic('h');
+		helpMenu.add(help);
+		
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add(fileMenu);
+		menuBar.add(helpMenu);
 		frame.setJMenuBar(menuBar);
 		frame.setVisible(true);
 		frame.pack();
@@ -318,5 +333,29 @@ public class PreferenceReasoner extends JApplet{
 		paneTurner.setSaved(true);
 		
 	}
+	
+	private static void showHelpMenu() {
+		HelpSet hs = getHelpSet("javahelp/Sample.hs");
+		HelpBroker hb = hs.createHelpBroker();
+		
+		CSH.setHelpIDString(frame, "frame");
+		new CSH.DisplayHelpFromSource(hb);
+	}
+	
+	/**
+	 * find the helpset file and create a HelpSet object
+	 */
+	 public static HelpSet getHelpSet(String helpsetfile) {
+		 HelpSet hs = null;
+	     ClassLoader cl = PreferenceReasoner.class.getClassLoader();
+	     try {
+	    	 URL hsURL = HelpSet.findHelpSet(cl, helpsetfile);
+	    	 hs = new HelpSet(null, hsURL);
+    	 } catch(Exception ee) {
+    		 System.out.println("HelpSet: "+ee.getMessage());
+    		 System.out.println("HelpSet: "+ helpsetfile + " not found");
+    	 }
+	     return hs;
+	 }
 
 }
