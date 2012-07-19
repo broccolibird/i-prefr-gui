@@ -7,7 +7,23 @@
 	<mapID target="toplevelfolder" url="images/toplevel.gif" />
 	<mapID target="top" url="help/welcome.html" />
 
+	
 	<mapID target="intro" url="help/welcome.html" />
+	<mapID target="projectpane" url="panes/projectpane.html"/>
+	<mapID target="attributepane" url="panes/attributepane.html"/>
+	<mapID target="domainpane" url="panes/domainpane.html"/>
+	<mapID target="alternativepane" url="panes/alternativepane.html"/>
+	<mapID target="valuepane" url="panes/valuepane.html"/>
+	<mapID target="stakeholderpane" url="panes/stakeholderpane.html"/>
+		<mapID target="rolepane" url="panes/rolepane.html"/>
+		<mapID target="hierarchypane" url="panes/hierarchypane.html" />
+		<mapID target="memberpane" url="panes/memberpane.html" />
+	<mapID target="preferencepane" url="panes/preferencepane.html" />
+		<mapID target="importancepane" url="panes/importancepane.html" />
+		<mapID target="setupgraphpane" url="panes/setupgraphpane.html" />
+	<mapID target="viewresultspane" url="panes/viewresultspane.html" />
+	
+	
 	<mapID target="start" url="help/start.html" />
         <mapID target="overview" url="help/welcome.html" />
 	<mapID target="one" url="help/start.html" />
