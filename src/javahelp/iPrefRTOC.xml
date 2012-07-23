@@ -6,11 +6,12 @@
 <tocitem text="i-PrefR Help" image="toplevelfolder" target="intro">
 
 	<tocitem text="Getting Started" target="start"/>
-	<tocitem text="Project Setup" target="projectpane"/>
+	<tocitem text="Glossary" target="glossary"/>
+	<tocitem text="Setup Project" target="projectpane"/>
 	<tocitem text="Add Attributes" target="attributepane"/>
-	<tocitem text="Add Attribute Domains" target="domainpane"/>
+	<tocitem text="Attribute Domains" target="domainpane"/>
 	<tocitem text="Add Alternatives" target="alternativepane"/>
-	<tocitem text="Add Alternative Values" target="valuepane"/>
+	<tocitem text="Alternative Values" target="valuepane"/>
 	<tocitem text="Add Multiple Stakeholders" target="stakeholderpane" expand="false">
 		<tocitem text="Add Roles" target="rolepane"/>
 		<tocitem text="Create Role Hierarchy" target="hierarchypane"/>

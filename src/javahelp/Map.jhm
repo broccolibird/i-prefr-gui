@@ -6,7 +6,8 @@
 <map version="1.0">
 	<mapID target="toplevelfolder" url="images/toplevel.gif" />
 	<mapID target="top" url="help/welcome.html" />
-
+	<mapID target="start" url="help/start.html" />
+	<mapID target="glossary" url="help/glossary.html" />
 	
 	<mapID target="intro" url="help/welcome.html" />
 	<mapID target="projectpane" url="panes/projectpane.html"/>
@@ -22,14 +23,5 @@
 		<mapID target="importancepane" url="panes/importancepane.html" />
 		<mapID target="setupgraphpane" url="panes/setupgraphpane.html" />
 	<mapID target="viewresultspane" url="panes/viewresultspane.html" />
-	
-	
-	<mapID target="start" url="help/start.html" />
-        <mapID target="overview" url="help/welcome.html" />
-	<mapID target="one" url="help/start.html" />
-	<mapID target="two" url="help/start.html" />
 
-	<mapID target="bean.story" url="help/welcome.html" />
-	<mapID target="bean.story" url="help/start.html" />
-	<mapID target="bean.story" url="help/welcome.html" />
 </map>
