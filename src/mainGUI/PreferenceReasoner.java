@@ -123,7 +123,7 @@ public class PreferenceReasoner extends JApplet{
 		
 		//setup help
 		JMenuItem help = new JMenuItem("Help");
-		HelpSet hs = getHelpSet("javahelp/Sample.hs");
+		HelpSet hs = getHelpSet("javahelp/master.hs");
 		HelpBroker hb = hs.createHelpBroker();
 		CSH.setHelpIDString(help, "top");
 		help.addActionListener(new CSH.DisplayHelpFromSource(hb));
@@ -335,7 +335,7 @@ public class PreferenceReasoner extends JApplet{
 	}
 	
 	private static void showHelpMenu() {
-		HelpSet hs = getHelpSet("javahelp/Sample.hs");
+		HelpSet hs = getHelpSet("javahelp/master.hs");
 		HelpBroker hb = hs.createHelpBroker();
 		
 		CSH.setHelpIDString(frame, "frame");
