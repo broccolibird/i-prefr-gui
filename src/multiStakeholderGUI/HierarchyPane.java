@@ -8,11 +8,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 
 import org.apache.commons.collections15.Factory;
 import org.apache.commons.collections15.Transformer;
@@ -61,10 +64,16 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 	private RoleEditingModalGraphMouse<Role, Integer> graphMouse;
 	
 	// remember GUI Elements so they can be redrawn in update()
+	private JPanel rolePanel;
 	private JComboBox<Role> roleBox;
+	private JPanel modePanel;
+	private JPanel zoomPanel;
 	private JButton plus;
 	private JButton minus;
 	private JPanel controls;
+	
+	
+	
 	
 	/**
 	 * Creates the HierarchyPane based on the current Document
@@ -95,7 +104,7 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 		}
 		
 		// set up view settings
-		vv = new VisualizationViewer<Role, Integer>(layout, new Dimension(400, 600));
+		vv = new VisualizationViewer<Role, Integer>(layout, new Dimension(500, 575));
 		vv.setBackground(Color.white);
 		vv.getRenderContext().setEdgeShapeTransformer(new EdgeShape.Line()); 
         vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<Role>());
@@ -146,11 +155,16 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 	@Override
 	public void update() {
 		controls.removeAll();
-		controls.add(plus);
-		controls.add(minus);
-		controls.add(graphMouse.getModeComboBox());
+		
 		setupRoleBox();
-		controls.add(roleBox);	
+		controls.add(rolePanel);
+		
+		modePanel = new JPanel();
+		modePanel.setBorder(BorderFactory.createTitledBorder("Mode"));
+		modePanel.add(graphMouse.getModeComboBox());
+		controls.add(modePanel);	
+		
+		controls.add(zoomPanel);
 	}
 	
 	/**
@@ -181,6 +195,10 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 		if (allRoles.length > 0) {
 			roleBox.setSelectedIndex(0);
 		}
+		
+		rolePanel = new JPanel();
+		rolePanel.setBorder(BorderFactory.createTitledBorder("Role"));
+		rolePanel.add(roleBox);
 	}
 	
 	/**
@@ -203,7 +221,9 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 	 * Creates actions for graph zoom controls
 	 */
 	private void createZoomControls() {
-		 // Add zoom controls
+		zoomPanel = new JPanel();
+		zoomPanel.setBorder(BorderFactory.createTitledBorder("Zoom"));
+		
         final ScalingControl scaler = new CrossoverScalingControl();
 
         plus = new JButton("+");
@@ -218,6 +238,9 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
                 scaler.scale(vv, 1/1.1f, vv.getCenter());
             }
         });
+        
+        zoomPanel.add(plus);
+        zoomPanel.add(minus);
 	}
 	
 	class ComboBoxRenderer extends DefaultListCellRenderer {
