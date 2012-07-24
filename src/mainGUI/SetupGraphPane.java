@@ -158,7 +158,7 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 		for( Attribute attr : allUsedAttributes ) {
 			attr.setUsed(false);
 		}
-		update();
+		updatePreferencePanel();
 	}
 	
 	@Override
