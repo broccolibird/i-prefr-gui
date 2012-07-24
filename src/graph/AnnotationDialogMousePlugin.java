@@ -138,7 +138,36 @@ public class AnnotationDialogMousePlugin<V, E> extends
 	}
 
 	public void mouseReleased(MouseEvent e) {
-		// do nothing
+		if (e.isPopupTrigger()) {
+			if(vertex != null) {
+				Point2D ip = e.getPoint();
+				
+				Annotation<VertexStatementMap, V> thisAnnotation = annotationManager
+						.getAnnotation(vertex);
+				VertexStatementMap oldMap = null;
+				if (thisAnnotation != null) {
+					oldMap = (VertexStatementMap) thisAnnotation.getAnnotation();
+					annotationManager.remove(thisAnnotation);
+				} else {
+					oldMap = new VertexStatementMap();
+					thisAnnotation = new Annotation<VertexStatementMap, V>(null, layer,
+							annotationColor, fill, ip, vertex);
+				}
+				// CARL - this is one of the critical areas of code - the
+				// ability to associate a particular VertexStatementMap with an
+				// Annotation that remembers its associated Vertex
+				
+				//Attribute existingAttribute = (Attribute)vertex;
+				//System.out.println("existing Attribute: "+existingAttribute.toString());
+				VertexAnnotationDialog vertexAnnotationDialog = new VertexAnnotationDialog(
+						parentFrame, oldMap, attributeMap,
+						(Attribute) vertex);
+				VertexStatementMap newTable = (VertexStatementMap) vertexAnnotationDialog
+						.getMap();
+				thisAnnotation.setAnnotation((VertexStatementMap) newTable);
+				annotationManager.add(layer, thisAnnotation);
+			}
+		}
 	}
 
 	public void mouseDragged(MouseEvent e) {
