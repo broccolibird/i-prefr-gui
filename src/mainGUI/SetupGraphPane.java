@@ -9,6 +9,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
@@ -53,6 +54,9 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 	private JButton plus;
 	private JButton minus;
 	private JPanel controls;
+	private JPanel zoomPanel;
+	private JPanel modePanel;
+	private JPanel attributePanel;
 
 	/**
 	 * Create new SetupGraphPane instance
@@ -83,7 +87,7 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 		// create a simple graph for the demo
 		graph = new SparseMultigraph<Attribute, EdgeStatementMap>();
 
-		Dimension preferredSize = new Dimension(550, 570);
+		Dimension preferredSize = new Dimension(550, 530);
 		layout = new StaticLayout<Attribute, EdgeStatementMap>(graph,
 				preferredSize);
 
@@ -147,7 +151,11 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 			}
 		});
 
-		controls = new JPanel();
+		zoomPanel = new JPanel();
+		zoomPanel.setBorder(BorderFactory.createTitledBorder("Zoom"));
+		zoomPanel.add(plus);
+		zoomPanel.add(minus);
+		
 	}
 	
 	/**
@@ -171,6 +179,7 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 	protected void initializePreferencePanel() {
 		JPanel graphPanel = setupGraph();
 
+		controls = new JPanel();
 		createScaleControl();
 		
 		updatePreferencePanel();
@@ -185,11 +194,19 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 	@Override
 	public void updatePreferencePanel() {		
 		controls.removeAll();
-		controls.add(plus);
-		controls.add(minus);
-		controls.add(graphMouse.getModeComboBox());
+		
+		attributePanel = new JPanel();
+		attributePanel.setBorder(BorderFactory.createTitledBorder("Attribute"));
 		setupAttributeBox();
-		controls.add(attributeBox);
+		attributePanel.add(attributeBox);
+		controls.add(attributePanel);
+		
+		modePanel = new JPanel();
+		modePanel.setBorder(BorderFactory.createTitledBorder("Mode"));
+		modePanel.add(graphMouse.getModeComboBox());
+		controls.add(modePanel);
+		
+		controls.add(zoomPanel);
 	}
 
 	/**
