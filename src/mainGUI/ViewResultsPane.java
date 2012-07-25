@@ -3,6 +3,8 @@ package mainGUI;
 import guiElements.CustomAlternativeDialog;
 import guiElements.ExistingAlternativeDialog;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -10,6 +12,8 @@ import java.awt.event.MouseListener;
 import java.util.Collection;
 import java.util.Vector;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -180,15 +184,26 @@ public class ViewResultsPane extends UpdatePane implements ActionListener {
 		topNextButton.addActionListener(this);
 		
 		JPanel innerPanel = new JPanel();
+		innerPanel.setLayout(new BoxLayout(innerPanel, BoxLayout.X_AXIS));
+		
+		JTextField resultLabel = new JTextField("Results");
+		resultLabel.setEditable(false);
+		resultLabel.setPreferredSize(new Dimension(75, 50));
+		
 		resultsField = new JTextArea(3,38);
 		resultsField.setEditable(false);
+		resultsField.setPreferredSize(new Dimension(400, 50));
 		resultsField.setText("list of results fetched one by one");
-		JLabel resultLabel = new JLabel("Results: ");
+		resultsField.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+		
 		innerPanel.add(resultLabel);
 		innerPanel.add(resultsField);
 		
+		resultsPanel.add(Box.createRigidArea(new Dimension(10, 10)));
 		resultsPanel.add(topNextButton);
+		resultsPanel.add(Box.createRigidArea(new Dimension(10, 10)));
 		resultsPanel.add(innerPanel);
+		resultsPanel.add(Box.createRigidArea(new Dimension(10, 10)));
 		return resultsPanel;
 	}
 	
@@ -198,11 +213,18 @@ public class ViewResultsPane extends UpdatePane implements ActionListener {
 	 */
 	private JPanel createJustificationPanel() {
 		JPanel justificationPanel = new JPanel();
+		justificationPanel.setLayout(new BoxLayout(justificationPanel, BoxLayout.X_AXIS));
 		
-		justificationField = new JTextArea(3,36);
+		JTextField justificationLabel = new JTextField("Justification");
+		justificationLabel.setEditable(false);
+		justificationLabel.setPreferredSize(new Dimension(75, 50));
+		
+		justificationField = new JTextArea(3,38);
 		justificationField.setEditable(false);
+		justificationField.setPreferredSize(new Dimension(400, 50));
 		justificationField.setText("result justification");
-		JLabel justificationLabel = new JLabel("Justification: ");
+		justificationField.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+		
 		
 		justificationPanel.add(justificationLabel);
 		justificationPanel.add(justificationField);
