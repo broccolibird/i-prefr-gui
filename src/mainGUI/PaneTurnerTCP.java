@@ -38,7 +38,7 @@ public class PaneTurnerTCP extends AbstractPaneTurner{
 		// AttributeTuple, so get a reference to it
 		preferencesPane = new SetupGraphPane(parent, document);
 		viewPanes[index++] = preferencesPane;
-		viewPanes[index] = new ViewResultsPane(document,parent);
+		viewPanes[index] = new ViewResultsPaneTCP(document,parent);
 		
 		projectPane = new SetupProjectPane(document.getMetaData());
 		viewPanes[0] = projectPane;
