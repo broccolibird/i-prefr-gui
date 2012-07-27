@@ -200,7 +200,8 @@ public abstract class PreferencePane extends UpdatePane implements ActionListene
 		stakeholderControls.setLayout(new FlowLayout());
 		
 		// Set text for field showing user's preference file path
-		curFile = new JTextField();		
+		curFile = new JTextField();
+		curFile.setToolTipText("file location");
 		curFile.setEditable(false);
 		
 		// in non-multistakeholder project
