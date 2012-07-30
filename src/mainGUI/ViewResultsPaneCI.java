@@ -1,6 +1,8 @@
 package mainGUI;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -17,6 +19,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import translate.CINetReasoner;
+
 import dataStructures.AbstractDocument;
 import dataStructures.Alternative;
 import dataStructures.Attribute;
@@ -27,30 +31,95 @@ import dataStructures.maps.AttributeMap;
 import dataStructures.maps.ValueMap;
 
 public class ViewResultsPaneCI extends ViewResultsPane{
+	
+	CINetReasoner reasoner;
+	String ciNetFileName;
 
 	public ViewResultsPaneCI(AbstractDocument document, JFrame parentFrame) {
 		super(document, parentFrame);
 	}
 
-	protected String xmlToText(File prefXml) {
-		// Start text file
-		String textFile = "";
-		textFile += "VARIABLES\n";
+	protected void initReasoner(String xmlFileName) {
+		if(reasoner == null) {
+			ciNetFileName = xmlToText(new File(xmlFileName)).getAbsolutePath();
+			reasoner = new CINetReasoner(ciNetFileName, "cadencesmv", 
+					"C:\\Program Files (x86)\\SMV\\bin\\smv");
+		}
+	}
+	
+	protected void topNext() {
+		
+		if(document.getAlternativeMap().useEntireAlternativeSpace()) {
+			String resultSet = getNextPreferred();
+			addResult(resultSet);
+		} else {
+			boolean alternativeFound = false;
+			String resultSet;
+			while(!alternativeFound) {
+				resultSet = getNextPreferred();
+				Alternative alt = getAlternative(resultSet);
+				if(alt != null) {
+					String resultString = alt.getName() + " " + resultSet;
+					addResult(resultString);
+					alternativeFound = true;
+				}
+			}
+		}
+		
+	}
+	
+	protected String getNextPreferred() {
+		Set<String> prefResult;
+		try {
+			prefResult = reasoner.nextPreferred();
+		} catch (Exception e) {
+			System.err.println("Thread handling "+ciNetFileName+" encountered exception:");
+			e.printStackTrace();
+			return null;
+		}
+				
+		return prefResult.toString();
+	}
+	
+	protected void checkConsistency() {
+		
+		boolean consistent;
+		try {
+			consistent = reasoner.isConsistent();
+		} catch (Exception e) {
+			System.err.println("Thread handling "+ciNetFileName+" encountered exception:");
+			e.printStackTrace();
+			return;
+		}
+		
+		if(consistent) {
+			consistencyField.setText("consistent");
+		} else {
+			consistencyField.setText("inconsistent");
+		}
+		
+	}
+	
+	
+	protected File xmlToText(File prefXml) {
+		// Start converting to text
+		String text = "";
+		text += "VARIABLES\n";
 		
 		// add variable list
 		AttributeMap attributeMap = document.getAttributeMap();
 		Collection<Attribute> attributes = attributeMap.values();
 		for(Attribute attribute : attributes) {
-			textFile += attribute + ",";
+			text += attribute + ",";
 		}
 		
 		// remove extra comma
-		int lastIndex = textFile.lastIndexOf(',');
-		lastIndex = (lastIndex > 0)?lastIndex:textFile.length();
-		textFile = textFile.substring(0, lastIndex);
+		int lastIndex = text.lastIndexOf(',');
+		lastIndex = (lastIndex > 0)?lastIndex:text.length();
+		text = text.substring(0, lastIndex);
 		
 		// add preferences header to text file
-		textFile += "\nPREFERENCES\n";
+		text += "\nPREFERENCES\n";
 		
 		
 		// Create dom object from prefXml
@@ -102,11 +171,33 @@ public class ViewResultsPaneCI extends ViewResultsPane{
 			}
 			
 			// add to text file
-			textFile += "{"+preference[0]+"};{"+preference[1]+
+			text += "{"+preference[0]+"};{"+preference[1]+
 					"}:{"+preference[2]+"};{"+preference[3]+"}\n";
 		}
 		
+		String textFileLocation = prefXml.getAbsolutePath();
+		int ending = textFileLocation.lastIndexOf('.');
+		textFileLocation = textFileLocation
+				.substring(0, (ending>0)?ending:textFileLocation.length())+"-text.xml";
+		File textFile= new File(textFileLocation);
 		
+		BufferedWriter writer = null;
+		try {
+		    writer = new BufferedWriter(new FileWriter(textFile));
+		    writer.write(text);
+		}
+		catch (IOException e) {
+		    e.printStackTrace();
+		    // save failed, return null
+		    return null;
+		}
+		
+		try {
+		    writer.close();
+		}
+		catch(IOException e) {
+		    e.printStackTrace();
+		}
 		return textFile;
 	}
 	

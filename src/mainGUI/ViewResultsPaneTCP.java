@@ -14,7 +14,7 @@ public class ViewResultsPaneTCP extends ViewResultsPane {
 	}
 
 	@Override
-	protected String xmlToText(File prefXml) {
+	protected File xmlToText(File prefXml) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -29,6 +29,24 @@ public class ViewResultsPaneTCP extends ViewResultsPane {
 	protected Alternative getAlternative(String variableSet) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	protected void checkConsistency() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void initReasoner(String prefXml) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void topNext() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -10,9 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -62,11 +60,11 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 	private JButton dominanceButton;
 	private JButton topNextButton;
 	
-	private JTextField consistencyField;
+	protected JTextField consistencyField;
 	private JTextField leftDominanceSet;
 	private JTextField rightDominanceSet;
 	private JTextField dominanceField;
-	private JTextArea resultsField;
+	protected JTextArea resultsField;
 	private JTextArea justificationField;
 
 	private AlternativeList alreadyChosen;
@@ -79,6 +77,8 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 	private boolean allMembers;
 
 	private JFrame parentFrame;
+	
+	protected int currentResult = 1;
 	
 	/**
 	 * Create new ViewResultsPane instance
@@ -190,8 +190,8 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 		toTextButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String text = xmlToText(new File(curMember.getPreferenceFilePath()));
-				System.out.println(text);
+				File text = xmlToText(new File(curMember.getPreferenceFilePath()));
+				System.out.println(text.getAbsolutePath());
 				
 			}
 		});
@@ -300,8 +300,16 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 		return resultsPanel;
 	}
 	
-	private void addResult(String result) {
+	protected void addResult(String resultSet) {
+		String oldText;
 		
+		if(currentResult == 1)
+			oldText = "";
+		else
+			oldText = resultsField.getText();
+		
+		oldText += currentResult++ + ". " + resultSet + "\n";
+		resultsField.setText(oldText);
 	}
 	
 	/**
@@ -410,9 +418,12 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 		}
 	}
 	
-	protected abstract String xmlToText(File prefXml);
+	protected abstract void initReasoner(String prefXml);
+	protected abstract void topNext();
+	protected abstract File xmlToText(File prefXml);
 	protected abstract String getVariableSet(String line);
 	protected abstract Alternative getAlternative(String variableSet);
+	protected abstract void checkConsistency();
 	
 	/**
 	 * Send Query to back end
@@ -421,11 +432,9 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 	private void sendQuery(int type) {
 		switch (type) {
 		case CONSISTENCY:
-			System.out.println("send cosistency query");
-			if (allMembers)
-				consistencyField.setText("new results for All Members");
-			else
-				consistencyField.setText("new results for "+curMember);
+			System.out.println("send consistency query");
+			initReasoner(curMember.getPreferenceFilePath());
+			checkConsistency();
 
 			//TODO - update result field
 			break;
@@ -440,13 +449,16 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 		case TOP:
 			System.out.println("send top query");
 			//TODO - add result to alreadyChosen
-			
+			initReasoner(curMember.getPreferenceFilePath());
+			topNext();
 			break;
 		case NEXT:
-			int n = alreadyChosen.size();
+			/*int n = alreadyChosen.size();
 			System.out.println("send next query with n =" + n
-					+ " and alreadyChosen = " + alreadyChosen.toString());
+					+ " and alreadyChosen = " + alreadyChosen.toString());*/
 			//TODO - add result to alreadyChosen
+			initReasoner(curMember.getPreferenceFilePath());
+			topNext();
 			break;
 		default:
 			System.err.println("In ViewResultsPaneCI - sendQuery triggered by invalid type integer");
@@ -454,7 +466,7 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 		}
 		parentFrame.pack();
 	}
-	
+
 	class AlternativeListener implements MouseListener {
 		private JTextComponent field;
 		private Alternative singleAlternative;
