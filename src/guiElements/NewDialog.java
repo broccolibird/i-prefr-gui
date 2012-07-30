@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -79,8 +80,10 @@ public class NewDialog extends JDialog implements ActionListener {
 		// Add stakeholders options (single/multiple)
 		JLabel stakeholderLabel = new JLabel("Select number of stakeholders:");
 		single = new JRadioButton("Single");
+		single.setMnemonic(KeyEvent.VK_S);
 		single.addActionListener(this);
 		multiple = new JRadioButton("Multiple");
+		multiple.setMnemonic(KeyEvent.VK_M);
 		multiple.addActionListener(this);
 		
 		// create stakeholder button group
@@ -103,8 +106,10 @@ public class NewDialog extends JDialog implements ActionListener {
 		// Add network options (TCP-net/CI-net)
 		JLabel networkLabel = new JLabel("Select preference network type:");
 		cp = new JRadioButton("(T)CP-NET");
+		cp.setMnemonic(KeyEvent.VK_T);
 		cp.addActionListener(this);
 		ci = new JRadioButton("CI-NET");
+		ci.setMnemonic(KeyEvent.VK_C);
 		ci.addActionListener(this);
 		
 		// add network options to button group

@@ -7,20 +7,23 @@
 
 	<tocitem text="Getting Started" target="start"/>
 	<tocitem text="Glossary" target="glossary"/>
-	<tocitem text="Setup Project" target="projectpane"/>
-	<tocitem text="Add Attributes" target="attributepane"/>
-	<tocitem text="Attribute Domains" target="domainpane"/>
-	<tocitem text="Add Alternatives" target="alternativepane"/>
-	<tocitem text="Alternative Values" target="valuepane"/>
-	<tocitem text="Add Multiple Stakeholders" target="stakeholderpane" expand="false">
-		<tocitem text="Add Roles" target="rolepane"/>
-		<tocitem text="Create Role Hierarchy" target="hierarchypane"/>
-		<tocitem text="Assign Stakeholders" target="memberpane"/>
+	<tocitem text="Navigaton" target="navigation"/>
+	<tocitem text="Walkthrough" target="walkthrough" expand="true">
+		<tocitem text="Setup Project" target="projectpane"/>
+		<tocitem text="Add Attributes" target="attributepane"/>
+		<tocitem text="Attribute Domains" target="domainpane"/>
+		<tocitem text="Add Alternatives" target="alternativepane"/>
+		<tocitem text="Alternative Values" target="valuepane"/>
+		<tocitem text="Add Multiple Stakeholders" target="stakeholderpane" expand="false">
+			<tocitem text="Add Roles" target="rolepane"/>
+			<tocitem text="Create Role Hierarchy" target="hierarchypane"/>
+			<tocitem text="Assign Stakeholders" target="memberpane"/>
+		</tocitem>
+		<tocitem text="Setup Preferences" target="preferencepane" expand="false">
+			<tocitem text="CI-Net" target="importancepane"/>
+			<tocitem text="TCP-Net" target="setupgraphpane"/>
+		</tocitem>
+		<tocitem text="View Results" target="viewresultspane"/>
 	</tocitem>
-	<tocitem text="Setup Preferences" target="preferencepane" expand="false">
-		<tocitem text="CI-Net" target="importancepane"/>
-		<tocitem text="TCP-Net" target="setupgraphpane"/>
-	</tocitem>
-	<tocitem text="View Results" target="viewresultspane"/>
 </tocitem>
 </toc>
