@@ -40,11 +40,9 @@ public class ViewResultsPaneCI extends ViewResultsPane{
 	}
 
 	protected void initReasoner(String xmlFileName) {
-		if(reasoner == null) {
-			ciNetFileName = xmlToText(new File(xmlFileName)).getAbsolutePath();
-			reasoner = new CINetReasoner(ciNetFileName, "cadencesmv", 
+		ciNetFileName = xmlToText(new File(xmlFileName)).getAbsolutePath();
+		reasoner = new CINetReasoner(ciNetFileName, "cadencesmv", 
 					"C:\\Program Files (x86)\\SMV\\bin\\smv");
-		}
 	}
 	
 	protected void topNext() {

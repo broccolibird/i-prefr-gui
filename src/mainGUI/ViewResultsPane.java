@@ -139,8 +139,10 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 			allMembers = false;
 		}
 		
-		resetResultFields();
+		initReasoner(curMember.getPreferenceFilePath());
 		
+		resetResultFields();
+		currentResult = 1;
 		parentFrame.pack();
 	}
 	
@@ -364,6 +366,7 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 		consistencyField.setText("result");
 		dominanceField.setText("result");
 		topNextButton.setText("Top");
+		resultsField.setText("");
 	}
 	
 	/**
@@ -433,7 +436,6 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 		switch (type) {
 		case CONSISTENCY:
 			System.out.println("send consistency query");
-			initReasoner(curMember.getPreferenceFilePath());
 			checkConsistency();
 
 			//TODO - update result field
@@ -449,7 +451,6 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 		case TOP:
 			System.out.println("send top query");
 			//TODO - add result to alreadyChosen
-			initReasoner(curMember.getPreferenceFilePath());
 			topNext();
 			break;
 		case NEXT:
@@ -457,7 +458,6 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 			System.out.println("send next query with n =" + n
 					+ " and alreadyChosen = " + alreadyChosen.toString());*/
 			//TODO - add result to alreadyChosen
-			initReasoner(curMember.getPreferenceFilePath());
 			topNext();
 			break;
 		default:
