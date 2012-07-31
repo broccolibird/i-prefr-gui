@@ -179,12 +179,16 @@ public abstract class AbstractDocument {
 			dBuilder = dbFactory.newDocumentBuilder();
 			roleDoc = dBuilder.parse(roleFile);
 					
-		} catch (ParserConfigurationException | SAXException | IOException e) {
+		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-				
-		//populate roleMap
+		} catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //populate roleMap
 		NodeList roleList = roleDoc.getElementsByTagName("ROLE");
 		int nRoles = roleList.getLength();
 		for(int i=0;i<nRoles;i++){
@@ -236,12 +240,16 @@ public abstract class AbstractDocument {
 				hierarchyDBuilder = hierarchyDBFactory.newDocumentBuilder();
 				hierarchyDoc = hierarchyDBuilder.parse(hierarchyFile);
 								
-			} catch (ParserConfigurationException | SAXException | IOException e) {
+			} catch (ParserConfigurationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-			
-			RoleHierarchy rh = new RoleHierarchy(roleMap);
+			} catch (SAXException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            RoleHierarchy rh = new RoleHierarchy(roleMap);
 			StaticLayout sl = new StaticLayout(rh);
 			rh.setLayout(sl);
 			roleMap.setRoleHierarchy(rh);

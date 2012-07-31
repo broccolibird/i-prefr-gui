@@ -159,13 +159,16 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 			try {
 				dBuilder = dbFactory.newDocumentBuilder();
 				doc = dBuilder.parse(file);
-			} catch (ParserConfigurationException | SAXException | 
-						IOException e) {
+			} catch (ParserConfigurationException e) {
 				e.printStackTrace();
 				return false;
-			}
-			
-			// create the importanceMap
+			} catch (SAXException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            // create the importanceMap
 			Element importances = (Element) ((doc
 					.getElementsByTagName("IMPORTANCES")).item(0));
 			int uniqueID = Integer.parseInt(Util.getOnlyChildText(importances,
