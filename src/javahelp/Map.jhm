@@ -14,17 +14,41 @@
 	
 	<mapID target="project" url="panes/projectpanels.html"/>
 		<mapID target="projectpane" url="panes/projectpane.html"/>
+			<mapID target="projectpane.modelchecker" url="panes/projectpane.html#modelchecker"/>
 		<mapID target="attributepane" url="panes/attributepane.html"/>
+			<mapID target="attributepane.remove" url="panes/attributepane.html#remove"/>
 		<mapID target="domainpane" url="panes/domainpane.html"/>
+			<mapID target="domainpane.CI" url="panes/domainpane.html#CI"/>
 		<mapID target="alternativepane" url="panes/alternativepane.html"/>
+			<mapID target="alternativepane.useentire" url="panes/alternativepane.html#useentire"/>
+			<mapID target="alternativepane.specify" url="panes/alternativepane.html#specify"/>
+			<mapID target="alternativepane.remove" url="panes/alternativepane.html#remove"/>
 		<mapID target="valuepane" url="panes/valuepane.html"/>
+			<mapID target="valuepane.set" url="panes/valuepane.html#set"/>
 		<mapID target="stakeholderpane" url="panes/stakeholderpane.html"/>
 			<mapID target="rolepane" url="panes/rolepane.html"/>
+				<mapID target="rolepane.remove" url="panes/rolepane.html#remove"/>
 			<mapID target="hierarchypane" url="panes/hierarchypane.html" />
+				<mapID target="hierarchypane.add" url="panes/hierarchypane.html#add" />
+				<mapID target="hierarchypane.create" url="panes/hierarchypane.html#create" />
+				<mapID target="hierarchypane.annotations" url="panes/hierarchypane.html#annotations" />
+				<mapID target="hierarchypane.controls" url="panes/hierarchypane.html#controls" />
 			<mapID target="memberpane" url="panes/memberpane.html" />
 		<mapID target="preferencepane" url="panes/preferencepane.html" />
 			<mapID target="importancepane" url="panes/importancepane.html" />
+				<mapID target="importancepane.create" url="panes/importancepane.html#create"/>
+				<mapID target="importancepane.add" url="panes/importancepane.html#add"/>
+				<mapID target="importancepane.read" url="panes/importancepane.html#read"/>
+				<mapID target="importancepane.write" url="panes/importancepane.html#write"/>
 			<mapID target="setupgraphpane" url="panes/setupgraphpane.html" />
+				<mapID target="setupgraphpane.add" url="panes/setupgraphpane.html#add" />
+				<mapID target="setupgraphpane.edgepreference" url="panes/setupgraphpane.html#edgepreference" />
+				<mapID target="setupgraphpane.nodepreference" url="panes/setupgraphpane.html#nodepreference" />
+				<mapID target="setupgraphpane.condition" url="panes/setupgraphpane.html#condition" />
+			<mapID target="preferencepane.controls" url="panes/preferencepane.html#preferencecontrols"/>
 		<mapID target="viewresultspane" url="panes/viewresultspane.html" />
+			<mapID target="viewresultspane.consistency" url="panes/viewresultspane.html#consistency" />
+			<mapID target="viewresultspane.dominance" url="panes/viewresultspane.html#dominance" />
+			<mapID target="viewresultspane.results" url="panes/viewresultspane.html#results" />
 
 </map>
