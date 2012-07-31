@@ -12,7 +12,7 @@
 	<mapID target="navigation" url="help/navigation.html" />
 	
 	
-	<mapID target="walkthrough" url="panes/walkthrough.html"/>
+	<mapID target="project" url="panes/projectpanels.html"/>
 		<mapID target="projectpane" url="panes/projectpane.html"/>
 		<mapID target="attributepane" url="panes/attributepane.html"/>
 		<mapID target="domainpane" url="panes/domainpane.html"/>

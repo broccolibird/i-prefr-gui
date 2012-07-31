@@ -8,7 +8,7 @@
 	<tocitem text="Getting Started" target="start"/>
 	<tocitem text="Glossary" target="glossary"/>
 	<tocitem text="Navigaton" target="navigation"/>
-	<tocitem text="Walkthrough" target="walkthrough" expand="true">
+	<tocitem text="Project Panels" target="project" expand="true">
 		<tocitem text="Setup Project" target="projectpane"/>
 		<tocitem text="Add Attributes" target="attributepane"/>
 		<tocitem text="Attribute Domains" target="domainpane"/>
