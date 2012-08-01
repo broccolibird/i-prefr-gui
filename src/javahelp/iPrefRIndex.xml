@@ -39,7 +39,7 @@
 			<indexitem text="Creating Conditional Importance Epressions" target="importancepane.create"/>
 			<indexitem text="Adding Additional Expressions" target="importancepane.add"/>
 			<indexitem text="Reading CI-Net Statements" target="importancepane.read"/>
-			<indexitem text="Writing CI-Net Statements" target="importancepane.write"/>
+			<indexitem text="Validating CI-Net Statements" target="importancepane.write"/>
 		</indexitem>
 		<indexitem text="TCP-Net" target="setupgraphpane" expand="false">
 			<indexitem text="Add Attributes to the Preference Map" target="setupgraphpane.add"/>

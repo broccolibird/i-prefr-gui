@@ -24,10 +24,11 @@
 	<p><strong>Example:</strong>
 	<br><center><img src="../pics/conditionExpressionSample.PNG"/></center>
 	<br>If the car has <em>power windows</em>, and does not have <em>four doors</em>, then I prefer that it have a <em>sun roof</em> over <em>power locks</em>.
+	</p>
 	
-	<br>
-	<H2><a name="write">Writing CI-Net Statements</a></H2>
+	<H2><a name="write">Validating CI-Net Statements</a></H2>
 	<p>To form a complete Conditional Importance Expression (preference), the final two fields must be filled AND each attribute may only appear once in the expression.
+	To verify that an expression meets these specifications, select the <em>validate button</em> to the right of the expression.
 	<p>Example statements:
 	<ul>
 		<li>Using only the final two fields forms a preference:
@@ -41,6 +42,16 @@
 		</li>
 		<li>All four fields can also be used at the same time:
 			<ul><li>"If the car has <em>power windows</em>, and does not have <em>four doors</em>, then I prefer that it have a <em>sun roof</em> over <em>power locks</em>."</li></ul>
+		</li>
+	</ul>
+	<br>Example invalid statements:
+	<ul>
+		<li>One of the final two fields are not filled:
+			<ul><li>"If the car has <em>power windows</em>, and does not have <em>four doors</em>, then I prefer that it have a <em>sun roof</em> over <strong>{?}</strong>."</li>
+			<li>"If the car has <em>power windows</em>, and does not have <em>four doors</em>, then I prefer that it have a <strong>{?}</strong> over <em>power locks</em>."</li></ul>
+		</li>
+		<li>An attribute appears more than once in an expression:
+			<ul><li>"If the car has <strong>power windows</strong>, and does not have <em>four doors</em>, then I prefer that it have a <strong>power windows</strong> over <em>power locks</em>."</li></ul>
 		</li>
 	</ul>
 	
