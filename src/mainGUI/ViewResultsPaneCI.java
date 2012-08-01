@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -36,8 +37,7 @@ import dataStructures.maps.AttributeMap;
 import dataStructures.maps.ValueMap;
 
 public class ViewResultsPaneCI extends ViewResultsPane{
-	
-	reasoner.PreferenceReasoner reasoner;
+
 	String ciNetFileName;
 
 	public ViewResultsPaneCI(AbstractDocument document, JFrame parentFrame) {
@@ -67,6 +67,16 @@ public class ViewResultsPaneCI extends ViewResultsPane{
 	}
 	
 	protected void dominance() {
+		if(reasoner == null) {
+			JOptionPane.showMessageDialog(parentFrame,
+				    "The current user has no preferences.\n" +
+				    "Please verify on the Setup Preferences pane that preferences have " +
+				    "been added and saved.",
+				    "Preferences Not Found",
+				    JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+		
 		if(leftAlternative == null || rightAlternative == null) {
 			return;
 		}
@@ -104,6 +114,16 @@ public class ViewResultsPaneCI extends ViewResultsPane{
 	}
 	
 	protected void topNext() {
+		
+		if(reasoner == null) {
+			JOptionPane.showMessageDialog(parentFrame,
+				    "The current user has no preferences.\n" +
+				    "Please verify on the Setup Preferences pane that preferences have " +
+				    "been added and saved.",
+				    "Preferences Not Found",
+				    JOptionPane.WARNING_MESSAGE);
+			return;
+		}
 		
 		if(document.getAlternativeMap().useEntireAlternativeSpace()) {
 			String resultSet = getNextPreferred();
@@ -160,6 +180,16 @@ public class ViewResultsPaneCI extends ViewResultsPane{
 	}
 	
 	protected void checkConsistency() {
+		
+		if(reasoner == null) {
+			JOptionPane.showMessageDialog(parentFrame,
+				    "There is no preference file to check for consistency.\n" +
+				    "Please verify on the Setup Preferences pane that preferences have " +
+				    "been added and saved.",
+				    "Preferences Not Found",
+				    JOptionPane.WARNING_MESSAGE);
+			return;
+		}
 		
 		boolean consistent;
 		try {

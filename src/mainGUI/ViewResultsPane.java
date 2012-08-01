@@ -48,7 +48,8 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 	public static final int NEXT = 3;
 	
 	protected AbstractDocument document;
-	private JFrame parentFrame;
+	protected JFrame parentFrame;
+	protected reasoner.PreferenceReasoner reasoner;
 	
 	private JPanel dominancePanel;
 	private JButton dominanceButton;
@@ -372,7 +373,9 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 		//stakeholderBox.insertItemAt("All Members", 0);
 		stakeholderBox.addActionListener(this);
 		stakeholderBox.invalidate();
-		stakeholderBox.setSelectedIndex(0); // select All Members
+		
+		if(stakeholderBox.getItemAt(0) != null)
+			stakeholderBox.setSelectedIndex(0); // select All Members (for now, first member)
 		
 	}
 
@@ -394,7 +397,12 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 			Object selectedItem = stakeholderBox.getSelectedItem();
 			if (selectedItem instanceof Member) {
 				curMember = (Member) selectedItem;
-				initReasoner(curMember.getPreferenceFilePath());
+				
+				if(curMember.getPreferenceFilePath() != null)
+					initReasoner(curMember.getPreferenceFilePath());
+				else
+					reasoner = null; //reasoner must be set to null so that results are not displayed or previous member
+				
 				allMembers = false;
 			} else if (selectedItem.equals("All Members")) {
 				curMember = null;
@@ -459,6 +467,7 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 				CustomAlternativeDialog dialog = new CustomAlternativeDialog(parentFrame,document.getAttributeMap(),singleAlternative);
 				singleAlternative = dialog.getAlternative();
 				field.setText(singleAlternative.toExpandedString(document.getAttributeMap()));
+				field.setToolTipText(singleAlternative.toExpandedString(document.getAttributeMap()));
 			}else{
 				ExistingAlternativeDialog dialog = new ExistingAlternativeDialog(parentFrame,document.getAlternativeMap(),singleAlternative);
 				singleAlternative = dialog.getAlternative();
