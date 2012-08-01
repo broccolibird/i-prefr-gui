@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='ISO-8859-1'  ?>
+<!DOCTYPE toc
+  PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 2.0//EN"
+         "../dtd/toc_2_0.dtd">
+<toc version="2.0">
+<tocitem text="i-PrefR Help" image="toplevelfolder" target="intro">
+
+	<tocitem text="Getting Started" target="start"/>
+	<tocitem text="Glossary" target="glossary"/>
+	<tocitem text="Navigaton" target="navigation"/>
+	<tocitem text="Project Panels" target="project" expand="true">
+		<tocitem text="Setup Project" target="projectpane"/>
+		<tocitem text="Add Attributes" target="attributepane"/>
+		<tocitem text="Attribute Domains" target="domainpane"/>
+		<tocitem text="Add Alternatives" target="alternativepane"/>
+		<tocitem text="Alternative Values" target="valuepane"/>
+		<tocitem text="Add Multiple Stakeholders" target="stakeholderpane" expand="false">
+			<tocitem text="Add Roles" target="rolepane"/>
+			<tocitem text="Create Role Hierarchy" target="hierarchypane"/>
+			<tocitem text="Assign Stakeholders" target="memberpane"/>
+		</tocitem>
+		<tocitem text="Setup Preferences" target="preferencepane" expand="false">
+			<tocitem text="CI-Net" target="importancepane"/>
+			<tocitem text="TCP-Net" target="setupgraphpane"/>
+		</tocitem>
+		<tocitem text="View Results" target="viewresultspane"/>
+	</tocitem>
+</tocitem>
+</toc>

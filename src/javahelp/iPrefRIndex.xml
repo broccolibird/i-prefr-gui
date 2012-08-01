@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='ISO-8859-1'  ?>
+<!DOCTYPE index
+  PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Index Version 1.0//EN"
+         "http://java.sun.com/javase/technologies/desktop/javahelp/index_1_0.dtd">
+
+<index version="1.0">
+   
+	<indexitem text="Setup Project" target="projectpane" expand="false">
+		<indexitem text="Model Checker" target="projectpane.modelchecker"/>
+	</indexitem>
+	<indexitem text="Add Attributes" target="attributepane" expand="false">
+		<indexitem text="Remove Attributes" target="attributepane.remove"/>
+	</indexitem>
+	<indexitem text="Attribute Domains" target="domainpane" expand="false">
+		<indexitem text="Domains in the CI Network" target="domainpane.CI"/>
+	</indexitem>
+	<indexitem text="Add Alternatives" target="alternativepane" expand="false">
+		<indexitem text="Use Entire Possible Alternative Space" target="alternativepane.useentire"/>
+		<indexitem text="Specify Specific Alternatives" target="alternativepane.specify"/>
+		<indexitem text="Remove Alternatives" target="alternativepane.remove"/>
+	</indexitem>
+	<indexitem text="Alternative Values" target="valuepane" expand="false">
+		<indexitem text="Setting Alternative Values" target="valuepane.set"/>
+	</indexitem>
+	<indexitem text="Add Multiple Stakeholders" target="stakeholderpane" expand="false">
+		<indexitem text="Add Roles" target="rolepane" expand="false">
+			<indexitem text="Remove Roles" target="rolepane.remove"/>
+		</indexitem>
+		<indexitem text="Create Role Hierarchy" target="hierarchypane" expand="false">
+			<indexitem text="Add Roles to Hierarchy" target="hierarchypane.add"/>
+			<indexitem text="Create a Role Hierarchy" target="hierarchypane.create"/>
+			<indexitem text="Annotations" target="hierarchypane.annotations"/>
+			<indexitem text="Controls" target="hierarchypane.controls"/>
+		</indexitem>
+		<indexitem text="Assign Stakeholders" target="memberpane"/>
+	</indexitem>
+	<indexitem text="Setup Preferences" target="preferencepane" expand="false">
+		<indexitem text="CI-Net" target="importancepane" expand="false">
+			<indexitem text="Creating Conditional Importance Epressions" target="importancepane.create"/>
+			<indexitem text="Adding Additional Expressions" target="importancepane.add"/>
+			<indexitem text="Reading CI-Net Statements" target="importancepane.read"/>
+			<indexitem text="Writing CI-Net Statements" target="importancepane.write"/>
+		</indexitem>
+		<indexitem text="TCP-Net" target="setupgraphpane" expand="false">
+			<indexitem text="Add Attributes to the Preference Map" target="setupgraphpane.add"/>
+			<indexitem text="Adding Preferences to Edges" target="setupgraphpane.edgepreference"/>
+			<indexitem text="Adding Preferences to Nodes" target="setupgraphpane.nodepreference"/>
+			<indexitem text="Creating Condition Statements" target="setupgraphpane.condition"/>
+			<indexitem text="Controls" target="setupgraphpane.controls"/>
+		</indexitem>
+		<indexitem text="Controls" target="preferencepane.controls"/>
+	</indexitem>
+	<indexitem text="View Results" target="viewresultspane" expand="false">
+		<indexitem text="Check for Consistency" target="viewresultspane.consistency"/>
+		<indexitem text="Find Dominant Set" target="viewresultspane.dominance"/>
+		<indexitem text="View Most Preferred Result" target="viewresultspane.results"/>
+	</indexitem>
+</index>

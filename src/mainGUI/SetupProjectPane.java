@@ -85,7 +85,7 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 		panel.add(filenameField);
 		
 		// Add Model Checker options
-		panel.add(new JLabel("Selected Model Checker"));
+		panel.add(new JLabel("Select Model Checker"));
 
 		ModelCheckerOption[] options = ModelCheckerOption.getAllOptions();
 		modelCheckerComboBox = new JComboBox<ModelCheckerOption>(options);

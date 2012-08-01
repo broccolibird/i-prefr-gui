@@ -5,7 +5,7 @@ public class ModelCheckerOption extends NameKeyObject<ModelChecker>{
 	// identifiers used to represent different engines
 	public static final int MODEL_CHECKER_0 = 0;
 	public static final int MODEL_CHECKER_1 = 1;
-	public static final String[] modelCheckerNames = { "MODEL CHECKER 0", "MODEL CHECKER 1" };
+	public static final String[] modelCheckerNames = { "CADENCE SMV", "NuSMV" };
 	
 	public static ModelCheckerOption[] getAllOptions(){
 		ModelCheckerOption[] allOptions = new ModelCheckerOption[modelCheckerNames.length];
@@ -41,11 +41,23 @@ public class ModelCheckerOption extends NameKeyObject<ModelChecker>{
 			return null;
 		}
 		for(int i=0;i<modelCheckerNames.length;i++){
+			System.out.println(selectedModelChecker +" " +modelCheckerNames[i]);
 			if(selectedModelChecker.equals(modelCheckerNames[i])){
 				return new ModelCheckerOption(i);
 			}
 		}
 		return null;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof ModelCheckerOption)) {
+			return false;
+		} else if (!this.name.equals( ((ModelCheckerOption)obj).getName())) {
+			return false;
+		}
+		return true;
+		
 	}
 
 }

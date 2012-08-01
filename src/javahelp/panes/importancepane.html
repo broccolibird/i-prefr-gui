@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<BODY BGCOLOR="#ffffff">
+	<H1>Setup Preferences (CI-NET)</H1>
+	<hr>
+	<H2><a name="create">Creating Conditional Importance Expressions</a></H2>
+	<br><center><img src="../pics/conditionExpressionEmpty.PNG"/></center>
+	<p>Select one of the four expression fields. A dialog will appear. Select the attributes you would like to add to the field and press OK.
+	<br><center><img src="../pics/conditionEntry.PNG"/></center>
+	<br><center><img src="../pics/conditionExpressionOneField.PNG"/></center>
+	<br>Fill fields until you have the desired expression. See <a href="#read">Reading CI-Net Statements</a> for instruction reading Conditional Importance Expressions.
+	
+	<br>
+	<H2><a name="add">Adding Additional Expressions</a></H2>
+	<p>Add additional member fields by selecting the <em>plus button</em> in the appropriate section
+	</p>
+	<center><img src="../pics/plus.PNG"/></center>
+	
+	<br>
+	<H2><a name="read">Reading CI-Net Statements</a></H2>
+	<p>CI-net Statements in the form {A};{B}:{C};{D} can be read as:
+	<br>If I have attributes A, and I do not have attributes B, then I prefer the attributes C over the attributes D.
+	</p>
+	<p><strong>Example:</strong>
+	<br><center><img src="../pics/conditionExpressionSample.PNG"/></center>
+	<br>If the car has <em>power windows</em>, and does not have <em>four doors</em>, then I prefer that it have a <em>sun roof</em> over <em>power locks</em>.
+	
+	<br>
+	<H2><a name="write">Writing CI-Net Statements</a></H2>
+	<p>To form a complete Conditional Importance Expression (preference), the final two fields must be filled AND each attribute may only appear once in the expression.
+	<p>Example statements:
+	<ul>
+		<li>Using only the final two fields forms a preference:
+			<ul><li>"I prefer that the car have a <em>sun roof</em> over <em>power locks</em>."</li></ul>
+		</li>
+		<li>Using the final two fields with either the first or second field forms a conditional preference:
+			<ul>
+				<li>first: "If the car has <em>power windows</em>, then I prefer that it have a <em>sun roof</em> over <em>power locks</em>."</li>
+				<li>second: "If the car does not have <em>four doors</em>, then I prefer that it have a <em>sun roof</em> over <em>power locks</em>."</li>
+			</ul>
+		</li>
+		<li>All four fields can also be used at the same time:
+			<ul><li>"If the car has <em>power windows</em>, and does not have <em>four doors</em>, then I prefer that it have a <em>sun roof</em> over <em>power locks</em>."</li></ul>
+		</li>
+	</ul>
+	
+	<H2>Controls</H2>
+	<p>See <a href="preferencepane.html#preferencecontrols">Controls</a> for preference file information including saving and loading</a>
+</BODY>
+</HTML>

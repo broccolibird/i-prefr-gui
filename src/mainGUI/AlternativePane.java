@@ -95,7 +95,7 @@ public class AlternativePane extends UpdatePane implements ActionListener {
 		
 		specifySpace = new JRadioButton("Specify Specific Alternatives");
 		specifySpace.addActionListener(this);	
-		specifySpace.setMnemonic(KeyEvent.VK_S);
+		specifySpace.setMnemonic(KeyEvent.VK_P);
 
 		// add radio buttons to button group
 		ButtonGroup group = new ButtonGroup();

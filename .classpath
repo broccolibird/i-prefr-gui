@@ -10,5 +10,6 @@
 	<classpathentry kind="lib" path="lib/jung/concurrent-1.3.4.jar"/>
 	<classpathentry kind="lib" path="lib/jung/jung-api-2.0.1.jar" sourcepath="lib/jung-src/jung-api-2.0.1-sources.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/iPrefR-rc2"/>
+	<classpathentry kind="lib" path="lib/javaHelp/jh.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

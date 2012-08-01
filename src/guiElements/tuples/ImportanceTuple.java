@@ -9,6 +9,7 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -59,8 +60,23 @@ public class ImportanceTuple extends AbstractTuple<Importance> implements
 			fields[i].setText(fieldContents[i]);
 			fields[i].setEditable(false);
 			fields[i].addMouseListener(new ImportanceFieldListener(i));
-			this.add(fields[i]);
 		}
+		
+		fields[0].setToolTipText("If I have");
+		this.add(fields[0]);
+		this.add(new JLabel(";"));
+		
+		fields[1].setToolTipText("and I do not have");
+		this.add(fields[1]);
+		this.add(new JLabel(":"));
+		
+		fields[2].setToolTipText("then I prefer");
+		this.add(fields[2]);
+		this.add(new JLabel(";"));
+		
+		fields[3].setToolTipText("over");
+		this.add(fields[3]);
+		
 		validateButton = new JButton("validate");
 		validateButton.addActionListener(this);
 		this.add(validateButton);

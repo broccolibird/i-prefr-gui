@@ -59,7 +59,7 @@ public class VertexAnnotatingGraphMousePlugin<V,E> extends AbstractGraphMousePlu
     /**
      * color for annotations
      */
-    protected Color annotationColor = Color.cyan;
+    protected Color annotationColor = Color.lightGray;
     
     /**
      * layer for annotations
