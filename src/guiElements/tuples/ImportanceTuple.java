@@ -2,6 +2,7 @@ package guiElements.tuples;
 
 import guiElements.ImportanceDialog;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -16,11 +17,17 @@ import javax.swing.JTextField;
 import dataStructures.Attribute;
 import dataStructures.AttributeList;
 import dataStructures.Importance;
+import dataStructures.maps.AttributeMap;
 import dataStructures.maps.ImportanceMap;
 
 @SuppressWarnings("serial")
 public class ImportanceTuple extends AbstractTuple<Importance> implements
 		ActionListener {
+	
+	private static final int VALID_EXPRESSION = 0;
+	private static final int INCOMPLETE_EXPRESSION = 1;
+	private static final int INVALID_EXPRESSION = 2;
+	
 	protected JTextField alternativeName;
 	protected JButton xButton;
 	protected JButton validateButton;
@@ -93,9 +100,85 @@ public class ImportanceTuple extends AbstractTuple<Importance> implements
 			map.remove(key);
 			parentWindow.pack();
 		}else if(e.getSource()==validateButton){
-			//validate Importance element, disable button
-			System.out.println("validated");
+			int valid = validateExpression();
+			if(valid == VALID_EXPRESSION) {
+				validateButton.setText("valid");
+				validateButton.setEnabled(false);
+				validateButton.setOpaque(true);
+				validateButton.setBackground(Color.GREEN);
+				validateButton.setToolTipText("valid");
+			} else if (valid == INCOMPLETE_EXPRESSION) {
+				validateButton.setText("invalid");
+				validateButton.setEnabled(false);
+				validateButton.setOpaque(true);
+				validateButton.setBackground(Color.RED);
+				validateButton.setToolTipText("Incomplete expression.");
+			} else if (valid == INVALID_EXPRESSION) {
+				validateButton.setText("invalid");
+				validateButton.setEnabled(false);
+				validateButton.setOpaque(true);
+				validateButton.setBackground(Color.RED);
+				validateButton.setToolTipText("Attributes may only be used once per expression");
+			}
 		}
+	}
+	
+	/**
+	 * Validates the Importance Expression
+	 * @return 	0 if the expression is valid
+	 * 			1 if the expression is incomplete
+	 * 			2 if the expression uses an attribute more than once
+	 */
+	private int validateExpression() {
+		Importance importance = map.get(key);
+		AttributeList lists[] = new AttributeList[4];
+		
+		if(importance == null)
+			return INCOMPLETE_EXPRESSION;
+		
+		// retrieve final two lists to verify they contain
+		// attributes
+		lists[2] = importance.getList(2);
+		lists[3] = importance.getList(3);
+		
+		if(lists[2] == null || lists[2].size() == 0 
+				|| lists[3] == null || lists[3].size() == 0)
+			return INCOMPLETE_EXPRESSION;
+		
+		// retrieve final two lists to verify that no
+		// attribute is used more than once
+		lists[0] = importance.getList(0);
+		lists[1] = importance.getList(1);
+		
+		AttributeMap attributeMap = new AttributeMap();
+		
+		for(int i=0; i < 4; i++) {
+			
+			int listSize;
+			if(lists[i] == null){
+				listSize = 0;
+			} else {
+				listSize = lists[i].size();
+			}
+			
+			for(int j=0; j < listSize; j++) {
+				Attribute curAttribute = lists[i].get(j);
+				Attribute found = attributeMap.get(curAttribute.getAttributeKey());
+				if(found != null)
+					return INVALID_EXPRESSION;
+				attributeMap.put(curAttribute.getAttributeKey().getKey(), curAttribute);
+			}
+		}
+		
+		return VALID_EXPRESSION;
+	}
+	
+	private void resetValidateButton() {
+		validateButton.setText("validate");
+		validateButton.setEnabled(true);
+		validateButton.setOpaque(true);
+		validateButton.setBackground(null);
+		validateButton.setToolTipText("validate");
 	}
 	
 	class ImportanceFieldListener implements MouseListener {
@@ -136,6 +219,8 @@ public class ImportanceTuple extends AbstractTuple<Importance> implements
 			}
 			// made change to importance, map has changes
 			map.setSaved(false);
+			
+			resetValidateButton();
 			
 		}
 
