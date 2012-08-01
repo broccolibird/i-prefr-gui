@@ -118,13 +118,16 @@ public class ViewResultsPaneCI extends ViewResultsPane{
 			while(!alternativeFound) {
 				resultSet = getNextPreferred();
 				System.out.println("resultSet= "+resultSet);
-				if(resultSet == null)
+				if(resultSet == null) {
 					addEndOfResults();
-				Alternative alt = getAlternative(resultSet);
-				if(alt != null) {
-					String resultString = alt.getName() + " " + resultSet;
-					addResult(resultString);
 					alternativeFound = true;
+				} else {
+					Alternative alt = getAlternative(resultSet);
+					if(alt != null) {
+						String resultString = alt.getName() + " " + resultSet;
+						addResult(resultString);
+						alternativeFound = true;
+					}
 				}
 			}
 		}

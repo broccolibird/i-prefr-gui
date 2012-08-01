@@ -107,11 +107,11 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 
 		update();
 		panel.add(stakeholderPanel);
-		panel.add(Box.createRigidArea(new Dimension(5,25)));
+		panel.add(Box.createRigidArea(new Dimension(5,35)));
 		panel.add(consistencyPanel);
-		panel.add(Box.createRigidArea(new Dimension(5,25)));
+		panel.add(Box.createRigidArea(new Dimension(5,35)));
 		panel.add(dominancePanel);
-		panel.add(Box.createRigidArea(new Dimension(5,25)));
+		panel.add(Box.createRigidArea(new Dimension(5,35)));
 		//panel.add(justificationPanel);
 		panel.add(resultsPanel);
 		
@@ -133,7 +133,7 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 			allMembers = false;
 		}
 		
-		if(curMember != null)
+		if(curMember != null && curMember.getPreferenceFilePath() != null)
 			initReasoner(curMember.getPreferenceFilePath());
 		
 		resetResultFields();
@@ -147,10 +147,15 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 	 */
 	private JPanel createConsistencyPanel() {
 		JPanel consistencyPanel = new JPanel();
-		consistencyPanel.setLayout(new BoxLayout(consistencyPanel, BoxLayout.X_AXIS));
+		consistencyPanel.setLayout(new BoxLayout(consistencyPanel, BoxLayout.Y_AXIS));
+		
+		JPanel labelButtonPanel = new JPanel();
 		
 		consistencyButton = new JButton("Consistency");
 		consistencyButton.addActionListener(this);
+		
+		labelButtonPanel.add(new JLabel("Check Project for Consistency:"));
+		labelButtonPanel.add(consistencyButton);
 		
 		consistencyField=new JTextField("result");
 		consistencyField.setEditable(false);
@@ -175,7 +180,7 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 			public void mouseReleased(MouseEvent e) {}
 		});*/
 		
-		consistencyPanel.add(consistencyButton);
+		consistencyPanel.add(labelButtonPanel);
 		consistencyPanel.add(Box.createRigidArea(new Dimension(5,5)));
 		consistencyPanel.add(consistencyField);
 		return consistencyPanel;
@@ -186,13 +191,16 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 	 * @return JPanel
 	 */
 	private JPanel createDominancePanel() {
-		JPanel dominancePanel = new JPanel();
-		dominancePanel.setLayout(new BoxLayout(dominancePanel, BoxLayout.Y_AXIS));
-		
+		JPanel labelButtonPanel = new JPanel();
+		JLabel label = new JLabel("Determine Set Dominance:");
 		dominanceButton = new JButton("Dominance");
 		dominanceButton.addActionListener(this);
-		dominanceButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+		labelButtonPanel.add(label);
+		labelButtonPanel.add(dominanceButton);
 		
+		JPanel dominancePanel = new JPanel();
+		dominancePanel.setLayout(new BoxLayout(dominancePanel, BoxLayout.Y_AXIS));
+
 		leftDominanceSet= new JTextField("{}");
 		leftDominanceSet.setEditable(false);
 		leftDominanceSet.addMouseListener(new AlternativeListener(leftDominanceSet, leftAlternative, "left"));
@@ -210,11 +218,10 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 		dominanceField.setEditable(false);
 		dominanceField.setAlignmentX(Component.CENTER_ALIGNMENT);
 		
+		dominancePanel.add(labelButtonPanel);
 		dominancePanel.add(leftDominanceSet);
 		dominancePanel.add(greaterThan);
 		dominancePanel.add(rightDominanceSet);
-		dominancePanel.add(Box.createRigidArea(new Dimension(5,5)));
-		dominancePanel.add(dominanceButton);
 		dominancePanel.add(Box.createRigidArea(new Dimension(5,5)));
 		dominancePanel.add(dominanceField);
 		
@@ -228,9 +235,17 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 	private JPanel createResultsPanel() {
 		JPanel resultsPanel = new JPanel();
 		resultsPanel.setLayout(new BoxLayout(resultsPanel, BoxLayout.Y_AXIS));
+		
+		JPanel labelButtonPanel = new JPanel();
+		
+		JLabel label = new JLabel("Retrieve Most Preferred Results:");
+		
 		topNextButton = new JButton("Top");
 		topNextButton.addActionListener(this);
 		topNextButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
+		labelButtonPanel.add(label);
+		labelButtonPanel.add(topNextButton);
 		
 		JPanel innerPanel = new JPanel();
 		innerPanel.setLayout(new BoxLayout(innerPanel, BoxLayout.X_AXIS));
@@ -254,7 +269,7 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 		innerPanel.add(resultScrollPane);
 		
 		resultsPanel.add(Box.createRigidArea(new Dimension(10, 10)));
-		resultsPanel.add(topNextButton);
+		resultsPanel.add(labelButtonPanel);
 		resultsPanel.add(Box.createRigidArea(new Dimension(10, 10)));
 		resultsPanel.add(innerPanel);
 		resultsPanel.add(Box.createRigidArea(new Dimension(10, 10)));
@@ -443,13 +458,14 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 			if(document.getAlternativeMap().useEntireAlternativeSpace()){
 				CustomAlternativeDialog dialog = new CustomAlternativeDialog(parentFrame,document.getAttributeMap(),singleAlternative);
 				singleAlternative = dialog.getAlternative();
+				field.setText(singleAlternative.toExpandedString(document.getAttributeMap()));
 			}else{
 				ExistingAlternativeDialog dialog = new ExistingAlternativeDialog(parentFrame,document.getAlternativeMap(),singleAlternative);
-				singleAlternative = dialog.getAlternative();	
+				singleAlternative = dialog.getAlternative();
+				field.setText(singleAlternative.toString());
+				field.setToolTipText(singleAlternative.toExpandedString(document.getAttributeMap()));
 			}
-
-			//System.out.println("alternative to text: "+singleAlternative.toString());
-			field.setText(singleAlternative.toExpandedString(document.getAttributeMap()));
+			
 			if(side.equals("right")) {
 				rightAlternative = singleAlternative;
 			} else {
