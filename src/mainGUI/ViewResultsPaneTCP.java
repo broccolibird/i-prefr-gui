@@ -49,4 +49,10 @@ public class ViewResultsPaneTCP extends ViewResultsPane {
 		
 	}
 
+	@Override
+	protected void dominance() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

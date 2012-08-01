@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -13,13 +14,17 @@ import javax.swing.JFrame;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import translate.CINetReasoner;
+import reasoner.AcyclicPreferenceReasoner;
+import translate.PreferenceInputTranslator;
+import translate.PreferenceInputTranslatorFactory;
+import translate.PreferenceInputType;
 
 import dataStructures.AbstractDocument;
 import dataStructures.Alternative;
@@ -32,7 +37,7 @@ import dataStructures.maps.ValueMap;
 
 public class ViewResultsPaneCI extends ViewResultsPane{
 	
-	CINetReasoner reasoner;
+	reasoner.PreferenceReasoner reasoner;
 	String ciNetFileName;
 
 	public ViewResultsPaneCI(AbstractDocument document, JFrame parentFrame) {
@@ -40,28 +45,89 @@ public class ViewResultsPaneCI extends ViewResultsPane{
 	}
 
 	protected void initReasoner(String xmlFileName) {
-		if(reasoner == null) {
-			ciNetFileName = xmlToText(new File(xmlFileName)).getAbsolutePath();
-			reasoner = new CINetReasoner(ciNetFileName, "cadencesmv", 
-					"C:\\Program Files (x86)\\SMV\\bin\\smv");
+		ciNetFileName = xmlToText(new File(xmlFileName)).getAbsolutePath();
+		PreferenceInputTranslator translator = PreferenceInputTranslatorFactory.createTranslator(PreferenceInputType.CInet);
+		String fileName = null;
+		try {
+			fileName = translator.convertToSMV(ciNetFileName, 0);
+		} catch (XPathExpressionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		reasoner = new AcyclicPreferenceReasoner(fileName);
+	}
+	
+	protected void dominance() {
+		if(leftAlternative == null || rightAlternative == null) {
+			return;
+		}
+		Set<String> morePreferredSet = getCISet(leftAlternative);
+		Set<String> lessPreferredSet = getCISet(rightAlternative);
+		
+		System.out.println("More: " + morePreferredSet);
+		System.out.println("Less: " + lessPreferredSet);
+		
+		boolean dominates = false;
+		try {
+			dominates = reasoner.dominates(morePreferredSet, lessPreferredSet);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		dominanceField.setText(""+dominates);
+	}
+	
+
+	public Set<String> getCISet(Alternative alternative) {
+		AttributeMap attributeMap = document.getAttributeMap();
+		Set<String> ciSet = new HashSet<String>();
+		Collection<Entry<AttributeKey, DomainValue>> attributeValues = alternative.getObject().entrySet();
+		for(Entry<AttributeKey, DomainValue> entry : attributeValues) {
+			AttributeKey key = (AttributeKey) entry.getKey();
+			DomainValue value = (DomainValue) entry.getValue();
+			
+			if(value.getValue().equals("1") ) {
+				ciSet.add(attributeMap.get(key).getName());
+			}
+		}
+		return ciSet;
 	}
 	
 	protected void topNext() {
 		
 		if(document.getAlternativeMap().useEntireAlternativeSpace()) {
 			String resultSet = getNextPreferred();
-			addResult(resultSet);
+			System.out.println("resultSet= "+resultSet);
+			if(resultSet == null) 
+				addEndOfResults();
+			else
+				addResult(resultSet);
 		} else {
 			boolean alternativeFound = false;
 			String resultSet;
 			while(!alternativeFound) {
 				resultSet = getNextPreferred();
-				Alternative alt = getAlternative(resultSet);
-				if(alt != null) {
-					String resultString = alt.getName() + " " + resultSet;
-					addResult(resultString);
+				System.out.println("resultSet= "+resultSet);
+				if(resultSet == null) {
+					addEndOfResults();
 					alternativeFound = true;
+				} else {
+					Alternative alt = getAlternative(resultSet);
+					if(alt != null) {
+						String resultString = alt.getName() + " " + resultSet;
+						addResult(resultString);
+						alternativeFound = true;
+					}
 				}
 			}
 		}
@@ -77,7 +143,19 @@ public class ViewResultsPaneCI extends ViewResultsPane{
 			e.printStackTrace();
 			return null;
 		}
-				
+		
+		if(prefResult == null) { // nulls separate different results of the same rank
+			try {
+				prefResult = reasoner.nextPreferred();
+			} catch (Exception e) {
+				System.err.println("Thread handling "+ciNetFileName+" encountered exception:");
+				e.printStackTrace();
+				return null;
+			}
+			
+			//two nulls in a row define the end of the ranking
+			return (prefResult==null)?null:prefResult.toString();
+		}
 		return prefResult.toString();
 	}
 	
