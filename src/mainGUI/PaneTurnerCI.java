@@ -49,7 +49,7 @@ public class PaneTurnerCI extends AbstractPaneTurner{
 		} 
 		preferencesPane = new ImportancePane(parent, document);
 		viewPanes[index++] = preferencesPane;
-		viewPanes[index] = new ViewResultsPane(document,parent);
+		viewPanes[index] = new ViewResultsPaneCI(document,parent);
 		
 		
 		return viewPanes[currentSelected];

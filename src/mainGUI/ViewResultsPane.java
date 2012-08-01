@@ -9,6 +9,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Vector;
 
@@ -38,30 +43,33 @@ import dataStructures.maps.RoleMap;
  * the query results.
  */
 @SuppressWarnings("serial")
-public class ViewResultsPane extends UpdatePane implements ActionListener {
+public abstract class ViewResultsPane extends UpdatePane implements ActionListener {
 	public static final int CONSISTENCY = 0;
 	public static final int DOMINANCE = 1;
 	public static final int TOP = 2;
 	public static final int NEXT = 3;
 	
-	private AbstractDocument document;
+	protected AbstractDocument document;
+	
+	private JPanel testPanel;
+	
+	private JPanel justificationPanel;
+	private JPanel dominancePanel;
 	
 	private JButton consistencyButton;
 	private JButton dominanceButton;
 	private JButton topNextButton;
 	
-	private JTextField consistencyField;
+	protected JTextField consistencyField;
 	private JTextField leftDominanceSet;
 	private JTextField rightDominanceSet;
 	private JTextField dominanceField;
-	private JTextArea resultsField;
+	protected JTextArea resultsField;
 	private JTextArea justificationField;
 
 	private AlternativeList alreadyChosen;
 	private Alternative leftAlternative;
 	private Alternative rightAlternative;
-	
-	private JPanel dominancePanel;
 	
 	JPanel stakeholderPanel;
 	private JComboBox stakeholderBox;
@@ -69,6 +77,8 @@ public class ViewResultsPane extends UpdatePane implements ActionListener {
 	private boolean allMembers;
 
 	private JFrame parentFrame;
+	
+	protected int currentResult = 1;
 	
 	/**
 	 * Create new ViewResultsPane instance
@@ -93,6 +103,8 @@ public class ViewResultsPane extends UpdatePane implements ActionListener {
 
 		stakeholderPanel = new JPanel();
 		
+		testPanel = createTestPanel();
+		
 		JPanel consistencyPanel = createConsistencyPanel();
 	
 		JPanel resultsPanel = createResultsPanel();
@@ -102,11 +114,13 @@ public class ViewResultsPane extends UpdatePane implements ActionListener {
 		JPanel justificationPanel = createJustificationPanel();
 
 		update();
+		panel.add(testPanel);
 		panel.add(stakeholderPanel);
 		panel.add(consistencyPanel);
 		panel.add(dominancePanel);
-		panel.add(resultsPanel);
 		panel.add(justificationPanel);
+		panel.add(resultsPanel);
+		
 		return panel;
 	}
 	
@@ -137,15 +151,94 @@ public class ViewResultsPane extends UpdatePane implements ActionListener {
 	private JPanel createConsistencyPanel() {
 		JPanel consistencyPanel = new JPanel();
 		consistencyPanel.setLayout(new BoxLayout(consistencyPanel, BoxLayout.X_AXIS));
+		
 		consistencyButton = new JButton("Consistency");
 		consistencyButton.addActionListener(this);
+		
 		consistencyField=new JTextField("result");
 		consistencyField.setEditable(false);
+		consistencyField.setToolTipText("click to view justification");
+		consistencyField.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				showJustificationPanel(true);	
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {}
+
+			@Override
+			public void mouseExited(MouseEvent e) {}
+
+			@Override
+			public void mousePressed(MouseEvent e) {}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {}
+		});
+		
 		consistencyPanel.add(consistencyButton);
 		consistencyPanel.add(consistencyField);
 		return consistencyPanel;
 	}
 	
+	private JPanel createTestPanel() {
+		JPanel testPanel = new JPanel();
+		
+		JButton toTextButton = new JButton("XML to Text");
+		toTextButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				File text = xmlToText(new File(curMember.getPreferenceFilePath()));
+				System.out.println(text.getAbsolutePath());
+				
+			}
+		});
+		
+		JButton toXMLButton = new JButton("Parse Result");
+		toXMLButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String filePath = "C:\\Users\\Kat\\Dropbox\\iprefr\\test\\post12-4-3-0.prefs";
+				FileReader fr = null;
+				try {
+					fr = new FileReader(filePath);
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+					return;
+				}
+				BufferedReader br = new BufferedReader(fr);
+				
+				String line;
+				try {
+					// find under line of header in result file
+					while((line = br.readLine()) != null) {
+						if (line.contains("---------------")) {
+							break;
+						}
+					}
+					
+					while((line = br.readLine()) != null ) {
+						String variableSet = getVariableSet(line);
+						Alternative alt = getAlternative(variableSet);
+						System.out.println(alt);
+						
+					}
+					
+				} catch (IOException e1) {
+					e1.printStackTrace();
+					return;
+				}
+			}
+		});
+		
+		testPanel.add(toTextButton);
+		testPanel.add(toXMLButton);
+		
+		return testPanel;
+	}
+
 	/**
 	 * Create Dominance Panel
 	 * @return JPanel
@@ -207,13 +300,28 @@ public class ViewResultsPane extends UpdatePane implements ActionListener {
 		return resultsPanel;
 	}
 	
+	protected void addResult(String resultSet) {
+		String oldText;
+		
+		if(currentResult == 1)
+			oldText = "";
+		else
+			oldText = resultsField.getText();
+		
+		oldText += currentResult++ + ". " + resultSet + "\n";
+		resultsField.setText(oldText);
+	}
+	
 	/**
 	 * create Justification Panel
 	 * @return JPanel
 	 */
 	private JPanel createJustificationPanel() {
-		JPanel justificationPanel = new JPanel();
-		justificationPanel.setLayout(new BoxLayout(justificationPanel, BoxLayout.X_AXIS));
+		justificationPanel = new JPanel();
+		justificationPanel.setLayout(new BoxLayout(justificationPanel, BoxLayout.Y_AXIS));
+		
+		JPanel innerPanel = new JPanel();
+		innerPanel.setLayout(new BoxLayout(innerPanel, BoxLayout.X_AXIS));
 		
 		JTextField justificationLabel = new JTextField("Justification");
 		justificationLabel.setEditable(false);
@@ -225,11 +333,28 @@ public class ViewResultsPane extends UpdatePane implements ActionListener {
 		justificationField.setText("result justification");
 		justificationField.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
 		
+		JButton hide = new JButton("hide justification");
+		hide.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				showJustificationPanel(false);
+			}
+		});
 		
-		justificationPanel.add(justificationLabel);
-		justificationPanel.add(justificationField);
+		innerPanel.add(justificationLabel);
+		innerPanel.add(justificationField);
+		
+		justificationPanel.add(Box.createRigidArea(new Dimension(10,10)));
+		justificationPanel.add(innerPanel);
+		justificationPanel.add(Box.createRigidArea(new Dimension(10,5)));
+		justificationPanel.add(hide);
+		justificationPanel.setVisible(false);
 		
 		return justificationPanel;
+	}
+	
+	private void showJustificationPanel(boolean show) {
+		justificationPanel.setVisible(show);
 	}
 	
 	/**
@@ -293,6 +418,13 @@ public class ViewResultsPane extends UpdatePane implements ActionListener {
 		}
 	}
 	
+	protected abstract void initReasoner(String prefXml);
+	protected abstract void topNext();
+	protected abstract File xmlToText(File prefXml);
+	protected abstract String getVariableSet(String line);
+	protected abstract Alternative getAlternative(String variableSet);
+	protected abstract void checkConsistency();
+	
 	/**
 	 * Send Query to back end
 	 * @param query type
@@ -300,11 +432,9 @@ public class ViewResultsPane extends UpdatePane implements ActionListener {
 	private void sendQuery(int type) {
 		switch (type) {
 		case CONSISTENCY:
-			System.out.println("send cosistency query");
-			if (allMembers)
-				consistencyField.setText("new results for All Members");
-			else
-				consistencyField.setText("new results for "+curMember);
+			System.out.println("send consistency query");
+			initReasoner(curMember.getPreferenceFilePath());
+			checkConsistency();
 
 			//TODO - update result field
 			break;
@@ -319,12 +449,16 @@ public class ViewResultsPane extends UpdatePane implements ActionListener {
 		case TOP:
 			System.out.println("send top query");
 			//TODO - add result to alreadyChosen
+			initReasoner(curMember.getPreferenceFilePath());
+			topNext();
 			break;
 		case NEXT:
-			int n = alreadyChosen.size();
+			/*int n = alreadyChosen.size();
 			System.out.println("send next query with n =" + n
-					+ " and alreadyChosen = " + alreadyChosen.toString());
+					+ " and alreadyChosen = " + alreadyChosen.toString());*/
 			//TODO - add result to alreadyChosen
+			initReasoner(curMember.getPreferenceFilePath());
+			topNext();
 			break;
 		default:
 			System.err.println("In ViewResultsPaneCI - sendQuery triggered by invalid type integer");
@@ -332,7 +466,7 @@ public class ViewResultsPane extends UpdatePane implements ActionListener {
 		}
 		parentFrame.pack();
 	}
-	
+
 	class AlternativeListener implements MouseListener {
 		private JTextComponent field;
 		private Alternative singleAlternative;
@@ -344,7 +478,7 @@ public class ViewResultsPane extends UpdatePane implements ActionListener {
 		
 		
 		@Override
-		public void mouseClicked(MouseEvent arg0) {
+		public void mouseClicked(MouseEvent e) {
 			if(document.getAlternativeMap().useEntireAlternativeSpace()){
 				CustomAlternativeDialog dialog = new CustomAlternativeDialog(parentFrame,document.getAttributeMap(),singleAlternative);
 				singleAlternative = dialog.getAlternative();	
