@@ -1,5 +1,7 @@
 package dataStructures;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -69,5 +71,5 @@ public class Alternative extends
 	public String toString() {
 		return name;
 	}
-
+	
 }
