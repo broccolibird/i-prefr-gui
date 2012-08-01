@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -84,10 +85,11 @@ public class CustomAlternativeDialog extends JDialog implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource().getClass() == LabeledComboBox.class) {
-			LabeledComboBox activeComboBox = (LabeledComboBox) e.getSource();
+		Object source = e.getSource();
+		if (e.getSource().getClass() == JComboBox.class) {
+			JComboBox activeComboBox = (JComboBox) e.getSource();
 			for (LabeledComboBox b : boxes) {
-				if (activeComboBox == b) {
+				if (activeComboBox == b.getComboBox()) {
 					//System.out.println(b.getSelectedItem().getClass());
 					DomainValue selectedValue = (DomainValue) b
 							.getSelectedItem();

@@ -23,6 +23,10 @@ public class LabeledComboBox extends JPanel{
 		label.setText(newLabelString);
 	}
 	
+	public JComboBox getComboBox() {
+		return box;
+	}
+	
 	public void addActionListener(ActionListener l){
 		box.addActionListener(l);
 	}
