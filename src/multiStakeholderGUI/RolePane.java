@@ -21,7 +21,7 @@ import javax.swing.KeyStroke;
 import dataStructures.Role;
 import dataStructures.maps.RoleMap;
 
-import mainGUI.UpdatePane;
+import mainGUI.panes.UpdatePane;
 
 /**
  * An UpdatePane containing entry tuples for Role titles.

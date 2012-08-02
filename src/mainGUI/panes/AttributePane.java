@@ -1,4 +1,4 @@
-package mainGUI;
+package mainGUI.panes;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

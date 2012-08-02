@@ -1,4 +1,4 @@
-package mainGUI;
+package mainGUI.panes;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -18,6 +18,7 @@ import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
 
+import dataStructures.TCPDocument;
 import org.apache.commons.collections15.Factory;
 import org.apache.commons.collections15.functors.MapTransformer;
 import org.apache.commons.collections15.map.LazyMap;
@@ -63,7 +64,7 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 	 * @param document
 	 * @param parent
 	 */
-	public SetupGraphPane(JFrame parent, AbstractDocument document) {
+	public SetupGraphPane(JFrame parent, TCPDocument document) {
 		super(parent, document);
 
 		createGUI();

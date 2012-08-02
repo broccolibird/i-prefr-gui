@@ -1,4 +1,4 @@
-package mainGUI;
+package mainGUI.panes;
 
 import guiElements.tuples.ValueTuple;
 

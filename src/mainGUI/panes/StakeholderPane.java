@@ -1,4 +1,4 @@
-package mainGUI;
+package mainGUI.panes;
 
 import java.awt.BorderLayout;
 
@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 
 import dataStructures.AbstractDocument;
 
+import mainGUI.AbstractPaneTurner;
 import multiStakeholderGUI.PaneTurnerMS;
 
 /**

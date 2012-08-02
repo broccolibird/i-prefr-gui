@@ -1,4 +1,4 @@
-package mainGUI;
+package mainGUI.panes;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -25,6 +25,7 @@ import dataStructures.Member;
 import dataStructures.Role;
 import dataStructures.maps.MemberMap;
 import dataStructures.maps.RoleMap;
+import mainGUI.AbstractPaneTurner;
 
 /**
  * PreferencePane is an UpdatePane in which stakeholders 

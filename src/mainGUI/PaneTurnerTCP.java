@@ -6,6 +6,7 @@ import java.io.File;
 import javax.swing.JFrame;
 
 import dataStructures.TCPDocument;
+import mainGUI.panes.*;
 
 /**
  * The PaneTurnerTCP class is a PaneTurner populated with 

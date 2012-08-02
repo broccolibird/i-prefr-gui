@@ -18,6 +18,9 @@ import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
 
 import dataStructures.AbstractDocument;
+import mainGUI.panes.PreferencePane;
+import mainGUI.panes.SetupProjectPane;
+import mainGUI.panes.UpdatePane;
 
 /**
  * AbstractPaneTurner is an extension of JSplitPane which shows
@@ -50,7 +53,8 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 	
 	static String[] s_prefReasSteps = { "Setup Project", "Add Attributes", 
 		"Attribute\nDomains", "Add\nAlternatives", "Alternative\nValues", 
-		"Setup Preferences", "View Result" }; 
+		"Setup Preferences", "View Result" };
+    //TODO - find a way to insert "Add Multiple Stakeholders" instead of having two nearly identical arrays
 	static String[] s_plusMulStakeSteps = { "Setup Project", "Add Attributes", 
 		"Attribute\nDomains", "Add\nAlternatives", "Alternative\nValues", 
 		"Add Multiple\nStakeholders", "Setup Preferences", "View Result" };

@@ -16,7 +16,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import mainGUI.UpdatePane;
+import mainGUI.panes.UpdatePane;
 
 import dataStructures.Member;
 import dataStructures.Role;

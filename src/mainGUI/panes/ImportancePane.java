@@ -1,9 +1,8 @@
-package mainGUI;
+package mainGUI.panes;
 
 
 import guiElements.tuples.ImportanceTuple;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,6 +24,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import mainGUI.Util;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -172,7 +172,7 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 			Element importances = (Element) ((doc
 					.getElementsByTagName("IMPORTANCES")).item(0));
 			int uniqueID = Integer.parseInt(Util.getOnlyChildText(importances,
-					"UNIQUEMAPID"));
+                    "UNIQUEMAPID"));
 
 			// populate it with importances
 			NodeList importanceList = importances

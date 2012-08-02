@@ -12,10 +12,8 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 
 import org.apache.commons.collections15.Factory;
 import org.apache.commons.collections15.Transformer;
@@ -40,7 +38,7 @@ import graph.RoleHierarchy;
 import graph.RoleEditingModalGraphMouse;
 import graph.annotations.VertexAnnotatingGraphMousePlugin;
 
-import mainGUI.UpdatePane;
+import mainGUI.panes.UpdatePane;
 
 /**
  * HierarchyPane is an UpdatePane containing a graph in which to create

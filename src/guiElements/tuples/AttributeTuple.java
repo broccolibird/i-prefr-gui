@@ -9,8 +9,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 
-import mainGUI.PreferencePane;
-import mainGUI.SetupGraphPane;
+import mainGUI.panes.PreferencePane;
+import mainGUI.panes.SetupGraphPane;
 
 import dataStructures.Attribute;
 import dataStructures.AttributeKey;

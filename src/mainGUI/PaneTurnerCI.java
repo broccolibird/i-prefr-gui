@@ -6,6 +6,7 @@ import java.io.File;
 import javax.swing.JFrame;
 
 import dataStructures.CIDocument;
+import mainGUI.panes.*;
 
 /**
  * The PaneTurnerCI class is a PaneTurner populated with 

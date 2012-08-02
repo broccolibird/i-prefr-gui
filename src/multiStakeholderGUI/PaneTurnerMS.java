@@ -21,7 +21,7 @@ import javax.swing.KeyStroke;
 import dataStructures.AbstractDocument;
 
 import mainGUI.AbstractPaneTurner;
-import mainGUI.UpdatePane;
+import mainGUI.panes.UpdatePane;
 
 /**
  * PaneTurnerMS is a PaneTurner which flips through 
