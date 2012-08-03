@@ -50,7 +50,7 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 	private EditingModalGraphMouse<Attribute, EdgeStatementMap> graphMouse;
 
 	// remember GUI Elements so they can be redrawn in update()
-	private JComboBox<Attribute> attributeBox;
+	private JComboBox attributeBox;
 	private JButton plus;
 	private JButton minus;
 	private JPanel controls;
@@ -224,7 +224,7 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 		// make combobox with all attributes
 		Attribute[] allAttributes = document.getAttributeMap().values()
 				.toArray(new Attribute[0]);
-		attributeBox = new JComboBox<Attribute>(allAttributes);
+		attributeBox = new JComboBox(allAttributes);
 
 		// make renderer that greys out already-used attributes
 		ComboBoxRenderer renderer = new ComboBoxRenderer();
@@ -268,7 +268,7 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 		}
 
 		@Override
-		public Component getListCellRendererComponent(JList<?> list, Object value,
+		public Component getListCellRendererComponent(JList list, Object value,
 				int index, boolean isSelected, boolean cellHasFocus) {
 			super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 			Attribute a = (Attribute) value;

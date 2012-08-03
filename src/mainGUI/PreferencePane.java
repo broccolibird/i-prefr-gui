@@ -39,7 +39,7 @@ public abstract class PreferencePane extends UpdatePane implements ActionListene
 	
 	boolean isMultipleStakeholder;
 	
-	private JComboBox<Member> stakeholderBox;
+	private JComboBox stakeholderBox;
 	private JPanel stakeholderControls;
 	private JTextField curFile;
 	protected JPanel fileControls;
@@ -108,7 +108,7 @@ public abstract class PreferencePane extends UpdatePane implements ActionListene
 			}
 		}
 		
-		stakeholderBox = new JComboBox<Member>(allMembers);
+		stakeholderBox = new JComboBox(allMembers);
 		stakeholderBox.addActionListener(this);
 		stakeholderBox.invalidate();
 		if(allMembers.size() > 0){

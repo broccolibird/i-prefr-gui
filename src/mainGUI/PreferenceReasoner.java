@@ -281,7 +281,17 @@ public class PreferenceReasoner extends JApplet{
 		try {
 			dBuilder = dbFactory.newDocumentBuilder();
 			doc = dBuilder.parse(file);
-		} catch (ParserConfigurationException | SAXException | IOException e) {
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(frame, "Failed to open file: "+e.getMessage(),
+					"Error Loading File", JOptionPane.PLAIN_MESSAGE);
+			return;
+		}  catch (SAXException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(frame, "Failed to open file: "+e.getMessage(),
+					"Error Loading File", JOptionPane.PLAIN_MESSAGE);
+			return;
+		}  catch (IOException e) {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(frame, "Failed to open file: "+e.getMessage(),
 					"Error Loading File", JOptionPane.PLAIN_MESSAGE);

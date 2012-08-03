@@ -33,7 +33,7 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 	private JTextField projectNameField;
 	private JTextField filenameField;
 	private JCheckBox sameNameCheckBox;
-	private JComboBox<ModelCheckerOption> modelCheckerComboBox;
+	private JComboBox modelCheckerComboBox;
 
 	/**
 	 * Create a new instance of the SetupProjectPane
@@ -88,7 +88,7 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 		panel.add(new JLabel("Select Model Checker"));
 
 		ModelCheckerOption[] options = ModelCheckerOption.getAllOptions();
-		modelCheckerComboBox = new JComboBox<ModelCheckerOption>(options);
+		modelCheckerComboBox = new JComboBox(options);
 		modelCheckerComboBox.addActionListener(this);
 		ModelCheckerOption oldOption = metaData.getSelectedModelChecker();
 		if(oldOption!=null){

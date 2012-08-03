@@ -179,8 +179,11 @@ public abstract class AbstractDocument {
 			dBuilder = dbFactory.newDocumentBuilder();
 			roleDoc = dBuilder.parse(roleFile);
 					
-		} catch (ParserConfigurationException | SAXException | IOException e) {
-			// TODO Auto-generated catch block
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 				
@@ -236,8 +239,11 @@ public abstract class AbstractDocument {
 				hierarchyDBuilder = hierarchyDBFactory.newDocumentBuilder();
 				hierarchyDoc = hierarchyDBuilder.parse(hierarchyFile);
 								
-			} catch (ParserConfigurationException | SAXException | IOException e) {
-				// TODO Auto-generated catch block
+			} catch (ParserConfigurationException e) {
+				e.printStackTrace();
+			} catch (SAXException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			

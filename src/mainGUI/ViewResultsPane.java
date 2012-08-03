@@ -369,7 +369,7 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 			}
 		}
 		
-		stakeholderBox = new JComboBox<Member>(allMembers);
+		stakeholderBox = new JComboBox(allMembers);
 		//stakeholderBox.insertItemAt("All Members", 0);
 		stakeholderBox.addActionListener(this);
 		stakeholderBox.invalidate();

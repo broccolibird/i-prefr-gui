@@ -158,8 +158,13 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 			try {
 				dBuilder = dbFactory.newDocumentBuilder();
 				doc = dBuilder.parse(file);
-			} catch (ParserConfigurationException | SAXException | 
-						IOException e) {
+			} catch (ParserConfigurationException e) {
+				e.printStackTrace();
+				return false;
+			} catch (SAXException e) {
+				e.printStackTrace();
+				return false;
+			} catch (IOException e) {
 				e.printStackTrace();
 				return false;
 			}

@@ -65,7 +65,7 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 	
 	// remember GUI Elements so they can be redrawn in update()
 	private JPanel rolePanel;
-	private JComboBox<Role> roleBox;
+	private JComboBox roleBox;
 	private JPanel modePanel;
 	private JPanel zoomPanel;
 	private JButton plus;
@@ -183,7 +183,7 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 		// make combobox with all attributes
 		Role[] allRoles = document.getRoleMap().values()
 				.toArray(new Role[0]);
-		roleBox = new JComboBox<Role>(allRoles);
+		roleBox = new JComboBox(allRoles);
 
 		// make renderer that greys out already-used roles
 		ComboBoxRenderer renderer = new ComboBoxRenderer();
@@ -252,7 +252,7 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 		}
 
 		@Override
-		public Component getListCellRendererComponent(JList<?> list, Object value,
+		public Component getListCellRendererComponent(JList list, Object value,
 				int index, boolean isSelected, boolean cellHasFocus) {
 			super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 			Role r = (Role) value;

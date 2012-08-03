@@ -237,7 +237,13 @@ public class ViewResultsPaneCI extends ViewResultsPane{
 		try { 
 			prefDBuilder = dbFactory.newDocumentBuilder();
 			prefDoc = prefDBuilder.parse(prefXml);
-		} catch (ParserConfigurationException | SAXException | IOException e) {
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+			return null;
+		} catch (SAXException e ) {
+			e.printStackTrace();
+			return null;
+		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
 		}
