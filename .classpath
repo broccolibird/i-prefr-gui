@@ -11,5 +11,6 @@
 	<classpathentry kind="lib" path="lib/jung/jung-api-2.0.1.jar" sourcepath="lib/jung-src/jung-api-2.0.1-sources.jar"/>
 	<classpathentry kind="lib" path="lib/javaHelp/jh.jar"/>
 	<classpathentry kind="lib" path="lib/iprefr-rc2.jar"/>
+	<classpathentry kind="lib" path="javahelp/help.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

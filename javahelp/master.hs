@@ -38,11 +38,11 @@
     </data>
   </view>
 
-  <presentation default="true" displayviewimages="false">
+  <presentation default="true" displayviewimages="true">
      <name>main window</name>
      <size width="700" height="400" />
      <location x="200" y="200" />
-     <title>My Sample Help - Online</title>
+     <title>iPrefR: Preference Reasoner Help</title>
      <image>toplevelfolder</image>
      <toolbar>
 	<helpaction>javax.help.BackAction</helpaction>
@@ -59,6 +59,6 @@
      <name>main</name>
      <size width="400" height="400" />
      <location x="200" y="200" />
-     <title>My Sample Help - Online</title>
+     <title>iPrefR: Preference Reasoner Help</title>
   </presentation>
 </helpset>

@@ -5,7 +5,6 @@
 
 <map version="1.0">
 	<mapID target="toplevelfolder" url="images/toplevel.gif" />
-	<mapID target="top" url="help/welcome.html" />
 	<mapID target="intro" url="help/welcome.html" />
 	<mapID target="start" url="help/start.html" />
 	<mapID target="glossary" url="help/glossary.html" />
