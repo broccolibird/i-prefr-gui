@@ -15,6 +15,7 @@ import dataStructures.maps.AttributeMap;
 @SuppressWarnings("serial")
 public class DomainTupleCI extends AbstractTuple<Attribute>{
 	protected JTextArea domainField;
+	protected JTextField attributeName;
 
 	public DomainTupleCI(Integer key, AttributeMap map, JFrame parent,
 			JPanel parentPanel) {
@@ -31,15 +32,15 @@ public class DomainTupleCI extends AbstractTuple<Attribute>{
 	public void initializeGUI() {
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
-		domainField = new JTextArea(3, 25);
+		domainField = new JTextArea(3, 10);
 		Attribute a = map.get(key);
 		if (a == null) {
 			System.err.println("attribute should not be null in DomainTupleCI");
 		}
 		String atName = a.getName();
-		JTextField attributeName = new JTextField(atName);
+		attributeName = new JTextField(atName);
 		attributeName.setEditable(false);
-		attributeName.setPreferredSize(new Dimension(75, 20));
+//		attributeName.setPreferredSize(new Dimension(75, 20));
 		this.add(attributeName);
 		Domain d = a.getObject();
 		
@@ -52,8 +53,16 @@ public class DomainTupleCI extends AbstractTuple<Attribute>{
 		}
 			
 		domainField.setText(standardCIDomainValues);
-		domainField.setPreferredSize(new Dimension(100, 20));
+//		domainField.setPreferredSize(new Dimension(100, 20));
 		this.add(domainField);
+	}
+	
+	public JTextField getKey() {
+		return attributeName;
+	}
+	
+	public JTextArea getValue() {
+		return domainField;
 	}
 	
 //	@Override
