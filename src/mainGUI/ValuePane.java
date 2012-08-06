@@ -2,11 +2,13 @@ package mainGUI;
 
 import guiElements.tuples.ValueTuple;
 
+import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 
 import javax.swing.BoxLayout;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -67,25 +69,28 @@ public class ValuePane extends UpdatePane{
 			//alligned with the comboboxes
 			ArrayList<Attribute> allAttributes = new ArrayList<Attribute>(
 					attributeMap.values());
-			for(Attribute a : allAttributes){
+/*			for(Attribute a : allAttributes){
 				System.out.println(a.toXML());
-			}
+			}*/
 			Collections.sort(allAttributes);
+			
+			int numAttributes = allAttributes.size();
 
-			JPanel columnTitles = new JPanel();
-			columnTitles
-					.setLayout(new BoxLayout(columnTitles, BoxLayout.X_AXIS));
+//			JPanel columnTitles = new JPanel();
+			valuePanel.setLayout(new GridLayout(0, numAttributes+1));
+//			columnTitles
+//					.setLayout(new BoxLayout(columnTitles, BoxLayout.X_AXIS));
 
 			JTextField origin = new JTextField("Alternative");
 			origin.setEditable(false);
-			columnTitles.add(origin);
+			valuePanel.add(origin);
 
 			for (Attribute att : allAttributes) {
 				JTextField attName = new JTextField(att.getName());
 				attName.setEditable(false);
-				columnTitles.add(attName);
+				valuePanel.add(attName);
 			}
-			valuePanel.add(columnTitles);
+//			valuePanel.add(columnTitles);
 
 			// make a tuple for every alternative
 			LinkedList<Alternative> allAlternatives = new LinkedList<Alternative>(
@@ -97,8 +102,13 @@ public class ValuePane extends UpdatePane{
 				if(a.getKey()==null){
 					System.out.println("why is the key null?");
 				}
-				valuePanel.add(new ValueTuple(a.getKey(), alternativeMap,
-						parentFrame, this, allAttributes));
+				ValueTuple tuple = new ValueTuple(a.getKey(), alternativeMap,
+						parentFrame, this, allAttributes);
+				valuePanel.add(tuple.getKey());
+				JComboBox boxes[] = tuple.getValues();
+				for(int i = 0; i < boxes.length; i++) {
+					valuePanel.add(boxes[i]);
+				}
 			}
 		}
 		parentFrame.pack();

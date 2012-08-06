@@ -25,6 +25,7 @@ public class ValueTuple extends AbstractTuple<Alternative> implements
 
 	private ArrayList<Attribute> allAttributes;
 	private JComboBox[] boxes;
+	private JTextField alternativeName;
 
 	public ValueTuple(Integer key, AlternativeMap map,
 			JFrame parentFrame, JPanel parentPanel,
@@ -37,7 +38,7 @@ public class ValueTuple extends AbstractTuple<Alternative> implements
 	@Override
 	public void initializeGUI() {
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-		JTextField alternativeName = new JTextField();
+		alternativeName = new JTextField();
 		alternativeName.setPreferredSize(new Dimension(75, 20));
 		add(alternativeName);
 
@@ -108,5 +109,13 @@ public class ValueTuple extends AbstractTuple<Alternative> implements
 				}
 			}
 		}
+	}
+	
+	public JTextField getKey() {
+		return alternativeName;
+	}
+	
+	public JComboBox[] getValues() {
+		return boxes;
 	}
 }
