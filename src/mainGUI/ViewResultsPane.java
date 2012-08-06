@@ -25,7 +25,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.border.TitledBorder;
 import javax.swing.text.JTextComponent;
 
 import dataStructures.AbstractDocument;
@@ -154,6 +153,7 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 		
 		consistencyButton = new JButton("Consistency");
 		consistencyButton.addActionListener(this);
+		consistencyButton.setToolTipText("Verify all preference statements are consistent");
 		
 		labelButtonPanel.add(new JLabel("Check Project for Consistency:"));
 		labelButtonPanel.add(consistencyButton);
@@ -196,6 +196,8 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 		JLabel label = new JLabel("Determine Set Dominance:");
 		dominanceButton = new JButton("Dominance");
 		dominanceButton.addActionListener(this);
+		dominanceButton.setToolTipText("Determine which set is more preferred");
+		
 		labelButtonPanel.add(label);
 		labelButtonPanel.add(dominanceButton);
 		
@@ -244,6 +246,7 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 		topNextButton = new JButton("Top");
 		topNextButton.addActionListener(this);
 		topNextButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+		topNextButton.setToolTipText("Find most preferred result");
 		
 		labelButtonPanel.add(label);
 		labelButtonPanel.add(topNextButton);
