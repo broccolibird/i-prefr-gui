@@ -2,6 +2,7 @@ package mainGUI;
 
 import guiElements.tuples.DomainTupleCI;
 
+import java.awt.GridLayout;
 import java.util.Collection;
 import java.util.Map.Entry;
 
@@ -30,20 +31,25 @@ public class DomainPaneCI extends DomainPane{
 		// for every map entry, add a tuple to the table
 		domainPanel.removeAll();
 		JPanel label = new JPanel();
-		label.setLayout(new BoxLayout(label, BoxLayout.X_AXIS));
+//		label.setLayout(new BoxLayout(label, BoxLayout.X_AXIS));
+		label.setLayout(new GridLayout(0, 2));
 		JTextField name = new JTextField("Attribute Name");
 		JTextField domainEnum = new JTextField("Domain Enumeration");
 		name.setEditable(false);
 		domainEnum.setEditable(false);
 		label.add(name);
 		label.add(domainEnum);
-		domainPanel.add(label);
+		
 		Collection<Entry<Integer, Attribute>> set = map.entrySet();
 		for (Entry<Integer, Attribute> p : set){
 			//System.out.println("Creating DomainTuple with key: "+p.getKey()+ " maybe need key: "+p.getValue().getAttributeKey());
-			domainPanel.add(new DomainTupleCI(p.getKey(), map, parentFrame,
-					domainPanel));
+			DomainTupleCI tuple = new DomainTupleCI(p.getKey(), map, parentFrame,
+					domainPanel);
+			label.add(tuple.getKey());
+			label.add(tuple.getValue());
+			
 		}
+		domainPanel.add(label);
 //		ArrayList<Attribute> allAttributes = new ArrayList<Attribute>(
 //				map.values());
 //		for(Attribute a : allAttributes){
