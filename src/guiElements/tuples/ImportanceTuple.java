@@ -88,7 +88,7 @@ public class ImportanceTuple extends AbstractTuple<Importance> implements
 		validateButton.addActionListener(this);
 		this.add(validateButton);
 		
-		xButton = new JButton("x");
+		xButton = new JButton("remove");
 		xButton.addActionListener(this);
 		this.add(xButton);
 	}
