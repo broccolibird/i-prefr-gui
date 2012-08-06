@@ -60,5 +60,8 @@ public class StakeholderPane extends UpdatePane {
 		panel.add(paneTurner, BorderLayout.CENTER);
 		return panel;
 	}
+	
+	@Override
+	public void leave() {/*do nothing*/}
 
 }

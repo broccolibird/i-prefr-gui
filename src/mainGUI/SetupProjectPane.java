@@ -228,5 +228,8 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 		}
 	}
 	
+	@Override
+	public void leave() {/*do nothing*/}
+	
 
 }

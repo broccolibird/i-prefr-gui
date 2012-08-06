@@ -388,4 +388,7 @@ public class ViewResultsPaneCI extends ViewResultsPane{
 		return null;
 	}
 	
+	@Override
+	public void leave() {/*do nothing*/}
+	
 }

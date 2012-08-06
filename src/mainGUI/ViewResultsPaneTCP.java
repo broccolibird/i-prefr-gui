@@ -54,5 +54,8 @@ public class ViewResultsPaneTCP extends ViewResultsPane {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public void leave() {/*do nothing*/}
 
 }

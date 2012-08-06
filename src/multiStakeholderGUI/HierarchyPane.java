@@ -271,5 +271,8 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 			return mMap.toString();
 		}
 	}
+	
+	@Override
+	public void leave() {/*do nothing*/}
 
 }

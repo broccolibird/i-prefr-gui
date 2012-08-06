@@ -191,4 +191,7 @@ public class AlternativePane extends UpdatePane implements ActionListener {
 		parentFrame.pack();
 	}
 
+	@Override
+	public void leave() {/*do nothing*/}
+
 }

@@ -409,4 +409,23 @@ public abstract class PreferencePane extends UpdatePane implements ActionListene
 		}
 	}
 	
+	@Override
+	public void leave() {
+		if(existUnsavedChanges()) {
+			int choice = JOptionPane.showConfirmDialog(parent,
+				    "You have not yet saved your preferences." +
+				    "Would you like to do so now?",
+				    "Save unsaved preferences",
+				    JOptionPane.YES_NO_OPTION);
+			
+			if (choice == JOptionPane.YES_OPTION) {
+				if(curMember.getPreferenceFilePath() == null) {
+					savePreferencesAs();
+				}else{
+					savePreferences();
+				}
+			}
+		}
+	}
+	
 }

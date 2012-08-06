@@ -118,4 +118,7 @@ public class AttributePane extends UpdatePane implements ActionListener {
 		tuple.getTextField().requestFocusInWindow();
 		parentFrame.pack();
 	}
+	
+	@Override
+	public void leave() {/*do nothing*/}
 }
