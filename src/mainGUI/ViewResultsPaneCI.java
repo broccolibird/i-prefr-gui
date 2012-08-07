@@ -40,8 +40,9 @@ public class ViewResultsPaneCI extends ViewResultsPane{
 
 	String ciNetFileName;
 
-	public ViewResultsPaneCI(AbstractDocument document, JFrame parentFrame) {
-		super(document, parentFrame);
+	public ViewResultsPaneCI(AbstractDocument document, JFrame parentFrame,
+			PaneTurnerCI paneTurner) {
+		super(document, parentFrame, paneTurner);
 	}
 
 	protected void initReasoner(String xmlFileName) {
@@ -51,16 +52,16 @@ public class ViewResultsPaneCI extends ViewResultsPane{
 		try {
 			fileName = translator.convertToSMV(ciNetFileName, 0);
 		} catch (XPathExpressionException e) {
-			// TODO Auto-generated catch block
+			displayReasonerInitError(e.getMessage());
 			e.printStackTrace();
 		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
+			displayReasonerInitError(e.getMessage());
 			e.printStackTrace();
 		} catch (SAXException e) {
-			// TODO Auto-generated catch block
+			displayReasonerInitError(e.getMessage());
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			displayReasonerInitError(e.getMessage());
 			e.printStackTrace();
 		}
 		reasoner = new AcyclicPreferenceReasoner(fileName);
@@ -68,18 +69,15 @@ public class ViewResultsPaneCI extends ViewResultsPane{
 	
 	protected void dominance() {
 		if(reasoner == null) {
-			JOptionPane.showMessageDialog(parentFrame,
-				    "The current user has no preferences.\n" +
-				    "Please verify on the Setup Preferences pane that preferences have " +
-				    "been added and saved.",
-				    "Preferences Not Found",
-				    JOptionPane.WARNING_MESSAGE);
+			displayReasonerError("The reasoner was not initialized.");
 			return;
 		}
 		
 		if(leftAlternative == null || rightAlternative == null) {
+			dominanceField.setText("Please select two sets to compare");
 			return;
 		}
+		
 		Set<String> morePreferredSet = getCISet(leftAlternative);
 		Set<String> lessPreferredSet = getCISet(rightAlternative);
 		
@@ -90,8 +88,9 @@ public class ViewResultsPaneCI extends ViewResultsPane{
 		try {
 			dominates = reasoner.dominates(morePreferredSet, lessPreferredSet);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			displayReasonerError(e.getMessage());
 			e.printStackTrace();
+			return;
 		}
 		
 		dominanceField.setText(""+dominates);
@@ -116,12 +115,7 @@ public class ViewResultsPaneCI extends ViewResultsPane{
 	protected void topNext() {
 		
 		if(reasoner == null) {
-			JOptionPane.showMessageDialog(parentFrame,
-				    "The current user has no preferences.\n" +
-				    "Please verify on the Setup Preferences pane that preferences have " +
-				    "been added and saved.",
-				    "Preferences Not Found",
-				    JOptionPane.WARNING_MESSAGE);
+			displayReasonerError("The reasoner was not initialized.");
 			return;
 		}
 		
@@ -159,7 +153,7 @@ public class ViewResultsPaneCI extends ViewResultsPane{
 		try {
 			prefResult = reasoner.nextPreferred();
 		} catch (Exception e) {
-			System.err.println("Thread handling "+ciNetFileName+" encountered exception:");
+			displayReasonerError(e.getMessage());
 			e.printStackTrace();
 			return null;
 		}
@@ -168,7 +162,7 @@ public class ViewResultsPaneCI extends ViewResultsPane{
 			try {
 				prefResult = reasoner.nextPreferred();
 			} catch (Exception e) {
-				System.err.println("Thread handling "+ciNetFileName+" encountered exception:");
+				displayReasonerError(e.getMessage());
 				e.printStackTrace();
 				return null;
 			}
@@ -182,21 +176,20 @@ public class ViewResultsPaneCI extends ViewResultsPane{
 	protected void checkConsistency() {
 		
 		if(reasoner == null) {
-			JOptionPane.showMessageDialog(parentFrame,
-				    "There is no preference file to check for consistency.\n" +
-				    "Please verify on the Setup Preferences pane that preferences have " +
-				    "been added and saved.",
-				    "Preferences Not Found",
-				    JOptionPane.WARNING_MESSAGE);
+			displayReasonerError("The reasoner was not initialized.");
 			return;
 		}
 		
 		boolean consistent;
 		try {
 			consistent = reasoner.isConsistent();
-		} catch (Exception e) {
-			System.err.println("Thread handling "+ciNetFileName+" encountered exception:");
+		} catch (IOException e) {
 			e.printStackTrace();
+			displayReasonerError(e.getMessage());
+			return;
+		} catch (Exception e) {
+			e.printStackTrace();
+			displayReasonerError(e.getMessage());
 			return;
 		}
 		

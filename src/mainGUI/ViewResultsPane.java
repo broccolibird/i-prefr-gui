@@ -21,6 +21,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -47,8 +48,10 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 	public static final int NEXT = 3;
 	
 	protected AbstractDocument document;
+	protected AbstractPaneTurner paneTurner;
 	protected JFrame parentFrame;
 	protected reasoner.PreferenceReasoner reasoner;
+	protected boolean reasonerInitialized;
 	
 	private JPanel dominancePanel;
 	private JButton dominanceButton;
@@ -79,9 +82,12 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 	 * @param document
 	 * @param parentFrame
 	 */
-	public ViewResultsPane(AbstractDocument document, JFrame parentFrame) {
+	public ViewResultsPane(AbstractDocument document, JFrame parentFrame,
+			AbstractPaneTurner paneTurner) {
 		this.document = document;
 		this.parentFrame = parentFrame;
+		this.paneTurner = paneTurner;
+		this.reasonerInitialized = false;
 		//this.alreadyChosen = new AlternativeList();
 		this.add(initializeGUI());
 		setVisible(true);
@@ -133,12 +139,37 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 			allMembers = false;
 		}
 		
-		if(curMember != null && curMember.getPreferenceFilePath() != null)
+		if(!paneTurner.isInitializing() && curMember != null && curMember.getPreferenceFilePath() != null) {
 			initReasoner(curMember.getPreferenceFilePath());
+		} else if (!paneTurner.isInitializing()) { // do not display errors if paneTurner is initializing
+			if(curMember == null){
+				displayReasonerInitError("There are no stakeholders in the project.");
+				reasonerInitialized = false;
+			} else {
+				displayReasonerInitError("The current stakeholder has no preference file.");
+				reasonerInitialized = false;
+			}
+		}
 		
 		resetResultFields();
 		currentResult = 1;
 		parentFrame.pack();
+	}
+	
+	protected void displayReasonerInitError(String error) {
+		JOptionPane.showMessageDialog(parentFrame,
+			    "The reasoner was not initialized\n" +
+			    error,
+			    "Error initializing preference reasoner",
+			    JOptionPane.WARNING_MESSAGE);
+	}
+	
+	protected void displayReasonerError(String error) {
+		JOptionPane.showMessageDialog(parentFrame,
+			    "An error occured while attempting to run the preference reasoner\n" +
+			    error,
+			    "Preference Reasoner Error",
+			    JOptionPane.WARNING_MESSAGE);
 	}
 	
 	/**
@@ -401,10 +432,13 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 			if (selectedItem instanceof Member) {
 				curMember = (Member) selectedItem;
 				
-				if(curMember.getPreferenceFilePath() != null)
+				if(curMember.getPreferenceFilePath() != null) {
 					initReasoner(curMember.getPreferenceFilePath());
-				else
+				} else {
 					reasoner = null; //reasoner must be set to null so that results are not displayed or previous member
+					reasonerInitialized = false;
+					displayReasonerInitError("The current stakeholder has no preference file.");
+				}
 				
 				allMembers = false;
 			} else if (selectedItem.equals("All Members")) {

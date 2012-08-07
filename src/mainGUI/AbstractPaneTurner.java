@@ -28,6 +28,7 @@ import dataStructures.AbstractDocument;
 public abstract class AbstractPaneTurner extends JSplitPane {
 
 	protected JFrame parent;
+	protected boolean initializing;
 
 	protected JButton nextButton;
 	protected JButton prevButton;
@@ -252,4 +253,7 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 		viewPanes[currentSelected].update();
 	}
 
+	public boolean isInitializing() {
+		return initializing;
+	}
 }

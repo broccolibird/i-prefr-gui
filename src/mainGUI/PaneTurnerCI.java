@@ -29,6 +29,7 @@ public class PaneTurnerCI extends AbstractPaneTurner{
 
 	@Override
 	protected Component initializeViewPanes() {
+		initializing = true;
 		int index = 0;
 		viewPanes = new UpdatePane[metaPanes.length];
 		projectPane = new SetupProjectPane(document.getMetaData());
@@ -49,9 +50,9 @@ public class PaneTurnerCI extends AbstractPaneTurner{
 		} 
 		preferencesPane = new ImportancePane(parent, document);
 		viewPanes[index++] = preferencesPane;
-		viewPanes[index] = new ViewResultsPaneCI(document,parent);
+		viewPanes[index] = new ViewResultsPaneCI(document,parent, this);
 		
-		
+		initializing = false;
 		return viewPanes[currentSelected];
 	}
 

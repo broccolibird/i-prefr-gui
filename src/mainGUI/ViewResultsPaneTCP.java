@@ -9,8 +9,9 @@ import dataStructures.Alternative;
 
 public class ViewResultsPaneTCP extends ViewResultsPane {
 
-	public ViewResultsPaneTCP(AbstractDocument document, JFrame parentFrame) {
-		super(document, parentFrame);
+	public ViewResultsPaneTCP(AbstractDocument document, JFrame parentFrame,
+			PaneTurnerTCP paneTurner) {
+		super(document, parentFrame, paneTurner);
 	}
 
 	@Override
