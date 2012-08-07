@@ -158,7 +158,7 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 	
 	protected void displayReasonerInitError(String error) {
 		JOptionPane.showMessageDialog(parentFrame,
-			    "The reasoner was not initialized\n" +
+			    "The reasoner was not initialized:\n" +
 			    error,
 			    "Error initializing preference reasoner",
 			    JOptionPane.WARNING_MESSAGE);
@@ -166,7 +166,7 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 	
 	protected void displayReasonerError(String error) {
 		JOptionPane.showMessageDialog(parentFrame,
-			    "An error occured while attempting to run the preference reasoner\n" +
+			    "An error occured while attempting to run the preference reasoner:\n" +
 			    error,
 			    "Preference Reasoner Error",
 			    JOptionPane.WARNING_MESSAGE);
