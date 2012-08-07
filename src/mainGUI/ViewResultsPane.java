@@ -51,7 +51,6 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 	protected AbstractPaneTurner paneTurner;
 	protected JFrame parentFrame;
 	protected reasoner.PreferenceReasoner reasoner;
-	protected boolean reasonerInitialized;
 	
 	private JPanel dominancePanel;
 	private JButton dominanceButton;
@@ -87,7 +86,6 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 		this.document = document;
 		this.parentFrame = parentFrame;
 		this.paneTurner = paneTurner;
-		this.reasonerInitialized = false;
 		//this.alreadyChosen = new AlternativeList();
 		this.add(initializeGUI());
 		setVisible(true);
@@ -144,10 +142,8 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 		} else if (!paneTurner.isInitializing()) { // do not display errors if paneTurner is initializing
 			if(curMember == null){
 				displayReasonerInitError("There are no stakeholders in the project.");
-				reasonerInitialized = false;
 			} else {
 				displayReasonerInitError("The current stakeholder has no preference file.");
-				reasonerInitialized = false;
 			}
 		}
 		
@@ -436,7 +432,6 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 					initReasoner(curMember.getPreferenceFilePath());
 				} else {
 					reasoner = null; //reasoner must be set to null so that results are not displayed or previous member
-					reasonerInitialized = false;
 					displayReasonerInitError("The current stakeholder has no preference file.");
 				}
 				
