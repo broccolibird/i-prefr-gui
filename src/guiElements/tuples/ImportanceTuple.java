@@ -103,21 +103,21 @@ public class ImportanceTuple extends AbstractTuple<Importance> implements
 			int valid = validateExpression();
 			if(valid == VALID_EXPRESSION) {
 				validateButton.setText("valid");
-				validateButton.setEnabled(false);
 				validateButton.setOpaque(true);
 				validateButton.setBackground(Color.GREEN);
+				validateButton.setForeground(Color.WHITE);
 				validateButton.setToolTipText("valid");
 			} else if (valid == INCOMPLETE_EXPRESSION) {
 				validateButton.setText("invalid");
-				validateButton.setEnabled(false);
 				validateButton.setOpaque(true);
 				validateButton.setBackground(Color.RED);
+				validateButton.setForeground(Color.WHITE);
 				validateButton.setToolTipText("Incomplete expression.");
 			} else if (valid == INVALID_EXPRESSION) {
 				validateButton.setText("invalid");
-				validateButton.setEnabled(false);
 				validateButton.setOpaque(true);
 				validateButton.setBackground(Color.RED);
+				validateButton.setForeground(Color.WHITE);
 				validateButton.setToolTipText("Attributes may only be used once per expression");
 			}
 		}
@@ -178,6 +178,7 @@ public class ImportanceTuple extends AbstractTuple<Importance> implements
 		validateButton.setEnabled(true);
 		validateButton.setOpaque(true);
 		validateButton.setBackground(null);
+		validateButton.setForeground(null);
 		validateButton.setToolTipText("validate");
 	}
 	
