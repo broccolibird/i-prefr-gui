@@ -113,7 +113,4 @@ public class ValuePane extends UpdatePane{
 		}
 		parentFrame.pack();
 	}
-	
-	@Override
-	public void leave() {/*do nothing*/}
 }

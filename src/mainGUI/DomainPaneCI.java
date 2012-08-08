@@ -6,7 +6,6 @@ import java.awt.GridLayout;
 import java.util.Collection;
 import java.util.Map.Entry;
 
-import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;

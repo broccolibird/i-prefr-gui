@@ -11,7 +11,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -380,8 +379,5 @@ public class ViewResultsPaneCI extends ViewResultsPane{
 		
 		return null;
 	}
-	
-	@Override
-	public void leave() {/*do nothing*/}
 	
 }

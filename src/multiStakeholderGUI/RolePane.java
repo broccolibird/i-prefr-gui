@@ -122,7 +122,4 @@ public class RolePane extends UpdatePane implements ActionListener{
 		parentFrame.pack();
 		tuple.getTextField().requestFocusInWindow();
 	}
-	
-	@Override
-	public void leave() {/*do nothing*/}
 }

@@ -12,10 +12,8 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 
 import org.apache.commons.collections15.Factory;
 import org.apache.commons.collections15.Transformer;
@@ -271,8 +269,5 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 			return mMap.toString();
 		}
 	}
-	
-	@Override
-	public void leave() {/*do nothing*/}
 
 }

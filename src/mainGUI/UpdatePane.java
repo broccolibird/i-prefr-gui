@@ -16,5 +16,5 @@ public abstract class UpdatePane extends JPanel {
 	 */
 	public abstract void update();
 	
-	public abstract void leave();
+	public void leave() { /* do nothing*/ }
 }

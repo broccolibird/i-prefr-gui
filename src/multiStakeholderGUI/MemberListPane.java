@@ -151,8 +151,5 @@ public class MemberListPane extends UpdatePane implements ActionListener {
 		}
 		
 	}
-	
-	@Override
-	public void leave() {/*do nothing*/}
 
 }

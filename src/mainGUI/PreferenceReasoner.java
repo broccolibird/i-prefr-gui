@@ -15,7 +15,6 @@ import java.net.URL;
 import javax.help.*;
 import javax.swing.AbstractAction;
 import javax.swing.JApplet;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;

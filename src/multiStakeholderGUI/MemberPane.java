@@ -76,7 +76,4 @@ public class MemberPane extends UpdatePane {
 		}
 		parentFrame.pack();
 	}
-	
-	@Override
-	public void leave() {/*do nothing*/}
 }
