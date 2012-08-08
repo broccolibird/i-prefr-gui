@@ -1,7 +1,6 @@
 package mainGUI;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -9,17 +8,14 @@ import java.awt.event.ItemListener;
 import java.util.Calendar;
 
 import javax.swing.BoxLayout;
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import dataStructures.Attribute;
 import dataStructures.MetaData;
 import dataStructures.ModelCheckerOption;
 import dataStructures.maps.OptionMap;
@@ -94,7 +90,6 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 		ModelCheckerOption[] options = ModelCheckerOption.getAllOptions();
 		modelCheckerComboBox = new JComboBox(options);
 		modelCheckerComboBox.addActionListener(this);
-		modelCheckerComboBox.setRenderer(new ComboBoxRenderer());
 		ModelCheckerOption oldOption = metaData.getSelectedModelChecker();
 		if(oldOption!=null){
 			for(int i=0;i<options.length;i++){
@@ -204,29 +199,8 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 		if (e.getSource() == modelCheckerComboBox) {
 			ModelCheckerOption selectedOption = (ModelCheckerOption) modelCheckerComboBox
 					.getSelectedItem();
-			
-			// for now, do not allow user to choose NuSMV
-			if(selectedOption.equals(new ModelCheckerOption(1))) {
-				modelCheckerComboBox.setSelectedIndex(0);
-				selectedOption = new ModelCheckerOption(0);
-			}
-			
 			metaData.setSelectedModelChecker(selectedOption);
 		}
 	}
-	
-	class ComboBoxRenderer extends DefaultListCellRenderer {
-		@Override
-		public Component getListCellRendererComponent(JList list, Object value,
-				int index, boolean isSelected, boolean cellHasFocus) {
-			super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-			if(index == 1) {
-				setFocusable(false);
-				setEnabled(false);
-			}
-			return this;
-		}
-	}
-	
 
 }
