@@ -27,6 +27,7 @@ public class PaneTurnerTCP extends AbstractPaneTurner{
 
 	@Override
 	protected Component initializeViewPanes() {
+		initializing = true;
 		viewPanes = new UpdatePane[metaPanes.length];
 
 		int index = 5;
@@ -55,6 +56,7 @@ public class PaneTurnerTCP extends AbstractPaneTurner{
 		viewPanes[4] = new ValuePane(document.getAlternativeMap(),
 				document.getAttributeMap(), parent);
 
+		initializing = false;
 		return viewPanes[currentSelected];
 	}
 
