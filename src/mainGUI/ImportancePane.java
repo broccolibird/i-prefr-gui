@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Map.Entry;
 
 import javax.swing.Box;
@@ -20,6 +21,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.SpringLayout;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -48,6 +50,9 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 	private JPanel importancePanel;
 	private JButton plusButton;
 	
+	private SpringLayout layout;
+	private LinkedList<ImportanceTuple> tuples;
+	
 		/**
 		 * Create new instance of ImportancePane
 		 * @param parent
@@ -57,6 +62,7 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 			super(parent, document);
 			this.attributeMap = document.getAttributeMap();
 			this.map = new ImportanceMap();
+			tuples = new LinkedList<ImportanceTuple>();
 			createGUI();
 		}
 		
@@ -96,13 +102,13 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 			columnName.setEditable(false);
 			preferencePanel.add(columnName);
 			
-			importancePanel = new JPanel();
-			importancePanel.setLayout(new BoxLayout(importancePanel, BoxLayout.PAGE_AXIS));
 			
-			updatePreferencePanel();
-			
+			layout = new SpringLayout();
+			importancePanel = new JPanel(layout);
 			JScrollPane importanceScrollPane = new JScrollPane(importancePanel);
 			importanceScrollPane.setBorder(null);
+			
+			updatePreferencePanel();
 			
 			preferencePanel.add(importanceScrollPane);
 			plusButton = new JButton("+");
@@ -114,17 +120,71 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 		@Override
 		protected void updatePreferencePanel() {
 			importancePanel.removeAll();
+			tuples.clear();
 			
 			//for every map entry, add a tuple to the table,then one more
 			Collection<Entry<Integer, Importance>> set = map.entrySet();
 			System.out.println("set size: "+set.size());
 			Attribute[] allAttributes = getAttributes();
-			for (Entry<Integer, Importance> p : set)
-				importancePanel.add(new ImportanceTuple(p.getKey(),map,parent,importancePanel,allAttributes));
-			importancePanel.add(new ImportanceTuple(map,parent,importancePanel,allAttributes));
+			for (Entry<Integer, Importance> p : set) {
+				addTuple(p.getKey());
+			}
+			
+			addTuple(null);
+			
 			parent.pack();	
 		}
 
+		private void addTuple(Integer key) {
+			ImportanceTuple tuple;
+			if(key == null) {
+				tuple = new ImportanceTuple(map, parent, importancePanel, this, getAttributes());
+			} else {
+				tuple = new ImportanceTuple(key,map,parent,importancePanel, this, getAttributes());
+			}
+			 
+			tuples.add(tuple);
+			importancePanel.add(tuple);
+			
+			int lastTupleIndex = tuples.indexOf(tuple) - 1;
+			if(lastTupleIndex >= 0) {
+				layout.putConstraint(SpringLayout.NORTH, tuple, 0,
+						SpringLayout.SOUTH, tuples.get(lastTupleIndex));
+				layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, tuple, 0,
+						SpringLayout.HORIZONTAL_CENTER, tuples.get(lastTupleIndex));
+			} else {
+				layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, importancePanel, 0,
+						SpringLayout.HORIZONTAL_CENTER, tuple);
+			}
+			
+			int height = (int)tuple.getPreferredSize().getHeight();
+			importancePanel.setPreferredSize(new Dimension(700, height*tuples.size()));
+			
+		}
+		
+		public void removeTuple(ImportanceTuple tuple) {
+			int index = tuples.indexOf(tuple);
+			
+			if (index == 0 && tuples.size() > 1) {
+				layout.putConstraint(SpringLayout.NORTH, tuples.get(index+1), 0,
+						SpringLayout.NORTH, importancePanel);
+				layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, tuples.get(index+1), 0,
+						SpringLayout.HORIZONTAL_CENTER, importancePanel);
+			} else if(index == tuples.size()-1){
+				layout.removeLayoutComponent(tuple);
+			} else if (index > 0 && index != tuples.size()-1) {
+				layout.putConstraint(SpringLayout.NORTH, tuples.get(index+1), 0,
+						SpringLayout.SOUTH, tuples.get(index-1));
+				layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, tuples.get(index+1), 0,
+						SpringLayout.HORIZONTAL_CENTER, tuples.get(index-1));
+			}
+			
+			tuples.remove(tuple);
+			int height = (int)tuple.getPreferredSize().getHeight();
+			importancePanel.setPreferredSize(new Dimension(700, height*tuples.size()));
+			repaint();
+		}
+		
 		/**
 		 * Resets the importance map.
 		 */
@@ -135,7 +195,7 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (plusButton == e.getSource()) {
-				importancePanel.add(new ImportanceTuple(map,parent,importancePanel,getAttributes()));
+				addTuple(null);
 				parent.pack();
 			} else {
 				super.actionPerformed(e);

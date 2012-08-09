@@ -14,6 +14,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import mainGUI.ImportancePane;
+
 import dataStructures.Attribute;
 import dataStructures.AttributeList;
 import dataStructures.Importance;
@@ -33,17 +35,22 @@ public class ImportanceTuple extends AbstractTuple<Importance> implements
 	protected JButton validateButton;
 	protected Attribute[] allAttributes;
 	protected JTextField[] fields;
+	
+	private ImportancePane importancePane;
 
 	public ImportanceTuple(Integer key, ImportanceMap map, JFrame parent,
-			JPanel parentPanel,Attribute[] allAttributes) {
+			JPanel parentPanel, ImportancePane importancePane, Attribute[] allAttributes) {
 		super(key, map, parent, parentPanel);
 		this.allAttributes=allAttributes;
+		this.importancePane = importancePane;
 		initializeGUI();
 	}
 
-	public ImportanceTuple(ImportanceMap map, JFrame parent, JPanel parentPanel,Attribute[] allAttributes) {
+	public ImportanceTuple(ImportanceMap map, JFrame parent, JPanel parentPanel,
+			ImportancePane importancePane, Attribute[] allAttributes) {
 		super(map, parent, parentPanel);
 		this.allAttributes=allAttributes;
+		this.importancePane = importancePane;
 		initializeGUI();
 	}
 
@@ -96,6 +103,7 @@ public class ImportanceTuple extends AbstractTuple<Importance> implements
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource()==xButton){
+			importancePane.removeTuple(this);
 			parentPanel.remove(this);
 			map.remove(key);
 			parentWindow.pack();
