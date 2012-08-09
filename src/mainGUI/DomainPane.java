@@ -2,6 +2,7 @@ package mainGUI;
 
 import guiElements.tuples.DomainTuple;
 
+import java.awt.GridLayout;
 import java.util.Collection;
 import java.util.Map.Entry;
 
@@ -44,40 +45,31 @@ public class DomainPane extends UpdatePane {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		domainPanel = new JPanel();
-		domainPanel.setLayout(new BoxLayout(domainPanel, BoxLayout.Y_AXIS));
+		domainPanel.setLayout(new GridLayout(0,2));
 		update();
 		panel.add(domainPanel);
 		return panel;
 	}
  
 	public void update() {
-//		ArrayList<Attribute> allAttributes = new ArrayList<Attribute>(
-//				map.values());
-//		for(Attribute a : allAttributes){
-//			System.out.println("in ValueTuple: Attribute "+ a.getName()+"'s key is: "+a.getAttributeKey());
-//			DomainValueList list = a.getObject().getDomainValueList();
-//			for (DomainValue dv : list){
-//				System.out.println("dv: "+dv.getValue()+" dv's attributeKey: "+dv.getAttributeKey());
-//			}
-//			System.out.println("*****");
-//		}
 		// for every map entry, add a tuple to the table
 		domainPanel.removeAll();
-		JPanel label = new JPanel();
-		label.setLayout(new BoxLayout(label, BoxLayout.X_AXIS));
-		//label.setPreferredSize(new Dimension(150,20));
 		JTextField name = new JTextField("Attribute Name");
 		JTextField domainEnum = new JTextField("Domain Enumeration");
 		name.setEditable(false);
 		domainEnum.setEditable(false);
-		label.add(name);
-		label.add(domainEnum);
-		domainPanel.add(label);
+		domainPanel.add(name);
+		domainPanel.add(domainEnum);
 		Collection<Entry<Integer, Attribute>> set = map.entrySet();
 		for (Entry<Integer, Attribute> p : set){
-			domainPanel.add(new DomainTuple(p.getKey(), map, parentFrame,
-					domainPanel));
+			addTuple(p.getKey());
 		}
 		parentFrame.pack();
+	}
+	
+	protected void addTuple(Integer key){
+		DomainTuple tuple = new DomainTuple(key, map, parentFrame, domainPanel);
+		domainPanel.add(tuple.getKey());
+		domainPanel.add(tuple.getValue());
 	}
 }

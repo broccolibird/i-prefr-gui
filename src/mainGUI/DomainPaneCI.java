@@ -2,15 +2,7 @@ package mainGUI;
 
 import guiElements.tuples.DomainTupleCI;
 
-import java.awt.GridLayout;
-import java.util.Collection;
-import java.util.Map.Entry;
-
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
-import dataStructures.Attribute;
 import dataStructures.maps.AttributeMap;
 
 /**
@@ -26,40 +18,10 @@ public class DomainPaneCI extends DomainPane{
 	}
 	
 	@Override
-	public void update() {
-		// for every map entry, add a tuple to the table
-		domainPanel.removeAll();
-		JPanel label = new JPanel();
-//		label.setLayout(new BoxLayout(label, BoxLayout.X_AXIS));
-		label.setLayout(new GridLayout(0, 2));
-		JTextField name = new JTextField("Attribute Name");
-		JTextField domainEnum = new JTextField("Domain Enumeration");
-		name.setEditable(false);
-		domainEnum.setEditable(false);
-		label.add(name);
-		label.add(domainEnum);
-		
-		Collection<Entry<Integer, Attribute>> set = map.entrySet();
-		for (Entry<Integer, Attribute> p : set){
-			//System.out.println("Creating DomainTuple with key: "+p.getKey()+ " maybe need key: "+p.getValue().getAttributeKey());
-			DomainTupleCI tuple = new DomainTupleCI(p.getKey(), map, parentFrame,
-					domainPanel);
-			label.add(tuple.getKey());
-			label.add(tuple.getValue());
-			
-		}
-		domainPanel.add(label);
-//		ArrayList<Attribute> allAttributes = new ArrayList<Attribute>(
-//				map.values());
-//		for(Attribute a : allAttributes){
-//			System.out.println("in ValueTuple: Attribute "+ a.getName()+"'s key is: "+a.getAttributeKey());
-//			DomainValueList list = a.getObject().getDomainValueList();
-//			for (DomainValue dv : list){
-//				System.out.println("dv: "+dv.getValue()+" dv's attributeKey: "+dv.getAttributeKey());
-//			}
-//			System.out.println("*****");
-//		}
-		parentFrame.pack();
+	protected void addTuple(Integer key) {
+		DomainTupleCI tuple = new DomainTupleCI(key, map, parentFrame, domainPanel);
+		domainPanel.add(tuple.getKey());
+		domainPanel.add(tuple.getValue());
 	}
 	
 

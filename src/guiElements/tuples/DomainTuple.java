@@ -21,6 +21,7 @@ public class DomainTuple extends AbstractTuple<Attribute> implements
 		ActionListener {
 
 	protected JTextArea domainField;
+	protected JTextField attributeName;
 
 	public DomainTuple(Integer key, AttributeMap map, JFrame parent,
 			JPanel parentPanel) {
@@ -43,7 +44,7 @@ public class DomainTuple extends AbstractTuple<Attribute> implements
 			System.err.println("attribute should not be null in DomainTuple");
 		}
 		String atName = a.getName();
-		JTextField attributeName = new JTextField(atName);
+		attributeName = new JTextField(atName);
 		attributeName.setEditable(false);
 		attributeName.setPreferredSize(new Dimension(75, 20));
 		this.add(attributeName);
@@ -63,6 +64,14 @@ public class DomainTuple extends AbstractTuple<Attribute> implements
 		this.add(domainField);
 	}
 
+	public JTextField getKey() {
+		return attributeName;
+	}
+	
+	public JTextArea getValue() {
+		return domainField;
+	}
+	
 	class DomainTextListener extends AbstractTextListener {
 
 		public DomainTextListener(JTextArea field) {
