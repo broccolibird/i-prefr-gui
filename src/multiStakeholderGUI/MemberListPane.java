@@ -30,13 +30,14 @@ import dataStructures.maps.MemberMap;
 public class MemberListPane extends UpdatePane implements ActionListener {
 
 	public final static int COLUMNS = 3;
-	Role role;
-	MemberMap map;
-	JFrame parentFrame;
-	JPanel memberListEntry;
-	JButton plusButton;
+	private Role role;
+	private MemberMap map;
+	private JFrame parentFrame;
+	private MemberPane memberPane;
+	private JPanel memberListEntry;
+	private JButton plusButton;
 	
-	GridLayout layout;
+	private GridLayout layout;
 	
 	/** number of MemberTuples removed from the Panel */
 	int removed;
@@ -47,9 +48,11 @@ public class MemberListPane extends UpdatePane implements ActionListener {
 	 * @param map
 	 * @param parentFrame
 	 */
-	public MemberListPane(Role role, MemberMap map, JFrame parentFrame) {
+	public MemberListPane(Role role, MemberMap map, JFrame parentFrame,
+			MemberPane memberPane) {
 		this.role = role;
 		this.map = map;
+		this.memberPane = memberPane;
 		this.parentFrame = parentFrame;
 		this.removed = 0;
 		
@@ -65,6 +68,7 @@ public class MemberListPane extends UpdatePane implements ActionListener {
 		// Create label for Panel
 		JTextField roleTitle = new JTextField(role.getName());
 		roleTitle.setHorizontalAlignment(JTextField.CENTER);
+		roleTitle.setMaximumSize(new Dimension(600, 20));
 		roleTitle.setEditable(false);
 		add(roleTitle);
 		
@@ -92,7 +96,9 @@ public class MemberListPane extends UpdatePane implements ActionListener {
 	public void remove(Component comp) {
 		memberListEntry.remove(comp);
 		removed++;
+		
 		repaint();
+		memberPane.resize();
 	}
 	
 	/**
@@ -111,6 +117,7 @@ public class MemberListPane extends UpdatePane implements ActionListener {
 			memberListEntry.add(new MemberTuple(
 					map, parentFrame, this));
 		}
+		memberPane.resize();
 	}
 	
 	@Override

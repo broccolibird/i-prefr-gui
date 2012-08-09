@@ -2,7 +2,7 @@ package guiElements.tuples;
 
 import guiElements.AbstractTextListener;
 
-import java.awt.event.ActionEvent;
+import java.awt.Dimension;
 import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
@@ -38,6 +38,7 @@ public class MemberTuple extends AbstractTuple<Member> implements
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		
 		memberName = new JTextField(12);
+		memberName.setMaximumSize(new Dimension(125, 20));
 		Member m = map.get(key);
 		
 		if(m != null)
