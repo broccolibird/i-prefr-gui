@@ -12,8 +12,10 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import org.apache.commons.collections15.Factory;
 import org.apache.commons.collections15.Transformer;
@@ -69,9 +71,6 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 	private JButton plus;
 	private JButton minus;
 	private JPanel controls;
-	
-	
-	
 	
 	/**
 	 * Creates the HierarchyPane based on the current Document
@@ -163,6 +162,10 @@ public class HierarchyPane extends UpdatePane implements ActionListener {
 		controls.add(modePanel);	
 		
 		controls.add(zoomPanel);
+
+		vv.requestFocusInWindow();
+
+		
 	}
 	
 	/**

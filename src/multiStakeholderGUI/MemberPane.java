@@ -74,6 +74,7 @@ public class MemberPane extends UpdatePane {
 		return panel;
 	}
  
+	@Override
 	public void update() {
 		
 		//create table header
@@ -110,6 +111,9 @@ public class MemberPane extends UpdatePane {
 		
 	}
 	
+	/**
+	 * Resizes the panel holding MemberListPanes so that the scroll bar works properly
+	 */
 	public void resize() {
 		double height = 40;
 		
