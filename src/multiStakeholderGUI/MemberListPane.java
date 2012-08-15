@@ -2,6 +2,7 @@ package multiStakeholderGUI;
 
 import guiElements.tuples.MemberTuple;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -67,6 +68,8 @@ public class MemberListPane extends UpdatePane implements ActionListener {
 		
 		// Create label for Panel
 		JTextField roleTitle = new JTextField(role.getName());
+		roleTitle.setBackground(Color.GRAY);
+		roleTitle.setForeground(Color.WHITE);
 		roleTitle.setHorizontalAlignment(JTextField.CENTER);
 		roleTitle.setMaximumSize(new Dimension(600, 20));
 		roleTitle.setEditable(false);
