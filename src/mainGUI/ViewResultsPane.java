@@ -45,7 +45,7 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 	public static final int CONSISTENCY = 0;
 	public static final int DOMINANCE = 1;
 	public static final int TOP = 2;
-	public static final int NEXT = 3;
+//	public static final int NEXT = 3;
 	
 	protected AbstractDocument document;
 	protected AbstractPaneTurner paneTurner;
@@ -64,7 +64,7 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 	protected JTextField consistencyField;
 	private JButton consistencyButton;
 	
-	private JButton topNextButton;
+	protected JButton topNextButton;
 	protected JTextArea resultsField;
 	protected int currentResult = 1;
 	
@@ -135,18 +135,18 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 			// set curMember to default member
 			curMember = rm.get(0).getObject().get(0); 
 			allMembers = false;
-		}
-		
-		if(!paneTurner.isInitializing() && curMember != null && curMember.getPreferenceFilePath() != null) {
-			initReasoner(curMember.getPreferenceFilePath());
-		} else if (!paneTurner.isInitializing()) { // do not display errors if paneTurner is initializing
-			if(curMember == null){
-				displayReasonerInitError("There are no stakeholders in the project.");
-			} else {
-				displayReasonerInitError("The current stakeholder has no preference file.");
+			
+			if(!paneTurner.isInitializing() && curMember != null && curMember.getPreferenceFilePath() != null) {
+				initReasoner(curMember.getPreferenceFilePath());
+			} else if (!paneTurner.isInitializing()) { // do not display errors if paneTurner is initializing
+				if(curMember == null){
+					displayReasonerInitError("There are no stakeholders in the project.");
+				} else {
+					displayReasonerInitError("The current stakeholder has no preference file.");
+				}
 			}
 		}
-		
+				
 		resetResultFields();
 		currentResult = 1;
 		parentFrame.pack();
@@ -404,9 +404,11 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 		stakeholderBox.addActionListener(this);
 		stakeholderBox.invalidate();
 		
-		if(stakeholderBox.getItemAt(0) != null)
+		if(stakeholderBox.getItemAt(0) != null) {
 			stakeholderBox.setSelectedIndex(0); // select All Members (for now, first member)
-		
+		} else if(!paneTurner.isInitializing()) {
+			displayReasonerInitError("There are no stakeholders in the project.");
+		}
 	}
 
 	@Override
@@ -417,20 +419,15 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 		} else if (source == dominanceButton) {
 			sendQuery(DOMINANCE);
 		} else if (source == topNextButton) {
-			if(topNextButton.getText().contains("Top")){
-				topNextButton.setText("Next");
-				sendQuery(TOP);
-			}else{
-				sendQuery(NEXT);
-			}
+			sendQuery(TOP);
 		} else if (source == stakeholderBox) {
 			Object selectedItem = stakeholderBox.getSelectedItem();
 			if (selectedItem instanceof Member) {
 				curMember = (Member) selectedItem;
 				
-				if(curMember.getPreferenceFilePath() != null) {
+				if(!paneTurner.isInitializing() && curMember.getPreferenceFilePath() != null) {
 					initReasoner(curMember.getPreferenceFilePath());
-				} else {
+				} else if (!paneTurner.isInitializing()){
 					reasoner = null; //reasoner must be set to null so that results are not displayed or previous member
 					displayReasonerInitError("The current stakeholder has no preference file.");
 				}
@@ -469,10 +466,6 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 			break;
 		
 		case TOP:
-			topNext();
-			break;
-		
-		case NEXT:
 			topNext();
 			break;
 		

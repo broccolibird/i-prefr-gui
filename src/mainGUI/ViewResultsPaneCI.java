@@ -144,6 +144,7 @@ public class ViewResultsPaneCI extends ViewResultsPane{
 				}
 			}
 		}
+		topNextButton.setText("Next");
 		
 	}
 	
