@@ -23,6 +23,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -60,6 +61,8 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 	//private AlternativeList alreadyChosen;
 	protected Alternative leftAlternative;
 	protected Alternative rightAlternative;
+	protected JScrollPane justificationScroll;
+	protected JButton dominanceJustificationButton;
 	
 	protected JTextField consistencyField;
 	private JButton consistencyButton;
@@ -68,8 +71,8 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 	protected JTextArea resultsField;
 	protected int currentResult = 1;
 	
-	//private JPanel justificationPanel;
-	//private JTextArea justificationField;
+	private JPanel justificationPanel;
+	protected JTextArea justificationField;
 
 	JPanel stakeholderPanel;
 	private JComboBox stakeholderBox;
@@ -107,7 +110,7 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 		
 		dominancePanel = createDominancePanel();
 		
-		//JPanel justificationPanel = createJustificationPanel();
+		JPanel justificationPanel = createJustificationPanel();
 
 		update();
 		panel.add(stakeholderPanel);
@@ -115,8 +118,8 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 		panel.add(consistencyPanel);
 		panel.add(Box.createRigidArea(new Dimension(5,35)));
 		panel.add(dominancePanel);
+		panel.add(justificationPanel);
 		panel.add(Box.createRigidArea(new Dimension(5,35)));
-		//panel.add(justificationPanel);
 		panel.add(resultsPanel);
 		
 		return panel;
@@ -244,16 +247,25 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 		rightDominanceSet.addMouseListener(new AlternativeListener(rightDominanceSet, rightAlternative, "right"));
 		rightDominanceSet.setAlignmentX(Component.CENTER_ALIGNMENT);
 		
+		JPanel resultPanel = new JPanel();
+		
 		dominanceField=new JTextField("result");
 		dominanceField.setEditable(false);
 		dominanceField.setAlignmentX(Component.CENTER_ALIGNMENT);
+		dominanceField.setPreferredSize(new Dimension(350, 20));
+		resultPanel.add(dominanceField);
+		
+		dominanceJustificationButton = new JButton("Why?");
+		dominanceJustificationButton.setEnabled(false);
+		dominanceJustificationButton.addActionListener(this);
+		resultPanel.add(dominanceJustificationButton);
 		
 		dominancePanel.add(labelButtonPanel);
 		dominancePanel.add(leftDominanceSet);
 		dominancePanel.add(greaterThan);
 		dominancePanel.add(rightDominanceSet);
 		dominancePanel.add(Box.createRigidArea(new Dimension(5,5)));
-		dominancePanel.add(dominanceField);
+		dominancePanel.add(resultPanel);
 		
 		return dominancePanel;
 	}
@@ -331,38 +343,25 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 	 * create Justification Panel
 	 * @return JPanel
 	 */
-	/*private JPanel createJustificationPanel() {
+	private JPanel createJustificationPanel() {
 		justificationPanel = new JPanel();
-		justificationPanel.setLayout(new BoxLayout(justificationPanel, BoxLayout.Y_AXIS));
-		
-		JPanel innerPanel = new JPanel();
-		innerPanel.setLayout(new BoxLayout(innerPanel, BoxLayout.X_AXIS));
-		
+		justificationPanel.setLayout(new BoxLayout(justificationPanel, BoxLayout.X_AXIS));
+				
 		JTextField justificationLabel = new JTextField("Justification");
 		justificationLabel.setEditable(false);
 		justificationLabel.setPreferredSize(new Dimension(75, 50));
 		
 		justificationField = new JTextArea(3,38);
 		justificationField.setEditable(false);
-		justificationField.setPreferredSize(new Dimension(400, 50));
 		justificationField.setText("result justification");
 		justificationField.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
 		
-		JButton hide = new JButton("hide justification");
-		hide.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				showJustificationPanel(false);
-			}
-		});
+		justificationScroll = new JScrollPane(justificationField);
+		justificationScroll.setPreferredSize(new Dimension(400, 80));
+
+		justificationPanel.add(justificationLabel);
+		justificationPanel.add(justificationScroll);
 		
-		innerPanel.add(justificationLabel);
-		innerPanel.add(justificationField);
-		
-		justificationPanel.add(Box.createRigidArea(new Dimension(10,10)));
-		justificationPanel.add(innerPanel);
-		justificationPanel.add(Box.createRigidArea(new Dimension(10,5)));
-		justificationPanel.add(hide);
 		justificationPanel.setVisible(false);
 		
 		return justificationPanel;
@@ -370,16 +369,26 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 	
 	private void showJustificationPanel(boolean show) {
 		justificationPanel.setVisible(show);
-	}*/
+	}
 	
 	/**
 	 * Clear results fields
 	 */
 	private void resetResultFields() {
 		consistencyField.setText("result");
-		dominanceField.setText("result");
+		
+		resetDominanceFields();
+		
 		topNextButton.setText("Top");
 		resultsField.setText("");
+	}
+	
+	protected void resetDominanceFields() {
+		dominanceField.setText("result");
+		justificationField.setText("");
+		showJustificationPanel(false);
+		dominanceJustificationButton.setText("Why?");
+		dominanceJustificationButton.setEnabled(false);
 	}
 	
 	/**
@@ -420,6 +429,18 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 			sendQuery(DOMINANCE);
 		} else if (source == topNextButton) {
 			sendQuery(TOP);
+		} else if (source == dominanceJustificationButton) {
+			if(dominanceJustificationButton.getText() == "Why?") {
+				showJustificationPanel(true);
+				JScrollBar vertical = justificationScroll.getVerticalScrollBar();
+				vertical.setValue(0);
+				JScrollBar horizontal = justificationScroll.getHorizontalScrollBar();
+				horizontal.setValue(0);
+				dominanceJustificationButton.setText("hide");
+			} else if (dominanceJustificationButton.getText() == "hide") {
+				showJustificationPanel(false);
+				dominanceJustificationButton.setText("Why?");
+			}
 		} else if (source == stakeholderBox) {
 			Object selectedItem = stakeholderBox.getSelectedItem();
 			if (selectedItem instanceof Member) {
@@ -505,6 +526,9 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 			} else {
 				leftAlternative = singleAlternative;
 			}
+			
+			resetDominanceFields();
+			
 			parentFrame.pack();
 		}
 

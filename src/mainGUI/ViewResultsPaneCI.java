@@ -2,6 +2,7 @@ package mainGUI;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
@@ -11,10 +12,14 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.swing.JFrame;
+import javax.swing.JScrollBar;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
+
+import model.OutcomeSequence;
+import model.WorkingPreferenceModel;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -25,6 +30,7 @@ import reasoner.AcyclicPreferenceReasoner;
 import translate.PreferenceInputTranslator;
 import translate.PreferenceInputTranslatorFactory;
 import translate.PreferenceInputType;
+import verify.TraceFormatterFactory;
 
 import dataStructures.AbstractDocument;
 import dataStructures.Alternative;
@@ -77,12 +83,14 @@ public class ViewResultsPaneCI extends ViewResultsPane{
 			return;
 		}
 		
+		// create sets to send to the back-end
 		Set<String> morePreferredSet = getCISet(leftAlternative);
 		Set<String> lessPreferredSet = getCISet(rightAlternative);
 		
 		System.out.println("More: " + morePreferredSet);
 		System.out.println("Less: " + lessPreferredSet);
 		
+		// send dominance query
 		boolean dominates = false;
 		try {
 			dominates = reasoner.dominates(morePreferredSet, lessPreferredSet);
@@ -92,7 +100,72 @@ public class ViewResultsPaneCI extends ViewResultsPane{
 			return;
 		}
 		
+		// set dominance result
 		dominanceField.setText(""+dominates);
+		
+		// set up justification field if dominance is true
+		if(dominates) {
+			dominanceJustificationButton.setEnabled(true);
+			OutcomeSequence c = null;
+			String outcomeString = null;
+			boolean useEntire = false;
+			
+			// retrieve justification
+			try {
+				c = TraceFormatterFactory.createTraceFormatter().parsePathFromTrace(WorkingPreferenceModel.getPrefMetaData());
+			} catch (FileNotFoundException e) {
+				justificationField.setText("An error occurred while retrieving justification.");
+				e.printStackTrace();
+				return;
+			} catch (IOException e) {
+				justificationField.setText("An error occurred while retrieving justification.");
+				e.printStackTrace();
+				return;
+			}
+			
+			
+			// Set text in justification field
+			Set<Set<String>> outcomeSequence = c.getOutcomeSequence();
+			if(outcomeSequence == null || outcomeSequence.size()==0) {
+//				System.out.println("Empty!");
+			} else {
+				boolean first = true;
+				outcomeString = new String();
+				
+				if(useEntire = !document.getAlternativeMap().useEntireAlternativeSpace()) {
+					outcomeString += leftAlternative.getName() + " " + morePreferredSet;
+					outcomeString += " > ";
+					outcomeString += rightAlternative.getName() + " " + lessPreferredSet;
+					outcomeString += " = " + dominates;
+					outcomeString += "\n";
+				} else {
+					outcomeString += morePreferredSet;
+					outcomeString += " > ";
+					outcomeString += lessPreferredSet;
+					outcomeString += " = " + dominates;
+					outcomeString += "\n";
+				}
+				
+				
+				for (Set<String> o : outcomeSequence) {
+					outcomeString = outcomeString + (first?"":" -> ");
+					
+					if(useEntire) {
+						Alternative alternative = getAlternative(o.toString());
+						if(alternative != null)
+							outcomeString += alternative.getName() + " ";
+						
+					}
+					outcomeString += o;
+					first = false;
+				}
+			}
+			
+			parentFrame.pack();
+			
+			justificationField.setText(outcomeString);
+		}
+		
 	}
 	
 
@@ -130,7 +203,6 @@ public class ViewResultsPaneCI extends ViewResultsPane{
 			String resultSet;
 			while(!alternativeFound) {
 				resultSet = getNextPreferred();
-				System.out.println("resultSet= "+resultSet);
 				if(resultSet == null) {
 					addEndOfResults();
 					alternativeFound = true;
