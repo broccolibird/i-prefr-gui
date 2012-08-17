@@ -48,6 +48,7 @@
 		<mapID target="viewresultspane" url="panes/viewresultspane.html" />
 			<mapID target="viewresultspane.consistency" url="panes/viewresultspane.html#consistency" />
 			<mapID target="viewresultspane.dominance" url="panes/viewresultspane.html#dominance" />
+			<mapID target="viewresultspane.justification" url="panes/viewresultspane.html#justification" />
 			<mapID target="viewresultspane.results" url="panes/viewresultspane.html#results" />
 
 </map>

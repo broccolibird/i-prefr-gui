@@ -52,7 +52,9 @@
 	</indexitem>
 	<indexitem text="View Results" target="viewresultspane" expand="false">
 		<indexitem text="Check for Consistency" target="viewresultspane.consistency"/>
-		<indexitem text="Find Dominant Set" target="viewresultspane.dominance"/>
+		<indexitem text="Find Dominant Set" target="viewresultspane.dominance">
+			<indexitem text="Dominance Justification" target="viewresultspane.justification"/>
+		</indexitem>
 		<indexitem text="View Most Preferred Result" target="viewresultspane.results"/>
 	</indexitem>
 </index>
