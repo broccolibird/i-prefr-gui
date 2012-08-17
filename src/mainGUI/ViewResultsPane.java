@@ -255,7 +255,7 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 		dominanceField.setPreferredSize(new Dimension(350, 20));
 		resultPanel.add(dominanceField);
 		
-		dominanceJustificationButton = new JButton("Why?");
+		dominanceJustificationButton = new JButton("Justify Dominance");
 		dominanceJustificationButton.setEnabled(false);
 		dominanceJustificationButton.addActionListener(this);
 		resultPanel.add(dominanceJustificationButton);
@@ -387,7 +387,7 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 		dominanceField.setText("result");
 		justificationField.setText("");
 		showJustificationPanel(false);
-		dominanceJustificationButton.setText("Why?");
+		dominanceJustificationButton.setText("Justify Dominance");
 		dominanceJustificationButton.setEnabled(false);
 	}
 	
@@ -430,7 +430,7 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 		} else if (source == topNextButton) {
 			sendQuery(TOP);
 		} else if (source == dominanceJustificationButton) {
-			if(dominanceJustificationButton.getText() == "Why?") {
+			if(dominanceJustificationButton.getText() == "Justify Dominance") {
 				showJustificationPanel(true);
 				JScrollBar vertical = justificationScroll.getVerticalScrollBar();
 				vertical.setValue(0);
@@ -439,7 +439,7 @@ public abstract class ViewResultsPane extends UpdatePane implements ActionListen
 				dominanceJustificationButton.setText("hide");
 			} else if (dominanceJustificationButton.getText() == "hide") {
 				showJustificationPanel(false);
-				dominanceJustificationButton.setText("Why?");
+				dominanceJustificationButton.setText("Justify Dominance");
 			}
 		} else if (source == stakeholderBox) {
 			Object selectedItem = stakeholderBox.getSelectedItem();
