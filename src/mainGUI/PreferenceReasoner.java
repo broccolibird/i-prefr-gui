@@ -25,12 +25,10 @@ import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import dataStructures.CIDocument;
 import dataStructures.RunConfiguration;
@@ -280,25 +278,22 @@ public class PreferenceReasoner extends JApplet{
 		try {
 			dBuilder = dbFactory.newDocumentBuilder();
 			doc = dBuilder.parse(file);
-		} catch (ParserConfigurationException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(frame, "Failed to open file: "+e.getMessage(),
 					"Error Loading File", JOptionPane.PLAIN_MESSAGE);
 			return;
-		}  catch (SAXException e) {
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(frame, "Failed to open file: "+e.getMessage(),
-					"Error Loading File", JOptionPane.PLAIN_MESSAGE);
-			return;
-		}  catch (IOException e) {
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(frame, "Failed to open file: "+e.getMessage(),
-					"Error Loading File", JOptionPane.PLAIN_MESSAGE);
-			return;
-		} 
+		}
 		
 		// retrieve network type from document
 		NodeList nList = doc.getElementsByTagName("NETWORK");
+		
+		// if NETWORK not part of file, incorrect file type
+		if(nList.getLength() <= 0) {
+			displayIncorrectFileType(file, doc);
+			return;
+		}
+		
 		Element e = (Element)nList.item(0);
 		NodeList nList2 = (e).getElementsByTagName("TYPE");
 		Element e2 = (Element)nList2.item(0);
@@ -341,6 +336,100 @@ public class PreferenceReasoner extends JApplet{
 		
 		paneTurner.setSaved(true);
 		
+	}
+	
+	/**
+	 * Inform the user that the file they selected is not a project file
+	 * @param xmlFile
+	 * @param doc
+	 */
+	private static void displayIncorrectFileType(File xmlFile, Document doc) {
+		String filePath = xmlFile.getAbsolutePath();
+		
+		// Determine file type and create suggested file path
+		NodeList roleList = doc.getElementsByTagName("ROLES");
+		if(roleList.getLength() > 0) {
+			System.out.println("this is a role file");
+			
+			if(filePath.endsWith("-roles.xml")) {
+				int index = filePath.indexOf("-roles.xml");
+				filePath = filePath.substring(0, index);
+				filePath += ".xml";
+			}
+		}
+		
+		NodeList hierarchyList = doc.getElementsByTagName("ROLEHIERARCHY");
+		if(hierarchyList.getLength() > 0 ) {
+			System.out.println("this is a rolehierarchy file");
+			
+			if(filePath.endsWith("-hierarchy.xml")) {
+				int index = filePath.indexOf("-hierarchy.xml");
+				filePath = filePath.substring(0, index);
+				filePath += ".xml";
+			}
+		}
+		
+		NodeList importancesList = doc.getElementsByTagName("IMPORTANCES");
+		if(importancesList.getLength() > 0 ) {
+			System.out.println("this is a preference file");
+			
+			if(filePath.contains("-preference-")) {
+				int index = filePath.indexOf("-preference-");
+				filePath = filePath.substring(0, index);
+				filePath += ".xml";
+			}
+		}
+		
+		//Suggest a new file the user can open
+		File suggestedFile = new File(filePath);
+		
+		if(suggestedFile.exists()) {
+			
+			Object[] options = {"Open suggested file", "Open different file", "Cancel"};
+			int chosenOption = JOptionPane.showOptionDialog(frame, "The file you selected " +
+					"("+xmlFile.getAbsolutePath()+") is " +
+					"not a project file.\nWould you like to open " + filePath + " instead?",
+					"Incorrect file type", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, 
+					null, options, options[0]);
+			
+			if(chosenOption == 0) {
+				//Open suggested file
+				open(suggestedFile);
+				
+			} else if( chosenOption == 1) {
+				//Open file chooser to select new file
+				JFileChooser chooser = new JFileChooser();
+			    FileNameExtensionFilter filter = new FileNameExtensionFilter(
+			    		"XML (*.xml)","xml");
+			    chooser.setFileFilter(filter);
+			    int option = chooser.showOpenDialog(frame);
+				if (option == JFileChooser.APPROVE_OPTION) {
+					File file = chooser.getSelectedFile();
+					open(file);
+				}
+			}
+		
+		} else { //suggested file does not exist
+			Object[] options = {"Open different file", "Cancel"};
+			int chosenOption = JOptionPane.showOptionDialog(frame, "The file you selected " +
+					"("+xmlFile.getAbsolutePath()+") is " +
+					"not a project file.\nWould you like to open " + filePath + " instead?",
+					"Incorrect file type", JOptionPane.YES_NO_OPTION, (Integer) null, 
+					null, options, options[0]);
+			
+			if( chosenOption == 0) {
+				//let the user select a new file
+				JFileChooser chooser = new JFileChooser();
+			    FileNameExtensionFilter filter = new FileNameExtensionFilter(
+			    		"XML (*.xml)","xml");
+			    chooser.setFileFilter(filter);
+			    int option = chooser.showOpenDialog(frame);
+				if (option == JFileChooser.APPROVE_OPTION) {
+					File file = chooser.getSelectedFile();
+					open(file);
+				}
+			}
+		}
 	}
 	
 	/**
