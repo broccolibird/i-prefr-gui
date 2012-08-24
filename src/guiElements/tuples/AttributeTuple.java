@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 
+import mainGUI.AttributePane;
 import mainGUI.PreferencePane;
 import mainGUI.SetupGraphPane;
 
@@ -24,19 +25,23 @@ public class AttributeTuple extends AbstractTuple<Attribute> implements
 	protected JTextField attributeName;
 	protected JButton xButton;
 	protected PreferencePane preferencePane;
+	protected AttributePane attributePane;
 
 	public AttributeTuple(Integer key, AttributeMap map, JFrame parent,
-			JPanel parentPanel, PreferencePane preferencePane) {
+			JPanel parentPanel, AttributePane attributePane,
+			PreferencePane preferencePane) {
 		super(key, map, parent, parentPanel);
 
 		this.preferencePane = preferencePane;
+		this.attributePane = attributePane;
 		initializeGUI();
 	}
 
 	public AttributeTuple(AttributeMap map, JFrame parent, JPanel parentPanel,
-			PreferencePane preferencePane) {
+			AttributePane attributePane, PreferencePane preferencePane) {
 		super(map, parent, parentPanel);
 		this.preferencePane = preferencePane;
+		this.attributePane = attributePane;
 		initializeGUI();
 	}
 
@@ -61,6 +66,7 @@ public class AttributeTuple extends AbstractTuple<Attribute> implements
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == xButton) {
+			attributePane.removeTuple(this);
 			Attribute a = map.get(key);
 			if (preferencePane != null && preferencePane instanceof SetupGraphPane) {
 				((SetupGraphPane) preferencePane).getGraph().removeVertex(a);
