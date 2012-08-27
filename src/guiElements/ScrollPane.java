@@ -11,15 +11,15 @@ import mainGUI.UpdatePane;
 
 public abstract class ScrollPane extends UpdatePane {
 	
+	protected JPanel panel;
 	protected JPanel headerPanel;
-	
 	protected JPanel containerPanel;
 	protected SpringLayout layout;
 	protected JScrollPane scrollPane;
 	protected LinkedList<JPanel> tuples;
 	
 	public ScrollPane() {
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		
 		headerPanel = new JPanel();
