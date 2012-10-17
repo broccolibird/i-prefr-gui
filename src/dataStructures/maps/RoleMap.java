@@ -96,29 +96,26 @@ public class RoleMap extends SuperkeyMap<Role>{
 	/**
 	 * Create xml for Role information.
 	 * 
-	 * @param xmlfile
+	 * @param projectFolder
 	 * @return xml
 	 */
-	public String toXML(File xmlfile) {
+	public String toXML(File projectFolder) {
 		String roles = "\t<STAKEHOLDERS>\n";
 		roles += "\t\t<UNIQUEMAPID>"+uniqueID+"</UNIQUEMAPID>\n";
 		roles += "\t\t<MULTISTAKEHOLDER>"+isMultipleStakeholder+"</MULTISTAKEHOLDER>\n";
 		
-		String roleFile = createRoleFile(xmlfile);
+		String roleFile = createRoleFile(projectFolder);
 		roles += "\t\t<ROLEFILE>"+roleFile+"</ROLEFILE>\n";
 		
 		if ( isMultipleStakeholder )
-			roles += "\t\t<HIERARCHYFILE>"+createHierarchyFile(xmlfile)+"</HIERARCHYFILE>\n";
+			roles += "\t\t<HIERARCHYFILE>"+createHierarchyFile(projectFolder)+"</HIERARCHYFILE>\n";
 		
 		roles += "\t</STAKEHOLDERS>\n";
 		return roles;
 	}
 	
-	private String createRoleFile(File xmlfile) {
-		int suffixIndex = xmlfile.getAbsolutePath().lastIndexOf('.');
-		String filePrefix = (suffixIndex >= 0) ?
-				xmlfile.getAbsolutePath().substring(0, suffixIndex) : xmlfile.getAbsolutePath();
-		String roleFileName = filePrefix + "-roles.xml";
+	private String createRoleFile(File projectFolder) {
+		String roleFileName = projectFolder + System.getProperty("file.separator") + "roles.xml";
 		File roleFile = new File(roleFileName);
 		
 		System.out.println("Creating role file @ "+roleFileName+"\n");
@@ -142,11 +139,8 @@ public class RoleMap extends SuperkeyMap<Role>{
 		return roleFileName;
 	}
 	
-	private String createHierarchyFile(File xmlfile) {
-		int suffixIndex = xmlfile.getAbsolutePath().lastIndexOf('.');
-		String filePrefix = (suffixIndex >= 0) ?
-				xmlfile.getAbsolutePath().substring(0, suffixIndex) : xmlfile.getAbsolutePath();
-		String hierarchyFileName = filePrefix + "-hierarchy.xml";
+	private String createHierarchyFile(File projectFolder) {
+		String hierarchyFileName = projectFolder + System.getProperty("file.separator") + "hierarchy.xml";
 		File hierarchyFile = new File(hierarchyFileName);
 		
 		System.out.println("Creating hierarchy file @ "+hierarchyFileName+"\n");

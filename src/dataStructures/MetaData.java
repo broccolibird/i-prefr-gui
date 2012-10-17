@@ -12,7 +12,6 @@ import dataStructures.maps.OptionMap;
 public class MetaData {
 
 	// metadata variables
-	private String filename;
 	private String projectName;
 	private GregorianCalendar creationDate;
 	private ModelCheckerOption selectedModelChecker;
@@ -21,14 +20,14 @@ public class MetaData {
 	private boolean existChanges;
 
 	public MetaData() {
-		this("untitled.xml", "untitled", new ModelCheckerOption(
+		this("untitled", new ModelCheckerOption(
 				ModelCheckerOption.MODEL_CHECKER_0), new GregorianCalendar(),new OptionMap());
 		existChanges = false;
 	}
 
-	public MetaData(String filename, String projectName,
+	public MetaData(String projectName,
 			ModelCheckerOption selectedModelChecker, GregorianCalendar creationDate,OptionMap optionMap) {
-		this.filename = filename;
+
 		this.projectName = projectName;
 		this.selectedModelChecker = selectedModelChecker;
 		this.creationDate = creationDate;
@@ -37,9 +36,8 @@ public class MetaData {
 		existChanges = false;
 	}
 	
-	public MetaData(String filename, String projectName,
-			String selectedModelCheckerString,String creationDateString,OptionMap optionMap){
-		this.filename = filename;
+	public MetaData(String projectName, String selectedModelCheckerString,
+			String creationDateString,OptionMap optionMap){
 		this.projectName = projectName;
 		this.selectedModelChecker = ModelCheckerOption.getOption(selectedModelCheckerString);
 		this.displayOptions = optionMap;
@@ -57,15 +55,6 @@ public class MetaData {
 		creationDate = cal;
 		
 		existChanges = false;
-	}
-
-	public String getFilename() {
-		return filename;
-	}
-
-	public void setFilename(String filename) {
-		this.filename = filename;
-		existChanges = true;
 	}
 
 	public String getProjectName() {
@@ -110,7 +99,6 @@ public class MetaData {
 	 */
 	public String toXML(){
 		String metaData = "\t<METADATA>\n";
-		metaData += "\t\t<FILENAME>"+filename+"</FILENAME>\n";
 		metaData += "\t\t<PROJECTNAME>"+projectName+"</PROJECTNAME>\n";
 		metaData += "\t\t<MODELCHECKER>"+selectedModelChecker+"</MODELCHECKER>\n";
 		metaData += "\t\t<DATECREATED>"+getDateString()+"</DATECREATED>\n";

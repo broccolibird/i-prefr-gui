@@ -1,6 +1,7 @@
 package mainGUI;
 
 import guiElements.NewDialog;
+import guiElements.project.SaveProjectDialog;
 
 import java.awt.Dimension;
 import java.awt.Event;
@@ -12,7 +13,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 
-import javax.help.*;
+import javax.help.CSH;
+import javax.help.HelpBroker;
+import javax.help.HelpSet;
 import javax.swing.AbstractAction;
 import javax.swing.JApplet;
 import javax.swing.JFileChooser;
@@ -40,12 +43,65 @@ public class PreferenceReasoner extends JApplet{
 	private static AbstractPaneTurner paneTurner;
 	private static JFrame frame;
 	public static boolean loading;
-
-	public static void main(String[] args) {
+	
+	AbstractAction save = new AbstractAction("Save") {
+		public void actionPerformed(ActionEvent e) {
+			save();
+		}
+	};
+	
+	AbstractAction saveAs = new AbstractAction("SaveAs") {
+		public void actionPerformed(ActionEvent e){
+			if(paneTurner == null)
+				JOptionPane.showMessageDialog(frame, "Please start a project before saving.",
+						"Nothing to save", JOptionPane.PLAIN_MESSAGE);
+			else {
+				showSaveDialog();
+			}
+		}
+	};
+	
+	AbstractAction newProj = new AbstractAction("New") {
+		public void actionPerformed(ActionEvent e) {
+			boolean switchProject = true;
+			if ( existChanges() ) {
+				//offer to save old abstractDocument before opening new one
+				switchProject = showSaveChangesDialog();
+			}
+			if (switchProject) {
+				showNewDialog();
+			}
+		}
+	};
+	
+	AbstractAction open = new AbstractAction("Open") {
+		public void actionPerformed(ActionEvent e) {
+			//offer to save old abstractDocument before opening new one
+			boolean switchProject = true;
+			
+			if( existChanges() )
+				switchProject = showSaveChangesDialog();
+			
+			if ( switchProject ) {
+				//use a chooser to get the file to open
+				JFileChooser chooser = new JFileChooser();
+			    FileNameExtensionFilter filter = new FileNameExtensionFilter(
+			    		"XML (*.xml)","xml");
+			    chooser.setFileFilter(filter);
+			    int option = chooser.showOpenDialog(frame);
+				if (option == JFileChooser.APPROVE_OPTION) {
+					File file = chooser.getSelectedFile();
+					open(file);
+				}
+			}
+		}
+	};
+	
+	public PreferenceReasoner() {
 		// new JDialog: name your project
 		frame = new JFrame();
 		frame.setPreferredSize(new Dimension(900, 750));
-		frame.addWindowListener(new ReasonerWindowListener(frame));
+		frame.addWindowListener(new ReasonerWindowListener(frame, this));
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		paneTurner = null;
 		
@@ -57,64 +113,20 @@ public class PreferenceReasoner extends JApplet{
 		item = fileMenu.add("Save");
 		item.setMnemonic(KeyEvent.VK_S);
 		item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK));
-		item.addActionListener(new AbstractAction("Save") {
-			public void actionPerformed(ActionEvent e) {
-				save();
-			}
-		});
+		item.addActionListener(save);
 		
 		item = fileMenu.add("SaveAs");
-		item.addActionListener( new AbstractAction("SaveAs") {
-			public void actionPerformed(ActionEvent e){
-				if(paneTurner == null)
-					JOptionPane.showMessageDialog(frame, "Please create a project before saving.",
-							"Project does not exist", JOptionPane.PLAIN_MESSAGE);
-				else
-					showSaveDialog();
-			}
-		});
+		item.addActionListener(saveAs);
 		
 		item = fileMenu.add("New");
 		item.setMnemonic(KeyEvent.VK_N);
 		item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, Event.CTRL_MASK));
-		item.addActionListener(new AbstractAction("New") {
-			public void actionPerformed(ActionEvent e) {
-				boolean switchProject = true;
-				if ( existChanges() ) {
-					//offer to save old abstractDocument before opening new one
-					switchProject = showSaveChangesDialog();
-				}
-				if (switchProject) {
-					showNewDialog();
-				}
-			}
-		});
+		item.addActionListener(newProj);
 
 		item = fileMenu.add("Open");
 		item.setMnemonic(KeyEvent.VK_O);
 		item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, Event.CTRL_MASK));
-		item.addActionListener(new AbstractAction("Open") {
-			public void actionPerformed(ActionEvent e) {
-				//offer to save old abstractDocument before opening new one
-				boolean switchProject = true;
-				
-				if( existChanges() )
-					switchProject = showSaveChangesDialog();
-				
-				if ( switchProject ) {
-					//use a chooser to get the file to open
-					JFileChooser chooser = new JFileChooser();
-				    FileNameExtensionFilter filter = new FileNameExtensionFilter(
-				    		"XML (*.xml)","xml");
-				    chooser.setFileFilter(filter);
-				    int option = chooser.showOpenDialog(frame);
-					if (option == JFileChooser.APPROVE_OPTION) {
-						File file = chooser.getSelectedFile();
-						open(file);
-					}
-				}
-			}
-		});
+		item.addActionListener(open);
 
 		JMenu helpMenu = new JMenu("?");
 		
@@ -140,7 +152,7 @@ public class PreferenceReasoner extends JApplet{
 	 * since opening/last save.
 	 * @return true if changes exist
 	 */
-	public static boolean existChanges() {
+	public boolean existChanges() {
 		if (paneTurner != null) {
 			paneTurner.checkChangesInPreferences();
 			return paneTurner.existChanges();
@@ -154,7 +166,7 @@ public class PreferenceReasoner extends JApplet{
 	 * @return true if the user successfully saves the project or if they choose not to save,
 	 * 			returns false if the user cancels out of the action.
 	 */
-	protected static boolean showSaveChangesDialog(){
+	protected boolean showSaveChangesDialog(){
 		int choice = JOptionPane.showConfirmDialog(frame,
 			    "You are about to leave the current project, would you like to save your changes?",
 			    "Save Changes",
@@ -169,28 +181,23 @@ public class PreferenceReasoner extends JApplet{
 	}
 	
 	/**
-	 * Opens a file chooser for the user to select a location to save the project
+	 * Opens a file chooser for the user to select a location 
+	 * to save the project folder
 	 * @return true if the file is saved successfully
 	 */
-	private static boolean showSaveDialog(){
-		JFileChooser chooser = new JFileChooser();
+	private boolean showSaveDialog(){
+		SaveProjectDialog saveDialog = new SaveProjectDialog(frame, paneTurner.getProjectName());
+		File saveFile = saveDialog.showDialog();
+		if(saveFile != null)
+			return save(saveFile);
 		
-		// suggest filename used on SetupProjectPane
-		String filename = paneTurner.getProjectFileName();
-		chooser.setSelectedFile(new File(filename));
-		
-		int option = chooser.showSaveDialog(paneTurner);
-		if (option == JFileChooser.APPROVE_OPTION) {
-			File file = chooser.getSelectedFile();
-			return save(file);
-		}
 		return false;
 	}
 	
 	/**
 	 * Opens a dialog and creates a new project based on the user's selections
 	 */
-	private static void showNewDialog(){
+	private void showNewDialog(){
 		
 		NewDialog nd = new NewDialog(frame);
 		RunConfiguration config= nd.showDialog();
@@ -215,29 +222,41 @@ public class PreferenceReasoner extends JApplet{
 	}
 
 	/**
+	 * If a project has not yet been saved, a save dialog opens.
+	 * If the project has already been created and saved, project
+	 * is saved to project location.
+	 * 
 	 * @return true if the project was saved successfully
 	 */
-	public static boolean save() {
+	public boolean save() {
 		if(paneTurner == null) {
-			JOptionPane.showMessageDialog(frame, "Please create a project before saving.",
-					"Project does not exist", JOptionPane.PLAIN_MESSAGE);
+			JOptionPane.showMessageDialog(frame, "Please start a project before saving.",
+					"Nothing to save", JOptionPane.PLAIN_MESSAGE);
 			return false;
-		} else if (paneTurner.getCurrentFile() == null){
+		} else if (paneTurner.getCurrentFolder() == null){
 			return showSaveDialog();
 		} else {
-			return save(paneTurner.getCurrentFile());
+			return save(paneTurner.getCurrentFolder());
 		}
 	}
 	
 	/**
 	 * Saves an xml representation of the project to the
-	 * given file.
+	 * given project directory.
 	 * @param xmlfile - file to save to
 	 * @return true if the file is saved successfully
 	 */
-	private static boolean save(File xmlfile) {
-		String xmlRepresentation = paneTurner.toXML(xmlfile);
-		System.out.println(xmlRepresentation);
+	private boolean save(File projectDirectory) {
+	
+		// Create main xml file
+		File xmlfile = new File(projectDirectory.getAbsolutePath()
+				+System.getProperty("file.separator")+"main.xml");
+		
+		// sets the current project field as well as project name
+		paneTurner.setCurrentProject(projectDirectory);
+		
+		String xmlRepresentation = paneTurner.toXML(projectDirectory);
+		
 		BufferedWriter writer = null;
 		try {
 		    writer = new BufferedWriter(new FileWriter(xmlfile)); 
@@ -260,8 +279,6 @@ public class PreferenceReasoner extends JApplet{
 		    e.printStackTrace();
 		}
 		
-		paneTurner.setCurrentFile(xmlfile);
-		paneTurner.setProjectFileName(paneTurner.getCurrentFile().getName());
 		paneTurner.setSaved(true);
 		return true;
 	}
@@ -270,7 +287,7 @@ public class PreferenceReasoner extends JApplet{
 	 * Opens the given file and loads the project
 	 * @param file
 	 */
-	private static void open(File file) {
+	private void open(File file) {
 		loading = true;
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder;
@@ -343,7 +360,7 @@ public class PreferenceReasoner extends JApplet{
 	 * @param xmlFile
 	 * @param doc
 	 */
-	private static void displayIncorrectFileType(File xmlFile, Document doc) {
+	private void displayIncorrectFileType(File xmlFile, Document doc) {
 		String filePath = xmlFile.getAbsolutePath();
 		
 		// Determine file type and create suggested file path
@@ -435,7 +452,7 @@ public class PreferenceReasoner extends JApplet{
 	/**
 	 * find the helpset file and create a HelpSet object
 	 */
-	 public static HelpSet getHelpSet(String helpsetfile) {
+	 public HelpSet getHelpSet(String helpsetfile) {
 		 HelpSet hs = null;
 	     ClassLoader cl = PreferenceReasoner.class.getClassLoader();
 	     try {
@@ -448,4 +465,8 @@ public class PreferenceReasoner extends JApplet{
 	     return hs;
 	 }
 
+	 public static void main(String[] args) {
+		 new PreferenceReasoner();
+	 }
+		
 }

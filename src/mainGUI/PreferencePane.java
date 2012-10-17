@@ -303,11 +303,11 @@ public abstract class PreferencePane extends UpdatePane implements ActionListene
 		
 		// suggest a name for the preference file based on project file name
 		String suggestedName;
-		File currentFile = paneTurner.getCurrentFile();
+		File currentFile = paneTurner.getCurrentFolder();
 		if ( currentFile != null) {
 			suggestedName = currentFile.getAbsolutePath();
 		} else {
-			suggestedName = paneTurner.getProjectFileName();
+			suggestedName = paneTurner.getProjectName();
 		}
 		int suffixIndex = suggestedName.lastIndexOf('.');
 		suggestedName = (suffixIndex >= 0) ? 
@@ -337,7 +337,7 @@ public abstract class PreferencePane extends UpdatePane implements ActionListene
 	    // file location
  		String suggestedLocation;
  		AbstractPaneTurner paneTurner = (AbstractPaneTurner) getParent();
- 		File currentFile = paneTurner.getCurrentFile();
+ 		File currentFile = paneTurner.getCurrentFolder();
  		if ( currentFile != null) {
  			suggestedLocation = currentFile.getAbsolutePath();
  			int suffixIndex = suggestedLocation.lastIndexOf('/');

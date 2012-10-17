@@ -139,7 +139,6 @@ public abstract class AbstractDocument {
 		
 		//now initialize the MetaData
 		Element metaDataElement = (Element)((doc.getElementsByTagName("METADATA")).item(0));
-		String filename = Util.getOnlyChildText(metaDataElement,"FILENAME");
 		String projectName = Util.getOnlyChildText(metaDataElement,"PROJECTNAME");
 		String modelChecker = Util.getOnlyChildText(metaDataElement,"MODELCHECKER");
 		String dateCreated = Util.getOnlyChildText(metaDataElement,"DATECREATED");
@@ -153,7 +152,7 @@ public abstract class AbstractDocument {
 			Integer thisValue = Integer.parseInt(option.getTextContent());
 			optionMap.put(thisKey, thisValue);
 		}
-		metaData = new MetaData(filename, projectName,modelChecker,dateCreated,optionMap);
+		metaData = new MetaData(projectName,modelChecker,dateCreated,optionMap);
 		SuperkeyMap.setNextUniqueID(maxUniqueID+1);
 	}
 
@@ -396,13 +395,13 @@ public abstract class AbstractDocument {
 	 * @param xmlfile - file to be saved to
 	 * @return xml string
 	 */
-	public String toXML(File xmlfile) {
+	public String toXML(File projectFolder) {
 		String doc = "<DOCUMENT>\n";
 		doc += metaData.toXML();
 		doc += attributeMap.toXML();
 		doc += alternativeMap.toXML(attributeMap);
 		doc += getNetworkXML();
-		doc += roleMap.toXML(xmlfile);
+		doc += roleMap.toXML(projectFolder);
 		doc += "</DOCUMENT>";
 		return doc;
 	}

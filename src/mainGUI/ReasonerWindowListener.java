@@ -7,10 +7,12 @@ import javax.swing.JFrame;
 
 public class ReasonerWindowListener implements WindowListener{
 
-	JFrame frame;
+	private JFrame frame;
+	private PreferenceReasoner reasoner;
 	
-	public ReasonerWindowListener(JFrame frame){
+	public ReasonerWindowListener(JFrame frame, PreferenceReasoner reasoner){
 		this.frame = frame;
+		this.reasoner = reasoner;
 	}
 	
 	@Override
@@ -21,9 +23,9 @@ public class ReasonerWindowListener implements WindowListener{
 
 	@Override
 	public void windowClosing(WindowEvent e) {
-		if ( PreferenceReasoner.existChanges() ) {
+		if ( reasoner.existChanges() ) {
 			//offer to save
-			if(PreferenceReasoner.showSaveChangesDialog())
+			if(reasoner.showSaveChangesDialog())
 				frame.dispose();
 		} else {
 			frame.dispose();

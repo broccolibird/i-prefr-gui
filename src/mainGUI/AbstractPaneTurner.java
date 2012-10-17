@@ -47,7 +47,7 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 	protected SetupProjectPane projectPane;
 	protected PreferencePane preferencesPane;
 	
-	private File currentFile;
+	private File currentProjectFolder;
 	
 	static String[] s_prefReasSteps = { "Setup Project", "Add Attributes", 
 		"Attribute\nDomains", "Add\nAlternatives", "Alternative\nValues", 
@@ -69,7 +69,7 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 		this.parent = parent;
 		this.document = document;
 		this.isMultipleStakeholder = isMultipleStakeholder;
-		this.currentFile = currentFile;
+		this.currentProjectFolder = currentFile;
 	
 		setupActions();
 		setLeftComponent(getChooser());
@@ -82,8 +82,8 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 	 * @param xmlfile
 	 * @return xml string representation of project
 	 */
-	public String toXML(File xmlfile){
-		return document.toXML(xmlfile);
+	public String toXML(File projectFolder){
+		return document.toXML(projectFolder);
 	}
 
 	/**
@@ -215,35 +215,25 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 		preferencesPane.checkForUnsavedChanges();
 	}
 	
-	/**
-	 * Returns filename input by user on the SetupProjectPane
-	 * @return filename
-	 */
-	public String getProjectFileName() {
-		return document.getMetaData().getFilename();
-	}
-	
-	/**
-	 * Set filename on the SetupProjectPane
-	 * @param fileName
-	 */
-	public void setProjectFileName(String fileName){
-		projectPane.setSavedFileName(fileName);
+	public String getProjectName() {
+		return document.getMetaData().getProjectName();
 	}
 
 	/**
 	 * Set the project file
 	 * @param curFile
 	 */
-	public void setCurrentFile(File curFile) {
-		this.currentFile = curFile;
+	public void setCurrentProject(File curFolder) {
+		this.currentProjectFolder = curFolder;
+		document.getMetaData().setProjectName(curFolder.getName());
+		projectPane.updateProjectNameField();
 	}
 	
 	/**
-	 * @return the current project file
+	 * @return the current project folder
 	 */
-	public File getCurrentFile() {
-		return currentFile;
+	public File getCurrentFolder() {
+		return currentProjectFolder;
 	}
 	
 	/**

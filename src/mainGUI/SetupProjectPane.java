@@ -26,13 +26,11 @@ import dataStructures.maps.OptionMap;
  */
 @SuppressWarnings("serial")
 public class SetupProjectPane extends UpdatePane implements DocumentListener,
-		ItemListener, ActionListener {
+		ActionListener {
 
 	// private JPanel inputPanel;
 	private MetaData metaData;
 	private JTextField projectNameField;
-	private JTextField filenameField;
-	private JCheckBox sameNameCheckBox;
 	private JComboBox modelCheckerComboBox;
 
 	/**
@@ -59,31 +57,10 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 		projectNameField.getDocument().addDocumentListener(this);
 		panel.add(projectNameField);
 
-		JPanel filenameHeader = new JPanel();
-		filenameHeader
-				.setLayout(new BoxLayout(filenameHeader, BoxLayout.X_AXIS));
-		filenameHeader.add(new JLabel("Filename"));
-		sameNameCheckBox = new JCheckBox("same as project name");
-		
-		//use the option to inform the state of the sameNameCheckBox
-		Integer selected = metaData.getDisplayOptions().get(OptionMap.SAME_NAME);
-		if(selected != null && selected == 0){
-			selectSameName(false);
-		}else{
-			selectSameName(true);	
-		}
-		
-		sameNameCheckBox.addItemListener(this);
-		filenameHeader.add(sameNameCheckBox);
-		panel.add(filenameHeader);
-
-		filenameField = new JTextField(35);
-		filenameField.setText(metaData.getFilename());
-		filenameField.getDocument().addDocumentListener(this);
-		if(selected == null || selected == 1) // same name selected
-			filenameField.setEnabled(false);
-		panel.add(filenameField);
-		
+		JPanel projectNameHeader = new JPanel();
+		projectNameHeader
+				.setLayout(new BoxLayout(projectNameHeader, BoxLayout.X_AXIS));
+				
 		// Add Model Checker options
 		panel.add(new JLabel("Select Model Checker"));
 
@@ -119,48 +96,10 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 		projectNameField.setSelectionColor(new Color(0, 0, 0, 25));
 	}
 	
-	/**
-	 * Selects the same name checkbox in the GUI and
-	 * adds the selection to the metaData optionMap.
-	 * @param selected
-	 */
-	private void selectSameName(boolean selected){
-		sameNameCheckBox.setSelected(selected);
-		if(selected){
-			metaData.getDisplayOptions().put(OptionMap.SAME_NAME, 1);
-		}else{
-			metaData.getDisplayOptions().put(OptionMap.SAME_NAME, 0);
-		}		
-	}
-	
-	/**
-	 * Set File Name field after saving project changes
-	 * @param fileName
-	 */
-	public void setSavedFileName(String fileName) {
-		if(!(fileName.equals(filenameField.getText()) ||
-				fileName.equals(projectNameField.getText()+".xml"))){
-			sameNameCheckBox.setSelected(false);
-		}
-		filenameField.setText(fileName);
-		metaData.setSaved(true);
+	public void updateProjectNameField() {
+		projectNameField.setText(metaData.getProjectName());
 	}
 
-	@Override
-	public void itemStateChanged(ItemEvent e) {
-		Object o = e.getItemSelectable();
-		if (o == sameNameCheckBox) {
-			if (e.getStateChange() == ItemEvent.DESELECTED) {
-				selectSameName(false);
-				filenameField.setEnabled(true);
-			} else {
-				selectSameName(true);
-				filenameField.setEnabled(false);
-				filenameField.setText(projectNameField.getText()+".xml");
-				metaData.setFilename(filenameField.getText());
-			}
-		}
-	}
 
 	@Override
 	public void changedUpdate(DocumentEvent e) {
@@ -181,17 +120,7 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 		if (e.getDocument() == projectNameField.getDocument()) {
 			String projectName = projectNameField.getText();
 			metaData.setProjectName(projectName);
-
-			if (sameNameCheckBox.isSelected()) {
-				filenameField.setText(projectName+".xml");
-				metaData.setFilename(projectName+".xml");
-			}
-
-		} else if (e.getDocument() == filenameField.getDocument()) {
-			if (!sameNameCheckBox.isSelected()) {
-				metaData.setFilename(filenameField.getText());
-			}
-		}
+		} 
 	}
 
 	@Override
