@@ -123,6 +123,7 @@ public class SaveProjectDialog extends JDialog implements TreeSelectionListener 
 					model.insertNodeInto(childNode, selectedNode, selectedNode.getChildCount());
 					
 					tree.scrollPathToVisible(new TreePath(childNode.getPath()));
+					tree.setSelectionPath(new TreePath(childNode.getPath()));
 				}
 					
 			}
