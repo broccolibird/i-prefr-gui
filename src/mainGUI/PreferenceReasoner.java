@@ -5,6 +5,7 @@ import guiElements.project.SaveProjectDialog;
 
 import java.awt.Dimension;
 import java.awt.Event;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.BufferedWriter;
@@ -210,9 +211,9 @@ public class PreferenceReasoner extends JApplet{
 			frame.remove(paneTurner);
 		
 		if ( config.cpSelected == true ){
-			paneTurner = new PaneTurnerTCP(frame, new TCPDocument(config.multipleSelected), config.multipleSelected);
+			paneTurner = new PaneTurnerTCP(this, new TCPDocument(config.multipleSelected), config.multipleSelected);
 		} else {
-			paneTurner = new PaneTurnerCI(frame, new CIDocument(config.multipleSelected), config.multipleSelected);	
+			paneTurner = new PaneTurnerCI(this, new CIDocument(config.multipleSelected), config.multipleSelected);	
 		}
 		
 		frame.getContentPane().add(paneTurner);
@@ -233,10 +234,10 @@ public class PreferenceReasoner extends JApplet{
 			JOptionPane.showMessageDialog(frame, "Please start a project before saving.",
 					"Nothing to save", JOptionPane.PLAIN_MESSAGE);
 			return false;
-		} else if (paneTurner.getCurrentFolder() == null){
+		} else if (paneTurner.getDocument().getProjectFolder() == null){
 			return showSaveDialog();
 		} else {
-			return save(paneTurner.getCurrentFolder());
+			return save(paneTurner.getDocument().getProjectFolder());
 		}
 	}
 	
@@ -255,7 +256,7 @@ public class PreferenceReasoner extends JApplet{
 		// sets the current project field as well as project name
 		paneTurner.setCurrentProject(projectDirectory);
 		
-		String xmlRepresentation = paneTurner.toXML(projectDirectory);
+		String xmlRepresentation = paneTurner.toXML();
 		
 		BufferedWriter writer = null;
 		try {
@@ -270,6 +271,11 @@ public class PreferenceReasoner extends JApplet{
 		}
 		catch(IOException e) {
 		    e.printStackTrace();
+		    try {
+				writer.close();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 		    return false;
 		}
 		try {
@@ -338,15 +344,15 @@ public class PreferenceReasoner extends JApplet{
 			frame.remove(paneTurner);
 		
 		if(networkType.equals("CI")){
-			CIDocument oldCIDocument = new CIDocument(doc);
+			CIDocument oldCIDocument = new CIDocument(file.getParentFile(), doc);
 			loading = false;
-			paneTurner = new PaneTurnerCI(frame, oldCIDocument, isMultiStakeholder, file);
+			paneTurner = new PaneTurnerCI(this, oldCIDocument, isMultiStakeholder);
 			frame.getContentPane().add(paneTurner);
 			frame.pack();
 		}else if(networkType.equals("TCP")){
-			TCPDocument oldTCPDocument = new TCPDocument(doc);
+			TCPDocument oldTCPDocument = new TCPDocument(file.getParentFile(), doc);
 			loading = false;
-			paneTurner = new PaneTurnerTCP(frame, oldTCPDocument, isMultiStakeholder, file);
+			paneTurner = new PaneTurnerTCP(this, oldTCPDocument, isMultiStakeholder);
 			frame.getContentPane().add(paneTurner);
 			frame.pack();
 		}
@@ -468,5 +474,9 @@ public class PreferenceReasoner extends JApplet{
 	 public static void main(String[] args) {
 		 new PreferenceReasoner();
 	 }
+
+	public JFrame getFrame() {
+		return frame;
+	}
 		
 }

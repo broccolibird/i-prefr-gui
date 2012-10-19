@@ -27,7 +27,7 @@ import dataStructures.AbstractDocument;
 @SuppressWarnings("serial")
 public abstract class AbstractPaneTurner extends JSplitPane {
 
-	protected JFrame parent;
+	protected PreferenceReasoner reasoner;
 	protected boolean initializing;
 
 	protected JButton nextButton;
@@ -47,7 +47,7 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 	protected SetupProjectPane projectPane;
 	protected PreferencePane preferencesPane;
 	
-	private File currentProjectFolder;
+//	private File currentProjectFolder;
 	
 	static String[] s_prefReasSteps = { "Setup Project", "Add Attributes", 
 		"Attribute\nDomains", "Add\nAlternatives", "Alternative\nValues", 
@@ -60,16 +60,14 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 	
 	/**
 	 * Create a new instance of AbstractPaneTurner
-	 * @param parent
+	 * @param reasoner
 	 * @param document
 	 * @param isMultipleStakeholder
 	 */
-	public AbstractPaneTurner(JFrame parent, AbstractDocument document, boolean isMultipleStakeholder,
-			File currentFile) {
-		this.parent = parent;
+	public AbstractPaneTurner(PreferenceReasoner reasoner, AbstractDocument document, boolean isMultipleStakeholder) {
+		this.reasoner = reasoner;
 		this.document = document;
 		this.isMultipleStakeholder = isMultipleStakeholder;
-		this.currentProjectFolder = currentFile;
 	
 		setupActions();
 		setLeftComponent(getChooser());
@@ -82,8 +80,8 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 	 * @param xmlfile
 	 * @return xml string representation of project
 	 */
-	public String toXML(File projectFolder){
-		return document.toXML(projectFolder);
+	public String toXML(){
+		return document.toXML();
 	}
 
 	/**
@@ -159,7 +157,7 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 	}
 
 	public void pack() {
-		parent.pack();
+		reasoner.getFrame().pack();
 	}
 	
 	/**
@@ -224,16 +222,9 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 	 * @param curFile
 	 */
 	public void setCurrentProject(File curFolder) {
-		this.currentProjectFolder = curFolder;
+		document.setProjectFolder(curFolder);
 		document.getMetaData().setProjectName(curFolder.getName());
 		projectPane.updateProjectNameField();
-	}
-	
-	/**
-	 * @return the current project folder
-	 */
-	public File getCurrentFolder() {
-		return currentProjectFolder;
 	}
 	
 	/**
@@ -245,5 +236,9 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 
 	public boolean isInitializing() {
 		return initializing;
+	}
+
+	public AbstractDocument getDocument() {
+		return document;
 	}
 }

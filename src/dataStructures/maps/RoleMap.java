@@ -104,10 +104,9 @@ public class RoleMap extends SuperkeyMap<Role>{
 		roles += "\t\t<UNIQUEMAPID>"+uniqueID+"</UNIQUEMAPID>\n";
 		roles += "\t\t<MULTISTAKEHOLDER>"+isMultipleStakeholder+"</MULTISTAKEHOLDER>\n";
 		
-		String roleFile = createRoleFile(projectFolder);
-		roles += "\t\t<ROLEFILE>"+roleFile+"</ROLEFILE>\n";
+		roles += "\t\t<ROLEFILE>"+createRoleFile(projectFolder)+"</ROLEFILE>\n";
 		
-		if ( isMultipleStakeholder )
+		if ( isMultipleStakeholder ) 
 			roles += "\t\t<HIERARCHYFILE>"+createHierarchyFile(projectFolder)+"</HIERARCHYFILE>\n";
 		
 		roles += "\t</STAKEHOLDERS>\n";
@@ -115,7 +114,8 @@ public class RoleMap extends SuperkeyMap<Role>{
 	}
 	
 	private String createRoleFile(File projectFolder) {
-		String roleFileName = projectFolder + System.getProperty("file.separator") + "roles.xml";
+		String fileName = "roles.xml";
+		String roleFileName = projectFolder + System.getProperty("file.separator") + fileName;
 		File roleFile = new File(roleFileName);
 		
 		System.out.println("Creating role file @ "+roleFileName+"\n");
@@ -136,11 +136,12 @@ public class RoleMap extends SuperkeyMap<Role>{
 			e.printStackTrace();
 		}
 		
-		return roleFileName;
+		return fileName;
 	}
 	
 	private String createHierarchyFile(File projectFolder) {
-		String hierarchyFileName = projectFolder + System.getProperty("file.separator") + "hierarchy.xml";
+		String fileName = "hierarchy.xml";
+		String hierarchyFileName = projectFolder + System.getProperty("file.separator") + fileName;
 		File hierarchyFile = new File(hierarchyFileName);
 		
 		System.out.println("Creating hierarchy file @ "+hierarchyFileName+"\n");
@@ -156,6 +157,6 @@ public class RoleMap extends SuperkeyMap<Role>{
 			e.printStackTrace();
 		}
 		
-		return hierarchyFileName;
+		return fileName;
 	}
 }

@@ -34,6 +34,8 @@ import edu.uci.ics.jung.algorithms.layout.StaticLayout;
  */
 public abstract class AbstractDocument {
 
+	private File projectFolder;
+	
 	protected AttributeMap attributeMap;
 	protected AlternativeMap alternativeMap;
 	protected RoleMap roleMap;
@@ -50,6 +52,8 @@ public abstract class AbstractDocument {
 		alternativeMap = new AlternativeMap();
 		roleMap = new RoleMap(isMultiStakeholder);
 		metaData = new MetaData();
+		
+		projectFolder = null;
 	}
 	
 	/**
@@ -57,7 +61,8 @@ public abstract class AbstractDocument {
 	 * document
 	 * @param doc
 	 */
-	public AbstractDocument(org.w3c.dom.Document doc){
+	public AbstractDocument(File projectFolder, org.w3c.dom.Document doc){
+		this.projectFolder = projectFolder;
 		
 		//first create the attributeMap
 		int uniqueMapID = Integer.parseInt(Util.getOnlyChildText(doc,"ATTRIBUTES","UNIQUEMAPID"));
@@ -135,7 +140,7 @@ public abstract class AbstractDocument {
 		}
 
 		// initialize RoleMap
-		maxUniqueID = setupRoleMap(doc, maxUniqueID);
+		maxUniqueID = setupRoleMap(projectFolder, doc, maxUniqueID);
 		
 		//now initialize the MetaData
 		Element metaDataElement = (Element)((doc.getElementsByTagName("METADATA")).item(0));
@@ -162,15 +167,25 @@ public abstract class AbstractDocument {
 	 * @param maxUniqueID
 	 * @return new maxUniqueID
 	 */
-	private int setupRoleMap(org.w3c.dom.Document doc, int maxUniqueID) {
+	private int setupRoleMap(File projectFolder, org.w3c.dom.Document doc, int maxUniqueID) {
 		//create the roleMap
 		int uniqueMapID = Integer.parseInt(Util.getOnlyChildText(doc, "STAKEHOLDERS", "UNIQUEMAPID"));
 		maxUniqueID = Util.maxOf(maxUniqueID, uniqueMapID);
 		boolean multistakeholder = Boolean.parseBoolean(Util.getOnlyChildText(doc, "STAKEHOLDERS", "MULTISTAKEHOLDER"));
 		roleMap = new RoleMap(uniqueMapID, multistakeholder);
 				
-		//open roles file
-		String roleFile = Util.getOnlyChildText(doc, "STAKEHOLDERS", "ROLEFILE");
+		// open roles file
+		String roleFileName = Util.getOnlyChildText(doc, "STAKEHOLDERS", "ROLEFILE");
+		
+		// determine if file name that was read in is absolute path
+		String roleFile;
+		if(new File(roleFileName).isAbsolute()) {
+			roleFile = roleFileName;
+		} else {
+			roleFile = projectFolder.getAbsolutePath() + System.getProperty("file.separator") + roleFileName;
+		}
+		
+		// create doc from role file
 		Document roleDoc = null;
 		DocumentBuilder dBuilder;
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -212,7 +227,14 @@ public abstract class AbstractDocument {
 				NodeList preferenceFile = member.getElementsByTagName("PREFERENCEFILE");
 				if (preferenceFile.item(0) != null) { // Member already has a preference file
 					String preferenceFilePath = preferenceFile.item(0).getTextContent();
-					memberMap.put(thisKey, new Member (memberName, thisKey, preferenceFilePath));
+					String absolutePreferencePath;
+					if(new File(preferenceFilePath).isAbsolute()) {
+						absolutePreferencePath = preferenceFilePath;
+					} else {
+						absolutePreferencePath = projectFolder.getAbsolutePath() + 
+								System.getProperty("file.separator") + preferenceFilePath;
+					}
+					memberMap.put(thisKey, new Member (memberName, thisKey, absolutePreferencePath));
 				} else {
 					memberMap.put(thisKey, new Member(memberName,thisKey));
 				}
@@ -230,7 +252,13 @@ public abstract class AbstractDocument {
 		
 		if ( multistakeholder ) {
 			//open role hierarchy file
-			String hierarchyFile = Util.getOnlyChildText(doc, "STAKEHOLDERS", "HIERARCHYFILE");
+			String hierarchyFileName = Util.getOnlyChildText(doc, "STAKEHOLDERS", "HIERARCHYFILE");
+			String hierarchyFile;
+			if(new File(hierarchyFileName).isAbsolute()) {
+				hierarchyFile = hierarchyFileName;
+			} else {
+				hierarchyFile = projectFolder.getAbsolutePath() + System.getProperty("file.separator") + hierarchyFileName;
+			}
 			Document hierarchyDoc = null;
 			DocumentBuilder hierarchyDBuilder;
 			DocumentBuilderFactory hierarchyDBFactory = DocumentBuilderFactory.newInstance();
@@ -305,6 +333,23 @@ public abstract class AbstractDocument {
 		
 		// update nextEdge to unused value
 		rh.setNextEdge(roleEdge);
+		
+	}
+	
+	/**
+	 * @return project folder
+	 */
+	public File getProjectFolder() {
+		return projectFolder;
+	}
+	
+
+	/**
+	 * Returns the project Folder
+	 * @param projectFolder
+	 */
+	public void setProjectFolder(File projectFolder) {
+		this.projectFolder = projectFolder;
 		
 	}
 	
@@ -395,7 +440,7 @@ public abstract class AbstractDocument {
 	 * @param xmlfile - file to be saved to
 	 * @return xml string
 	 */
-	public String toXML(File projectFolder) {
+	public String toXML() {
 		String doc = "<DOCUMENT>\n";
 		doc += metaData.toXML();
 		doc += attributeMap.toXML();
@@ -405,6 +450,5 @@ public abstract class AbstractDocument {
 		doc += "</DOCUMENT>";
 		return doc;
 	}
-
 	
 }

@@ -1,5 +1,7 @@
 package dataStructures;
 
+import java.io.File;
+
 public class TCPDocument extends AbstractDocument{
 	
 	/**
@@ -15,8 +17,8 @@ public class TCPDocument extends AbstractDocument{
 	 * document
 	 * @param doc
 	 */
-	public TCPDocument(org.w3c.dom.Document doc){
-		super(doc);
+	public TCPDocument(File projectFolder, org.w3c.dom.Document doc){
+		super(projectFolder, doc);
 		//TODO - parse network into graph, pass graph into GUI
 	}
 	

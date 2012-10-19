@@ -58,8 +58,8 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 		 * @param parent
 		 * @param document
 		 */
-		public ImportancePane(JFrame parent, AbstractDocument document) {
-			super(parent, document);
+		public ImportancePane(PreferenceReasoner reasoner, JFrame parent, AbstractDocument document) {
+			super(reasoner, parent, document);
 			this.attributeMap = document.getAttributeMap();
 			this.map = new ImportanceMap();
 			tuples = new LinkedList<ImportanceTuple>();

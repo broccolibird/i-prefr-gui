@@ -54,7 +54,50 @@ public abstract class PreferencePane extends UpdatePane implements ActionListene
 	
 	protected JTextArea noMembers;
 	
-	public PreferencePane(JFrame parent, AbstractDocument document){
+	private ActionListener saveAction = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(curMember == null) {
+				System.out.println("SetupPreferencesPane -- member == null!!!");
+			} else if (curMember.getPreferenceFilePath() == null) {
+				savePreferencesAs();
+			} else {
+				savePreferences();
+			}
+			
+		}
+	};
+	
+	private ActionListener saveAsAction = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			savePreferencesAs();
+		}
+	};
+	
+	private ActionListener loadAction =  new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			checkForUnsavedChanges();
+			loadExistingPreferences();
+		}
+	};
+	
+	private ActionListener clearAction=  new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			int choice = JOptionPane.showConfirmDialog(parent,
+				    "You are about to clear the current preferences,"+
+				    " would you like to continue?",
+				    "Clear preferences",
+				    JOptionPane.YES_NO_OPTION);
+			
+			if (choice == JOptionPane.YES_OPTION)
+				clearMemberPreferences();				
+		}
+	};
+	
+	public PreferencePane(PreferenceReasoner reasoner, JFrame parent, AbstractDocument document){
 		this.parent = parent;
 		this.document = document;
 		this.isMultipleStakeholder = document.getRoleMap().isMultipleStakeholder();
@@ -90,6 +133,7 @@ public abstract class PreferencePane extends UpdatePane implements ActionListene
 	 * @return true if the panel contains any changes
 	 */
 	public abstract boolean existUnsavedChanges();
+	
 	
 	/**
 	 * Setup the combobox containing role members
@@ -151,50 +195,16 @@ public abstract class PreferencePane extends UpdatePane implements ActionListene
 	protected void createFileControls() {
 		// Add file controls
 		save = new JButton("Save");
-		save.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(curMember == null) {
-					System.out.println("SetupPreferencesPane -- member == null!!!");
-				} else if (curMember.getPreferenceFilePath() == null) {
-					savePreferencesAs();
-				} else {
-					savePreferences();
-				}
-				
-			}
-		});
+		save.addActionListener(saveAction);
 		
 		saveAs = new JButton("Save As");
-		saveAs.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				savePreferencesAs();
-			}
-		});
+		saveAs.addActionListener(saveAsAction);
+		
 		load = new JButton("Load Existing File");
-		load.addActionListener( new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				checkForUnsavedChanges();
-				loadExistingPreferences();
-			}
-		});
+		load.addActionListener(loadAction);
 		
 		clear = new JButton("Clear");
-		clear.addActionListener( new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				int choice = JOptionPane.showConfirmDialog(parent,
-					    "You are about to clear the current preferences,"+
-					    " would you like to continue?",
-					    "Clear preferences",
-					    JOptionPane.YES_NO_OPTION);
-				
-				if (choice == JOptionPane.YES_OPTION)
-					clearMemberPreferences();				
-			}
-		});
+		clear.addActionListener(clearAction);
 		
 		stakeholderControls = new JPanel();
 		stakeholderControls.setLayout(new FlowLayout());
@@ -287,41 +297,63 @@ public abstract class PreferencePane extends UpdatePane implements ActionListene
 	
 	/**
 	 * Saves member preferences to the member's current preference file
+	 * @return true if the file was saved sucessfully
 	 */
-	private void savePreferences() {
+	private boolean savePreferences() {
 		File memberFile = new File(curMember.getPreferenceFilePath());
-		saveMemberPreferences(memberFile);
+		return saveMemberPreferences(memberFile);
 	}
 	
 	/**
 	 * Opens a file chooser to allow the user to select the location
 	 * of the save file before saving
+	 * @return true if the file was saved sucessfully
 	 */
-	private void savePreferencesAs() {
+	private boolean savePreferencesAs() {
+		// check if project folder has been created
+		if(document.getProjectFolder() == null){
+			Object[] options = {"Save Now",
+			                    "Cancel"};
+			int n = JOptionPane.showOptionDialog(parent,
+			    "Your project has not been saved." +
+			    "Please, save your project and create "+
+			    "a project folder now.",
+			    "A Silly Question",
+			    JOptionPane.YES_NO_OPTION,
+			    JOptionPane.INFORMATION_MESSAGE,
+			    null,
+			    options,
+			    options[0]);
+			
+			if(n == 0) {
+				
+			}
+		}			
+			
 		JFileChooser chooser = new JFileChooser();
 		AbstractPaneTurner paneTurner = (AbstractPaneTurner) getParent();
 		
-		// suggest a name for the preference file based on project file name
+		// suggest a location for the preference file based on project name
 		String suggestedName;
-		File currentFile = paneTurner.getCurrentFolder();
-		if ( currentFile != null) {
-			suggestedName = currentFile.getAbsolutePath();
+		File projFolder = document.getProjectFolder();
+		if ( projFolder != null) {
+			suggestedName = projFolder.getAbsolutePath();
 		} else {
+			//TODO - ask to create project folder
 			suggestedName = paneTurner.getProjectName();
 		}
-		int suffixIndex = suggestedName.lastIndexOf('.');
-		suggestedName = (suffixIndex >= 0) ? 
-				suggestedName.substring(0, suffixIndex) : suggestedName;
-		suggestedName += "-preference-"+curMember.getName()+".xml";
+		suggestedName += System.getProperty("file.separator")+ "preference-"+curMember.getName()+".xml";
 		
 		chooser.setSelectedFile(new File(suggestedName));
 		int option = chooser.showSaveDialog(this);
 		if (option == JFileChooser.APPROVE_OPTION) {
 			File file = chooser.getSelectedFile();
 			curMember.setPreferenceFilePath(file.getAbsolutePath());
-			savePreferences();
+			boolean saved = savePreferences();
 			setCurrentFileField();
+			return saved;
 		}
+		return false; // file not saved
 	}
 	
 	/**
@@ -336,8 +368,7 @@ public abstract class PreferencePane extends UpdatePane implements ActionListene
 	    // suggest a starting folder based on the project
 	    // file location
  		String suggestedLocation;
- 		AbstractPaneTurner paneTurner = (AbstractPaneTurner) getParent();
- 		File currentFile = paneTurner.getCurrentFolder();
+ 		File currentFile = document.getProjectFolder();
  		if ( currentFile != null) {
  			suggestedLocation = currentFile.getAbsolutePath();
  			int suffixIndex = suggestedLocation.lastIndexOf('/');

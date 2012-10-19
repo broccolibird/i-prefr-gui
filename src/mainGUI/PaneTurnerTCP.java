@@ -14,14 +14,14 @@ import dataStructures.TCPDocument;
 @SuppressWarnings("serial")
 public class PaneTurnerTCP extends AbstractPaneTurner{
 
-	public PaneTurnerTCP(JFrame parent, TCPDocument document, boolean multipleStakeholder) {
-		super(parent, document, multipleStakeholder, null);
+	public PaneTurnerTCP(PreferenceReasoner reasoner, TCPDocument document, boolean multipleStakeholder) {
+		super(reasoner, document, multipleStakeholder);
 		setRightComponent(initializeViewPanes());
 	}
 	
-	public PaneTurnerTCP(JFrame parent, TCPDocument document, boolean multipleStakeholder,
+	public PaneTurnerTCP(PreferenceReasoner reasoner, TCPDocument document, boolean multipleStakeholder,
 			File currentFile) {
-		super(parent, document, multipleStakeholder, currentFile);
+		super(reasoner, document, multipleStakeholder);
 		setRightComponent(initializeViewPanes());
 	}
 
@@ -32,14 +32,14 @@ public class PaneTurnerTCP extends AbstractPaneTurner{
 
 		int index = 5;
 		if( isMultipleStakeholder ){
-			viewPanes[index++] = new StakeholderPane(parent, document, this);
+			viewPanes[index++] = new StakeholderPane(reasoner.getFrame(), document, this);
 		}
 		
 		// the graph used in the SetupGraphPane must be linked to each
 		// AttributeTuple, so get a reference to it
-		preferencesPane = new SetupGraphPane(parent, document);
+		preferencesPane = new SetupGraphPane(reasoner, document);
 		viewPanes[index++] = preferencesPane;
-		viewPanes[index] = new ViewResultsPaneTCP(document, parent, this);
+		viewPanes[index] = new ViewResultsPaneTCP(document, reasoner.getFrame(), this);
 		
 		projectPane = new SetupProjectPane(document.getMetaData());
 		viewPanes[0] = projectPane;
@@ -48,13 +48,13 @@ public class PaneTurnerTCP extends AbstractPaneTurner{
 		// AttributeTuples the AttributeTuple deletes an Attribute vertex from
 		// the graph when it is deleted in the AttributePane
 		viewPanes[1] = new AttributePane(document.getAttributeMap(), preferencesPane,
-				parent);
+				reasoner.getFrame());
 
 		//? a similar thing will probably have to be done to the Domains
-		viewPanes[2] = new DomainPane(document.getAttributeMap(), parent);
-		viewPanes[3] = new AlternativePane(document.getAlternativeMap(), parent);
+		viewPanes[2] = new DomainPane(document.getAttributeMap(), reasoner.getFrame());
+		viewPanes[3] = new AlternativePane(document.getAlternativeMap(), reasoner.getFrame());
 		viewPanes[4] = new ValuePane(document.getAlternativeMap(),
-				document.getAttributeMap(), parent);
+				document.getAttributeMap(), reasoner.getFrame());
 
 		initializing = false;
 		return viewPanes[currentSelected];

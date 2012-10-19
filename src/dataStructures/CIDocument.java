@@ -1,5 +1,7 @@
 package dataStructures;
 
+import java.io.File;
+
 public class CIDocument extends AbstractDocument {
 
 	/**
@@ -15,8 +17,8 @@ public class CIDocument extends AbstractDocument {
 	 * document
 	 * @param doc
 	 */
-	public CIDocument(org.w3c.dom.Document doc) {
-		super(doc);
+	public CIDocument(File projectFolder, org.w3c.dom.Document doc) {
+		super(projectFolder, doc);
 	}
 
 	@Override
