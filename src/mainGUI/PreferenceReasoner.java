@@ -85,13 +85,24 @@ public class PreferenceReasoner extends JApplet{
 			if ( switchProject ) {
 				//use a chooser to get the file to open
 				JFileChooser chooser = new JFileChooser();
-			    FileNameExtensionFilter filter = new FileNameExtensionFilter(
-			    		"XML (*.xml)","xml");
-			    chooser.setFileFilter(filter);
+				chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				chooser.setAcceptAllFileFilterUsed(false);
+				chooser.setDialogTitle("Open Project Folder");
+				
 			    int option = chooser.showOpenDialog(frame);
 				if (option == JFileChooser.APPROVE_OPTION) {
-					File file = chooser.getSelectedFile();
-					open(file);
+					File folder = chooser.getSelectedFile();
+					File file = new File(folder.getAbsolutePath() 
+							+ System.getProperty("file.separator") 
+							+ "main.xml");
+					if(file.exists()) {
+						open(file);
+					} else {
+						JOptionPane.showMessageDialog(frame, 
+								"Project folder does not contain main.xml file.",
+								"Problem opening project", JOptionPane.PLAIN_MESSAGE);
+					}
+					
 				}
 			}
 		}
@@ -110,20 +121,20 @@ public class PreferenceReasoner extends JApplet{
 		fileMenu.setMnemonic('f');
 		JMenuItem item;
 		
-		item = fileMenu.add("Save");
+		item = fileMenu.add("Save Project");
 		item.setMnemonic(KeyEvent.VK_S);
 		item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK));
 		item.addActionListener(save);
 		
-		item = fileMenu.add("SaveAs");
+		item = fileMenu.add("Save Project As");
 		item.addActionListener(saveAs);
 		
-		item = fileMenu.add("New");
+		item = fileMenu.add("New Project");
 		item.setMnemonic(KeyEvent.VK_N);
 		item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, Event.CTRL_MASK));
 		item.addActionListener(newProj);
 
-		item = fileMenu.add("Open");
+		item = fileMenu.add("Open Project");
 		item.setMnemonic(KeyEvent.VK_O);
 		item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, Event.CTRL_MASK));
 		item.addActionListener(open);
