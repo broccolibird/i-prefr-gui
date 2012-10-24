@@ -13,7 +13,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -34,7 +33,7 @@ import dataStructures.maps.RoleMap;
 @SuppressWarnings("serial")
 public abstract class PreferencePane extends UpdatePane implements ActionListener{
 
-	protected JFrame parent;
+	protected PreferenceReasoner reasoner;
 	protected AbstractDocument document;
 	
 	boolean isMultipleStakeholder;
@@ -86,7 +85,7 @@ public abstract class PreferencePane extends UpdatePane implements ActionListene
 	private ActionListener clearAction=  new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			int choice = JOptionPane.showConfirmDialog(parent,
+			int choice = JOptionPane.showConfirmDialog(reasoner.getFrame(),
 				    "You are about to clear the current preferences,"+
 				    " would you like to continue?",
 				    "Clear preferences",
@@ -97,8 +96,8 @@ public abstract class PreferencePane extends UpdatePane implements ActionListene
 		}
 	};
 	
-	public PreferencePane(PreferenceReasoner reasoner, JFrame parent, AbstractDocument document){
-		this.parent = parent;
+	public PreferencePane(PreferenceReasoner reasoner, AbstractDocument document){
+		this.reasoner = reasoner;
 		this.document = document;
 		this.isMultipleStakeholder = document.getRoleMap().isMultipleStakeholder();
 	}
@@ -314,11 +313,11 @@ public abstract class PreferencePane extends UpdatePane implements ActionListene
 		if(document.getProjectFolder() == null){
 			Object[] options = {"Save Now",
 			                    "Cancel"};
-			int n = JOptionPane.showOptionDialog(parent,
-			    "Your project has not been saved." +
+			int n = JOptionPane.showOptionDialog(reasoner.getFrame(),
+			    "Your project has not been saved.\n" +
 			    "Please, save your project and create "+
 			    "a project folder now.",
-			    "A Silly Question",
+			    "Create a project folder",
 			    JOptionPane.YES_NO_OPTION,
 			    JOptionPane.INFORMATION_MESSAGE,
 			    null,
@@ -326,7 +325,10 @@ public abstract class PreferencePane extends UpdatePane implements ActionListene
 			    options[0]);
 			
 			if(n == 0) {
-				
+				if (!reasoner.save())
+					return false;
+			} else {
+				return false;
 			}
 		}			
 			
@@ -351,6 +353,10 @@ public abstract class PreferencePane extends UpdatePane implements ActionListene
 			curMember.setPreferenceFilePath(file.getAbsolutePath());
 			boolean saved = savePreferences();
 			setCurrentFileField();
+			
+			// unsaved project changes in RoleMap
+			document.getRoleMap().setSaved(false);
+			
 			return saved;
 		}
 		return false; // file not saved
@@ -394,6 +400,9 @@ public abstract class PreferencePane extends UpdatePane implements ActionListene
 			curMember.setPreferenceFilePath(file.getAbsolutePath());
 			loadMemberPreferences();
 		}
+		
+		// Loaded preferences have not been saved to project
+		document.getRoleMap().setSaved(false);
 	}
 	
 	/**
@@ -402,7 +411,7 @@ public abstract class PreferencePane extends UpdatePane implements ActionListene
 	 * @return true if the user would like to save changes
 	 */
 	private boolean showUnsavedChangesDialog() {
-		int choice = JOptionPane.showConfirmDialog(parent,
+		int choice = JOptionPane.showConfirmDialog(reasoner.getFrame(),
 			    "The action you have selected will cause any unsaved"+
 			    " changes to "+curMember.toString()+"'s preferences to be lost.\n"+
 			    " Would you like to save changes now?",
@@ -443,7 +452,7 @@ public abstract class PreferencePane extends UpdatePane implements ActionListene
 	@Override
 	public void leave() {
 		if(existUnsavedChanges()) {
-			int choice = JOptionPane.showConfirmDialog(parent,
+			int choice = JOptionPane.showConfirmDialog(reasoner.getFrame(),
 				    "You have not yet saved your preferences." +
 				    "Would you like to do so now?",
 				    "Save unsaved preferences",

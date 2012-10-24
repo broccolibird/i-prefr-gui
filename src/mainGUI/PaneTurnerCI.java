@@ -3,8 +3,6 @@ package mainGUI;
 import java.awt.Component;
 import java.io.File;
 
-import javax.swing.JFrame;
-
 import dataStructures.CIDocument;
 
 /**
@@ -48,7 +46,7 @@ public class PaneTurnerCI extends AbstractPaneTurner{
 		if( isMultipleStakeholder ){
 			viewPanes[index++] = new StakeholderPane(reasoner.getFrame(), document, this);
 		} 
-		preferencesPane = new ImportancePane(reasoner, reasoner.getFrame(), document);
+		preferencesPane = new ImportancePane(reasoner, document);
 		viewPanes[index++] = preferencesPane;
 		viewPanes[index] = new ViewResultsPaneCI(document, reasoner.getFrame(), this);
 		

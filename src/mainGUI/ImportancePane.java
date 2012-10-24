@@ -17,7 +17,6 @@ import java.util.Map.Entry;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -58,8 +57,8 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 		 * @param parent
 		 * @param document
 		 */
-		public ImportancePane(PreferenceReasoner reasoner, JFrame parent, AbstractDocument document) {
-			super(reasoner, parent, document);
+		public ImportancePane(PreferenceReasoner reasoner, AbstractDocument document) {
+			super(reasoner, document);
 			this.attributeMap = document.getAttributeMap();
 			this.map = new ImportanceMap();
 			tuples = new LinkedList<ImportanceTuple>();
@@ -132,15 +131,15 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 			
 			addTuple(null);
 			
-			parent.pack();	
+			reasoner.getFrame().pack();	
 		}
 
 		private void addTuple(Integer key) {
 			ImportanceTuple tuple;
 			if(key == null) {
-				tuple = new ImportanceTuple(map, parent, importancePanel, this, getAttributes());
+				tuple = new ImportanceTuple(map, reasoner.getFrame(), importancePanel, this, getAttributes());
 			} else {
-				tuple = new ImportanceTuple(key,map,parent,importancePanel, this, getAttributes());
+				tuple = new ImportanceTuple(key,map,reasoner.getFrame(),importancePanel, this, getAttributes());
 			}
 			 
 			tuples.add(tuple);
@@ -196,7 +195,7 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			if (plusButton == e.getSource()) {
 				addTuple(null);
-				parent.pack();
+				reasoner.getFrame().pack();
 			} else {
 				super.actionPerformed(e);
 			}

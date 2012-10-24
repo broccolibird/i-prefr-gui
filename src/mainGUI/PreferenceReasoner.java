@@ -5,7 +5,6 @@ import guiElements.project.SaveProjectDialog;
 
 import java.awt.Dimension;
 import java.awt.Event;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.BufferedWriter;

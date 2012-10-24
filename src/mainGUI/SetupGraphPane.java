@@ -63,7 +63,7 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 	 * @param document
 	 */
 	public SetupGraphPane(PreferenceReasoner reasoner, AbstractDocument document) {
-		super(reasoner, reasoner.getFrame(), document);
+		super(reasoner, document);
 
 		createGUI();
 	}
@@ -117,7 +117,7 @@ public class SetupGraphPane extends PreferencePane implements ActionListener {
 		Factory<EdgeStatementMap> edgeFactory = new EdgeFactory();
 
 		graphMouse = new EditingModalGraphMouse<Attribute, EdgeStatementMap>(
-				vv.getRenderContext(), vertexFactory, edgeFactory, parent,
+				vv.getRenderContext(), vertexFactory, edgeFactory, reasoner.getFrame(),
 				document.getAttributeMap(),graph,edgeLabelMap);
 
 		// the EditingGraphMouse will pass mouse event coordinates to the

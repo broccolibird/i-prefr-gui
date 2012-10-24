@@ -1,6 +1,7 @@
 package dataStructures;
 
 
+import java.io.File;
 import java.util.Collection;
 
 import dataStructures.maps.MemberMap;
@@ -44,14 +45,14 @@ public class Role extends NameKeyObject<MemberMap>
 	 * Creates xml for -roles.xml file
 	 * @return contents for -roles.xml file
 	 */
-	public String toXML() {
+	public String toXML(File projectFolder) {
 		String role = "\t<ROLE ID = '"+key.toString()+"'>\n";
 		role += "\t\t<ISUSED>"+isUsed+"</ISUSED>\n";
 		role += "\t\t<TITLE>"+name+"</TITLE>\n";
 		role += "\t\t<MEMBERS>\n";
 		Collection<Member> allMembers = (Collection<Member>) getObject().values();
 		for(Member m : allMembers){
-			role += m.toXML();		
+			role += m.toXML(projectFolder);		
 		}
 		role += "\t\t</MEMBERS>\n";
 		role += "\t</ROLE>\n";

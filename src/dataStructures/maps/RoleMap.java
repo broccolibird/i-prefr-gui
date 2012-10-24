@@ -123,7 +123,7 @@ public class RoleMap extends SuperkeyMap<Role>{
 		String roleXML = "<ROLES>\n";
 		Set<Entry<Integer, Role>> allRoles = entrySet();
 		for(Entry<Integer, Role> entry : allRoles){
-			roleXML += entry.getValue().toXML();
+			roleXML += entry.getValue().toXML(projectFolder);
 		}
 		roleXML += "</ROLES>\n";
 		

@@ -1,5 +1,7 @@
 package dataStructures;
 
+import java.io.File;
+
 /**
  * Contains information pertaining to each stakeholder
  */
@@ -40,14 +42,35 @@ public class Member extends NameKeyObject<String> {
 	/**
 	 * @return xml string representation of this member
 	 */
-	public String toXML() {
+	public String toXML(File projectFolder) {
 		String xml = "\t\t\t<MEMBER ID = '"+key+"'>\n";
 		xml += "\t\t\t\t<NAME>"+name+"</NAME>\n";
-		if(object != null)
-			xml += "\t\t\t\t<PREFERENCEFILE>"+object+
+		if(object != null) {
+			String path = createRelativePath(projectFolder);
+			xml += "\t\t\t\t<PREFERENCEFILE>"+path+
 						"</PREFERENCEFILE>\n";
+		}
 		xml += "\t\t\t</MEMBER>\n";
 		
 		return xml;
+	}
+	
+	/**
+	 * Returns a relative file path if the preference file is in
+	 * the project folder. Returns an absolute file path if the 
+	 * file is not in the project path.
+	 * 
+	 * @return the Preference file path to be used in role file
+	 */
+	private String createRelativePath(File projectFolder) {
+		File objectFile = new File(object);
+		if(objectFile != null) {
+			if(objectFile.getParent().equals(projectFolder.getAbsolutePath())) {
+				return objectFile.getName();
+			}
+		}
+		
+		// return absolute path
+		return object;
 	}
 }
