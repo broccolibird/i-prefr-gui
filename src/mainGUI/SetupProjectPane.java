@@ -3,12 +3,10 @@ package mainGUI;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.Calendar;
 
 import javax.swing.BoxLayout;
-import javax.swing.JCheckBox;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -18,7 +16,6 @@ import javax.swing.event.DocumentListener;
 
 import dataStructures.MetaData;
 import dataStructures.ModelCheckerOption;
-import dataStructures.maps.OptionMap;
 
 /**
  * The SetupProjectPane is an UpdatePane with entry fields and
@@ -52,10 +49,15 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
 		panel.add(new JLabel("Project Name"));
+		
+		JPanel projectFolderPanel = new JPanel();
+		
 		projectNameField = new JTextField(35);
 		projectNameField.setText(metaData.getProjectName());
 		projectNameField.getDocument().addDocumentListener(this);
-		panel.add(projectNameField);
+		projectFolderPanel.add(projectNameField);
+		
+		JButton createFolderButton = new JButton("Create Project Folder");
 
 		JPanel projectNameHeader = new JPanel();
 		projectNameHeader
