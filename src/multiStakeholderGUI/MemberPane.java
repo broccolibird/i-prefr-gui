@@ -4,12 +4,10 @@ import guiElements.ScrollPane;
 
 import java.awt.Dimension;
 import java.util.Collection;
-import java.util.LinkedList;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
@@ -97,7 +95,7 @@ public class MemberPane extends ScrollPane {
 	 * Resizes the panel holding MemberListPanes so that the scroll bar works properly
 	 */
 	public void resize() {
-		double height = 40;
+		double height = 60;
 		
 		for(JPanel panel: tuples) {
 			height += panel.getPreferredSize().getHeight();
