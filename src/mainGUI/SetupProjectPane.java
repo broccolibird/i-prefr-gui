@@ -26,6 +26,7 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 		ActionListener {
 
 	// private JPanel inputPanel;
+	private PreferenceReasoner reasoner;
 	private MetaData metaData;
 	private JTextField projectNameField;
 	private JComboBox modelCheckerComboBox;
@@ -34,7 +35,8 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 	 * Create a new instance of the SetupProjectPane
 	 * @param metaData
 	 */
-	public SetupProjectPane(MetaData metaData) {
+	public SetupProjectPane(PreferenceReasoner reasoner, MetaData metaData) {
+		this.reasoner = reasoner;
 		this.metaData = metaData;
 		this.add(initializeGUI());
 		setVisible(true);
@@ -58,6 +60,16 @@ public class SetupProjectPane extends UpdatePane implements DocumentListener,
 		projectFolderPanel.add(projectNameField);
 		
 		JButton createFolderButton = new JButton("Create Project Folder");
+		createFolderButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				reasoner.showSaveDialog();
+				
+			}
+		});
+		projectFolderPanel.add(createFolderButton);
+		
+		panel.add(projectFolderPanel);
 
 		JPanel projectNameHeader = new JPanel();
 		projectNameHeader

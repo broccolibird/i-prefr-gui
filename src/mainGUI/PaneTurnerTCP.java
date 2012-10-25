@@ -3,8 +3,6 @@ package mainGUI;
 import java.awt.Component;
 import java.io.File;
 
-import javax.swing.JFrame;
-
 import dataStructures.TCPDocument;
 
 /**
@@ -41,7 +39,7 @@ public class PaneTurnerTCP extends AbstractPaneTurner{
 		viewPanes[index++] = preferencesPane;
 		viewPanes[index] = new ViewResultsPaneTCP(document, reasoner.getFrame(), this);
 		
-		projectPane = new SetupProjectPane(document.getMetaData());
+		projectPane = new SetupProjectPane(reasoner, document.getMetaData());
 		viewPanes[0] = projectPane;
 
 		// pass the reference in to the AttributePane which creates

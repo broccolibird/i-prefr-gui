@@ -30,7 +30,7 @@ public class PaneTurnerCI extends AbstractPaneTurner{
 		initializing = true;
 		int index = 0;
 		viewPanes = new UpdatePane[metaPanes.length];
-		projectPane = new SetupProjectPane(document.getMetaData());
+		projectPane = new SetupProjectPane(reasoner, document.getMetaData());
 		viewPanes[index++] = projectPane;
 
 		// pass the reference in to the AttributePane which creates

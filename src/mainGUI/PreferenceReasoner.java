@@ -196,7 +196,7 @@ public class PreferenceReasoner extends JApplet{
 	 * to save the project folder
 	 * @return true if the file is saved successfully
 	 */
-	private boolean showSaveDialog(){
+	public boolean showSaveDialog(){
 		SaveProjectDialog saveDialog = new SaveProjectDialog(frame, paneTurner.getProjectName());
 		File saveFile = saveDialog.showDialog();
 		if(saveFile != null)
