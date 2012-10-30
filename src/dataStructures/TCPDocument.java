@@ -2,6 +2,9 @@ package dataStructures;
 
 import java.io.File;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 public class TCPDocument extends AbstractDocument{
 	
 	/**
@@ -22,11 +25,14 @@ public class TCPDocument extends AbstractDocument{
 		//TODO - parse network into graph, pass graph into GUI
 	}
 	
-	public String getNetworkXML(){
-		String net = "\t<NETWORK>\n";
-		net += "\t\t<TYPE>TCP</TYPE>\n";
-		net += "\t</NETWORK>\n";
-		return net;
+	public Element getNetworkXML(Document doc){
+		Element netElem = doc.createElement("NETWORK");
+		
+		Element typeElem = doc.createElement("TYPE");
+		typeElem.appendChild(doc.createTextNode("TCP"));
+		netElem.appendChild(typeElem);
+
+		return netElem;
 	}
 
 }

@@ -1,9 +1,11 @@
 package dataStructures;
 
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import dataStructures.maps.AttributeMap;
 import dataStructures.maps.ValueMap;
@@ -34,20 +36,37 @@ public class Alternative extends
 	 * @param attributeMap
 	 * @return xml string representation of the Alternative
 	 */
-	public String toXML(AttributeMap attributeMap){
-		String alternative = "\t\t<ALTERNATIVE ID = '"+key.toString()+"'>\n";
-		alternative += "\t\t\t<NAME>"+name+"</NAME>\n";
-		alternative += "\t\t\t<VALUES>\n";
+	public Element toXML(AttributeMap attributeMap, Document doc){
+		Element altElem = doc.createElement("ALTERNATIVE");
+		Attr idAttr = doc.createAttribute("ID");
+		idAttr.setValue(key.toString());
+		altElem.setAttributeNode(idAttr);
+		
+		Element nameElem = doc.createElement("NAME");
+		nameElem.appendChild(doc.createTextNode(name));
+		altElem.appendChild(nameElem);
+		
+		Element valsElem = doc.createElement("VALUES");
+		
+		Element valElem;
 		Set<Entry<AttributeKey, DomainValue>> allValues = getObject().entrySet();
 		for(Entry<AttributeKey, DomainValue> entry : allValues){
-			alternative += "\t\t\t\t<VALUE>\n";
-			alternative += "\t\t\t\t\t<ATTRIBUTEKEY>"+entry.getKey().getKey().toString()+"</ATTRIBUTEKEY>\n";
-			alternative += "\t\t\t\t\t<DOMAINVALUE>"+ entry.getValue().getValue().toString()+"</DOMAINVALUE>\n";
-			alternative += "\t\t\t\t</VALUE>\n";
+			valElem = doc.createElement("VALUE");
+			
+			Element attrKeyElem = doc.createElement("ATTRIBUTEKEY");
+			attrKeyElem.appendChild(doc.createTextNode(entry.getKey().getKey().toString()));
+			valElem.appendChild(attrKeyElem);
+			
+			Element domValElem = doc.createElement("DOMAINVALUE");
+			domValElem.appendChild(doc.createTextNode(entry.getValue().getValue().toString()));
+			valElem.appendChild(domValElem);
+			
+			valsElem.appendChild(valElem);
 		}
-		alternative += "\t\t\t</VALUES>\n";		
-		alternative += "\t\t</ALTERNATIVE>\n";
-		return alternative;
+		
+		altElem.appendChild(valsElem);
+		
+		return altElem;
 	}
 	
 	/**

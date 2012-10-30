@@ -3,6 +3,13 @@ package dataStructures.maps;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import dataStructures.Importance;
 
 @SuppressWarnings("serial")
@@ -16,15 +23,37 @@ public class ImportanceMap extends SuperkeyMap<Importance>{
 		super(uniqueID);
 	}
 
-	public String toXML(){
-		String importances = "<IMPORTANCES>\n";
-		importances += "\t<UNIQUEMAPID>"+uniqueID+"</UNIQUEMAPID>\n";
+	public Document toXML(){
+		// create xml document
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder;
+		
+		try {
+			docBuilder = docFactory.newDocumentBuilder();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+		Document doc = docBuilder.newDocument();
+		
+		// create root element
+		Element rootElement = doc.createElement("IMPORTANCES");
+		doc.appendChild(rootElement);
+		
+		Element uniqueIDElem = doc.createElement("UNIQUEMAPID");
+		uniqueIDElem.appendChild(doc.createTextNode(Integer.toString(uniqueID)));
+		rootElement.appendChild(uniqueIDElem);
+		
+		Element impElem;
+		
 		Set<Entry<Integer, Importance>> allAttributes = entrySet();
 		for(Entry<Integer, Importance> entry : allAttributes){
-			importances += entry.getValue().toXML();
+			impElem = entry.getValue().toXML(doc);
+			rootElement.appendChild(impElem);
 		}
-		importances += "</IMPORTANCES>\n";
-		return importances;
+		
+		return doc;
 	}
 	
 }

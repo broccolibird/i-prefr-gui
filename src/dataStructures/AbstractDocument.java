@@ -388,7 +388,7 @@ public abstract class AbstractDocument {
 	/**
 	 * @return xml string representation of the network data
 	 */
-	public abstract String getNetworkXML();
+	public abstract Element getNetworkXML(Document doc);
 	
 	/**
 	 * Returns true if the Document or any of its subcomponents have
@@ -440,14 +440,45 @@ public abstract class AbstractDocument {
 	 * @param xmlfile - file to be saved to
 	 * @return xml string
 	 */
-	public String toXML() {
-		String doc = "<DOCUMENT>\n";
-		doc += metaData.toXML();
-		doc += attributeMap.toXML();
-		doc += alternativeMap.toXML(attributeMap);
-		doc += getNetworkXML();
-		doc += roleMap.toXML(projectFolder);
-		doc += "</DOCUMENT>";
+	public Document toXML() {
+	
+		// create xml document
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder;
+		
+		try {
+			docBuilder = docFactory.newDocumentBuilder();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+		Document doc = docBuilder.newDocument();
+		
+		// create root element
+		Element rootElement = doc.createElement("DOCUMENT");
+		doc.appendChild(rootElement);
+		
+		// add meta data
+		Element metaDataElem = metaData.toXML(doc);
+		rootElement.appendChild(metaDataElem);
+		
+		// add attribute map
+		Element attrMapElem = attributeMap.toXML(doc);
+		rootElement.appendChild(attrMapElem);
+		
+		// add alternative map
+		Element altMapElem = alternativeMap.toXML(attributeMap, doc);
+		rootElement.appendChild(altMapElem);
+		
+		// add network info
+		Element networkElem = getNetworkXML(doc);
+		rootElement.appendChild(networkElem);
+		
+//		// add role map
+		Element roleElem = roleMap.toXML(projectFolder, doc);
+		rootElement.appendChild(roleElem);
+		
 		return doc;
 	}
 	

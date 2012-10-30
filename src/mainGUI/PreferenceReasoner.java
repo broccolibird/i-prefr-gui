@@ -7,10 +7,7 @@ import java.awt.Dimension;
 import java.awt.Event;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.net.URL;
 
 import javax.help.CSH;
@@ -28,6 +25,12 @@ import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -266,33 +269,29 @@ public class PreferenceReasoner extends JApplet{
 		// sets the current project field as well as project name
 		paneTurner.setCurrentProject(projectDirectory);
 		
-		String xmlRepresentation = paneTurner.toXML();
+		Document document = paneTurner.toXML();
+		if(document == null) {
+			return false;
+		}
 		
-		BufferedWriter writer = null;
+		// write xml to file
+		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		Transformer transformer;
 		try {
-		    writer = new BufferedWriter(new FileWriter(xmlfile)); 
+			transformer = transformerFactory.newTransformer();
+		} catch (TransformerConfigurationException e) {
+			e.printStackTrace();
+			return false;
 		}
-		catch (IOException e) {
-		    e.printStackTrace();
-		    return false;
-		}
+		
+		DOMSource source = new DOMSource(document);
+		StreamResult result = new StreamResult(xmlfile);
+		
 		try {
-		    writer.write(xmlRepresentation);
-		}
-		catch(IOException e) {
-		    e.printStackTrace();
-		    try {
-				writer.close();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-		    return false;
-		}
-		try {
-		    writer.close();
-		}
-		catch(IOException e) {
-		    e.printStackTrace();
+			transformer.transform(source,  result);
+		} catch (TransformerException e) {
+			e.printStackTrace();
+			return false;
 		}
 		
 		paneTurner.setSaved(true);

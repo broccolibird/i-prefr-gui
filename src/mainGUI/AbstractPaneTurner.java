@@ -12,10 +12,11 @@ import javax.swing.BoxLayout;
 import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
+
+import org.w3c.dom.Document;
 
 import dataStructures.AbstractDocument;
 
@@ -78,9 +79,9 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 	/**
 	 * Creates and returns the xml representation of the project.
 	 * @param xmlfile
-	 * @return xml string representation of project
+	 * @return xml DOMSource representation of project
 	 */
-	public String toXML(){
+	public Document toXML(){
 		return document.toXML();
 	}
 

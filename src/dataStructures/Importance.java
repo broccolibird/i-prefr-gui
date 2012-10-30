@@ -2,6 +2,10 @@ package dataStructures;
 
 import java.util.LinkedList;
 
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 public class Importance {
 
 	private AttributeList[] lists;
@@ -24,22 +28,37 @@ public class Importance {
 		return key;
 	}
 	
-	public String toXML(){
-		String importance = "\t<IMPORTANCE ID = '"+key.toString()+"'>\n";
-		importance += "\t\t<LISTS>\n";
+	public Element toXML(Document doc){
+		Element impElem = doc.createElement("IMPORTANCE");
+		Attr idAttr = doc.createAttribute("ID");
+		idAttr.setValue(key.toString());
+		impElem.setAttributeNode(idAttr);
+		
+		Element listsElem = doc.createElement("LISTS");
+		
+		Element listElem;
 		for(int i=0;i<lists.length;i++){
-			importance += "\t\t\t<LIST>\n";
-			importance += "\t\t\t\t<INDEX>"+i+"</INDEX>\n";
+			listElem = doc.createElement("LIST");
+			
+			Element indexElem = doc.createElement("INDEX");
+			indexElem.appendChild(doc.createTextNode(Integer.toString(i)));
+			listElem.appendChild(indexElem);
+			
+			Element attrKeyElem;
 			AttributeList list = lists[i];
-			if(list!=null)
-			for(Attribute a : list){
-				importance += "\t\t\t\t<ATTRIBUTEKEY>"+a.getAttributeKey().getKey().toString()+"</ATTRIBUTEKEY>\n";
+			if(list!=null){
+				for(Attribute a : list){
+					attrKeyElem = doc.createElement("ATTRIBUTEKEY");
+					attrKeyElem.appendChild(doc.createTextNode(a.getAttributeKey().getKey().toString()));
+					listElem.appendChild(attrKeyElem);
+				}
 			}
-			importance += "\t\t\t</LIST>\n";
+			listsElem.appendChild(listElem);
 		}
-		importance += "\t\t</LISTS>\n";		
-		importance += "\t</IMPORTANCE>\n";
-		return importance;
+		
+		impElem.appendChild(listsElem);
+		
+		return impElem;
 	}
 	
 }

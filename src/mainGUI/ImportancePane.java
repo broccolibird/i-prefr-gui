@@ -24,6 +24,12 @@ import javax.swing.SpringLayout;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -278,25 +284,29 @@ public class ImportancePane extends PreferencePane implements ActionListener{
 
 		@Override
 		public boolean saveMemberPreferences(File preferenceFile) {
-			String xmlRepresentation = map.toXML();
-			
-			System.out.println(xmlRepresentation);
-			BufferedWriter writer = null;
-			try {
-			    writer = new BufferedWriter(new FileWriter(preferenceFile));
-			    writer.write(xmlRepresentation);
-			}
-			catch (IOException e) {
-			    e.printStackTrace();
-			    // save failed, return false
-			    return false;
+			Document doc = map.toXML();
+			if(document == null) {
+				return false;
 			}
 			
+			// write xml to file
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer;
 			try {
-			    writer.close();
+				transformer = transformerFactory.newTransformer();
+			} catch (TransformerConfigurationException e) {
+				e.printStackTrace();
+				return false;
 			}
-			catch(IOException e) {
-			    e.printStackTrace();
+			
+			DOMSource source = new DOMSource(doc);
+			StreamResult result = new StreamResult(preferenceFile);
+			
+			try {
+				transformer.transform(source,  result);
+			} catch (TransformerException e) {
+				e.printStackTrace();
+				return false;
 			}
 			
 			map.setSaved(true);

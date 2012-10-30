@@ -2,6 +2,9 @@ package dataStructures;
 
 import java.io.File;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 public class CIDocument extends AbstractDocument {
 
 	/**
@@ -22,12 +25,14 @@ public class CIDocument extends AbstractDocument {
 	}
 
 	@Override
-	public String getNetworkXML() {
-		String net = "\t<NETWORK>\n";
-		net += "\t\t<TYPE>CI</TYPE>\n";
-		//net += importanceMap.toXML();
-		net += "\t</NETWORK>\n";
-		return net;
+	public Element getNetworkXML(Document doc) {
+		Element netElem = doc.createElement("NETWORK");
+		
+		Element typeElem = doc.createElement("TYPE");
+		typeElem.appendChild(doc.createTextNode("CI"));
+		netElem.appendChild(typeElem);
+				
+		return netElem;
 	}
 
 }

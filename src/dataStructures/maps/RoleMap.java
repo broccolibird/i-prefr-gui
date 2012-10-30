@@ -7,8 +7,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import dataStructures.Member;
 import dataStructures.Role;
@@ -99,18 +102,31 @@ public class RoleMap extends SuperkeyMap<Role>{
 	 * @param projectFolder
 	 * @return xml
 	 */
-	public String toXML(File projectFolder) {
-		String roles = "\t<STAKEHOLDERS>\n";
-		roles += "\t\t<UNIQUEMAPID>"+uniqueID+"</UNIQUEMAPID>\n";
-		roles += "\t\t<MULTISTAKEHOLDER>"+isMultipleStakeholder+"</MULTISTAKEHOLDER>\n";
+	public Element toXML(File projectFolder, Document doc) {
+		Element rolesElem = doc.createElement("STAKEHOLDERS");
 		
-		roles += "\t\t<ROLEFILE>"+createRoleFile(projectFolder)+"</ROLEFILE>\n";
+		Element uniqueIDElem = doc.createElement("UNIQUEMAPID");
+		uniqueIDElem.appendChild(doc.createTextNode(Integer.toString(uniqueID)));
+		rolesElem.appendChild(uniqueIDElem);
 		
-		if ( isMultipleStakeholder ) 
-			roles += "\t\t<HIERARCHYFILE>"+createHierarchyFile(projectFolder)+"</HIERARCHYFILE>\n";
+		Element multiElem = doc.createElement("MULTISTAKEHOLDER");
+		multiElem.appendChild(doc.createTextNode(Boolean.toString(isMultipleStakeholder)));
+		rolesElem.appendChild(multiElem);
 		
-		roles += "\t</STAKEHOLDERS>\n";
-		return roles;
+		Element roleFile = doc.createElement("ROLEFILE");
+		roleFile.appendChild(doc.createTextNode(createRoleFile(projectFolder)));
+		rolesElem.appendChild(roleFile);
+		
+		if ( isMultipleStakeholder ) {
+			Element hierarchyElem = doc.createElement("HIERARCHYFILE");
+			String hierarchyFile = createHierarchyFile(projectFolder);
+			if(hierarchyFile != null) {
+				hierarchyElem.appendChild(doc.createTextNode(createHierarchyFile(projectFolder)));
+			}
+			rolesElem.appendChild(hierarchyElem);
+		}
+		
+		return rolesElem;
 	}
 	
 	private String createRoleFile(File projectFolder) {

@@ -1,7 +1,10 @@
 package dataStructures.maps;
 
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import dataStructures.Alternative;
 
@@ -27,16 +30,25 @@ public class AlternativeMap extends SuperkeyMap<Alternative>{
 		return useEntireAlternativeSpace;
 	}
 	
-	public String toXML(AttributeMap attributeMap){
-		String alternatives = "\t<ALTERNATIVES>\n";
-		alternatives += "\t\t<UNIQUEMAPID>"+uniqueID+"</UNIQUEMAPID>\n";
-		alternatives += "\t\t<USEENTIRE>"+useEntireAlternativeSpace+"</USEENTIRE>\n";
+	public Element toXML(AttributeMap attributeMap, Document doc){
+		Element altsElem = doc.createElement("ALTERNATIVES");
+		
+		Element uniqueIDElem = doc.createElement("UNIQUEMAPID");
+		uniqueIDElem.appendChild(doc.createTextNode(Integer.toString(uniqueID)));
+		altsElem.appendChild(uniqueIDElem);
+		
+		Element useElem = doc.createElement("USEENTIRE");
+		useElem.appendChild(doc.createTextNode(Boolean.toString(useEntireAlternativeSpace)));
+		altsElem.appendChild(useElem);
+		
+		Element altElem;
 		Set<Entry<Integer, Alternative>> allOptions = entrySet();
 		for(Entry<Integer, Alternative> entry : allOptions){
-			alternatives += entry.getValue().toXML(attributeMap);
+			altElem = entry.getValue().toXML(attributeMap, doc);
+			altsElem.appendChild(altElem);
 		}
-		alternatives += "\t</ALTERNATIVES>\n";
-		return alternatives;
+		
+		return altsElem;
 	}
 	
 }

@@ -7,6 +7,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import dataStructures.maps.OptionMap;
 
 public class MetaData {
@@ -97,13 +100,28 @@ public class MetaData {
 	/**
 	 * @return MetaData in XML String format
 	 */
-	public String toXML(){
-		String metaData = "\t<METADATA>\n";
-		metaData += "\t\t<PROJECTNAME>"+projectName+"</PROJECTNAME>\n";
-		metaData += "\t\t<MODELCHECKER>"+selectedModelChecker+"</MODELCHECKER>\n";
-		metaData += "\t\t<DATECREATED>"+getDateString()+"</DATECREATED>\n";
-		metaData += displayOptions.toXML();
-		metaData += "\t</METADATA>\n";
+	public Element toXML(Document doc){
+		Element metaData = doc.createElement("METADATA");
+		
+		// Create ProjectName element
+		Element projectNameElem = doc.createElement("PROJECTNAME");
+		projectNameElem.appendChild(doc.createTextNode(projectName));
+		metaData.appendChild(projectNameElem);
+		
+		// Create ModelChecker element
+		Element modelCheckerElem = doc.createElement("MODELCHECKER");
+		modelCheckerElem.appendChild(doc.createTextNode(selectedModelChecker.toString()));
+		metaData.appendChild(modelCheckerElem);
+		
+		// Create date created element
+		Element dateCreatedElem = doc.createElement("DATECREATED");
+		dateCreatedElem.appendChild(doc.createTextNode(getDateString()));
+		metaData.appendChild(dateCreatedElem);
+		
+		// Add display Options
+		Element displayOptionsElem = displayOptions.toXML(doc);
+		metaData.appendChild(displayOptionsElem);
+		
 		return metaData;
 	}
 
