@@ -1,5 +1,7 @@
 package multiStakeholderGUI;
 
+import guiElements.ScrollPane;
+
 import java.awt.Dimension;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -11,8 +13,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
-import mainGUI.UpdatePane;
-
 import dataStructures.Role;
 import dataStructures.maps.RoleMap;
 
@@ -21,13 +21,10 @@ import dataStructures.maps.RoleMap;
  * Role within the project.
  */
 @SuppressWarnings("serial")
-public class MemberPane extends UpdatePane {
+public class MemberPane extends ScrollPane {
 
 	protected RoleMap map;
-	protected JPanel stakeholderPanel;
 	protected JFrame parentFrame;
-	private SpringLayout layout;
-	private LinkedList<JPanel> rolePanels;
 
 	/**
 	 * create a new MemberPane instance
@@ -35,10 +32,10 @@ public class MemberPane extends UpdatePane {
 	 * @param parentFrame
 	 */
 	public MemberPane(RoleMap oldMap, JFrame parentFrame) {
+		super();
 		this.map = oldMap;
 		this.parentFrame = parentFrame;
-		this.rolePanels = new LinkedList<JPanel>();
-		this.add(initializeGUI());
+		initializeGUI();
 		
 		setVisible(true);
 		resize();
@@ -47,39 +44,24 @@ public class MemberPane extends UpdatePane {
 	/**
 	 * @return JPanel
 	 */
-	private JPanel initializeGUI() {
-		JPanel panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		
-		JPanel label = new JPanel();
-		label.setLayout(new BoxLayout(label, BoxLayout.X_AXIS));
+	private void initializeGUI() {		
+		headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.X_AXIS));
 		JTextField title = new JTextField("Enter Role Members");
 		title.setEditable(false);
 		title.setHorizontalAlignment(JTextField.CENTER);
-		label.add(title);
-		panel.add(label);
+		headerPanel.add(title);
 		
-		stakeholderPanel = new JPanel();
-		layout = new SpringLayout();
-		stakeholderPanel.setLayout(layout);
-		
-		JScrollPane stakeholderScrollPane = new JScrollPane(stakeholderPanel);
-		stakeholderScrollPane.setPreferredSize(new Dimension(600, 650));
-		stakeholderScrollPane.setBorder(null);
+		scrollPane.setPreferredSize(new Dimension(600, 650));
 		
 		update();
-		
-		panel.add(stakeholderScrollPane);
-		
-		return panel;
 	}
  
 	@Override
 	public void update() {
 		
 		//create table header
-		stakeholderPanel.removeAll();
-		rolePanels.clear();
+		containerPanel.removeAll();
+		tuples.clear();
 		
 		// for every role, add a panel to the table
 		Collection<Role> roles = map.values();
@@ -88,7 +70,7 @@ public class MemberPane extends UpdatePane {
 		
 		for (Role role : roles){
 			JPanel rolePanel = new MemberListPane(role, role.getObject(), parentFrame, this);
-			stakeholderPanel.add(rolePanel);
+			containerPanel.add(rolePanel);
 			
 			if(lastPanel != null ) {
 				layout.putConstraint(SpringLayout.NORTH, rolePanel, 5,
@@ -97,12 +79,12 @@ public class MemberPane extends UpdatePane {
 						SpringLayout.HORIZONTAL_CENTER, lastPanel);
 			} else {
 				layout.putConstraint(SpringLayout.NORTH, rolePanel, 5,
-						SpringLayout.NORTH, stakeholderPanel);
+						SpringLayout.NORTH, containerPanel);
 				layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, rolePanel, 5,
-						SpringLayout.HORIZONTAL_CENTER, stakeholderPanel);
+						SpringLayout.HORIZONTAL_CENTER, containerPanel);
 			}
 			
-			rolePanels.add(rolePanel);
+			tuples.add(rolePanel);
 			lastPanel = rolePanel;
 		}
 		
@@ -117,12 +99,12 @@ public class MemberPane extends UpdatePane {
 	public void resize() {
 		double height = 40;
 		
-		for(JPanel panel: rolePanels) {
+		for(JPanel panel: tuples) {
 			height += panel.getPreferredSize().getHeight();
 		}
 		
-		stakeholderPanel.setPreferredSize(new Dimension(570, (int)height));
-		stakeholderPanel.setMinimumSize(new Dimension(570, (int)height));
+		containerPanel.setPreferredSize(new Dimension(570, (int)height));
+		containerPanel.setMinimumSize(new Dimension(570, (int)height));
 	
 	}
 }

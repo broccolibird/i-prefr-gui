@@ -1,25 +1,23 @@
 package mainGUI;
 
+import guiElements.ScrollPanePlus;
+import guiElements.tuples.AbstractTuple;
 import guiElements.tuples.AlternativeTuple;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.Map.Entry;
 
-import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-import javax.swing.InputMap;
-import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
-import javax.swing.KeyStroke;
 
 import dataStructures.Alternative;
 import dataStructures.maps.AlternativeMap;
@@ -29,55 +27,62 @@ import dataStructures.maps.AlternativeMap;
  * Preference Network Alternatives.
  */
 @SuppressWarnings("serial")
-public class AlternativePane extends UpdatePane implements ActionListener {
+public class AlternativePane extends ScrollPanePlus implements ActionListener {
 	private AlternativeMap map;
-	private JPanel alternativePanel;
-	private JFrame parentFrame;
-	private JButton plusButton;
+	
 	private JRadioButton useEntireSpace;
 	private JRadioButton specifySpace;
+	
+	private AlternativePane alternativePane= this;
+	
+	private static int prefWidth = 700;
+	private static int prefHeight = 570;
 
+	private TupleFactory tupleFactory = new TupleFactory() {
+		public AlternativeTuple create() {
+			return new AlternativeTuple(map, parentFrame, 
+					alternativePane, containerPanel);
+		}
+		
+		public AlternativeTuple create(Integer key) {
+			return new AlternativeTuple(key, map, 
+					parentFrame, alternativePane, containerPanel);
+		}
+	};
+	
 	/**
 	 * Create new AlternativePane instance
 	 * @param alternativeMap
 	 * @param parent
 	 */
 	public AlternativePane(AlternativeMap alternativeMap, JFrame parent) {
-		this.parentFrame = parent;
+		super(parent);
+		
+		super.setTupleFactory(tupleFactory);
+		
 		this.map = alternativeMap;
-		this.add(initializeGUI());
+		initializeGUI();
 	}
 
 	/**
 	 * Setup GUI for AlternativePane
 	 * @return JPanel
 	 */
-	private JPanel initializeGUI() {
-		JPanel panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+	private void initializeGUI() {
+		headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
+		headerPanel.add(getRadioButtonPanel());
+		JTextField columnName = new JTextField("Alternative");
+		columnName.setEditable(false);
+		headerPanel.add(columnName);
 		
-		alternativePanel = new JPanel();
-		alternativePanel.setLayout(new BoxLayout(alternativePanel,
-				BoxLayout.Y_AXIS));
+		containerPanel.setMaximumSize(new Dimension(prefWidth-20, prefHeight));
+		containerPanel.setPreferredSize(new Dimension(680, prefHeight));
 		
-		panel.add(getRadioButtonPanel());
-		
-		plusButton = new JButton("+");
-		plusButton.addActionListener(this);
-		InputMap plusInputMap = plusButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-		plusInputMap.put(KeyStroke.getKeyStroke("ENTER"), "selectPlus");
-		plusButton.getActionMap().put("selectPlus", new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				plusButton.doClick();				
-			}
-		});
-		
-		
+		scrollPane.setMinimumSize(new Dimension(prefWidth, 50));
+		scrollPane.setPreferredSize(new Dimension(prefWidth, prefHeight));
+		scrollPane.setMaximumSize(new Dimension(prefWidth, prefHeight));
+				
 		update();
-		panel.add(alternativePanel);
-		panel.add(plusButton);
-		return panel;
 	}
 
 	/**
@@ -133,19 +138,14 @@ public class AlternativePane extends UpdatePane implements ActionListener {
 	@Override
 	public void update() {
 		updateRadioButtons();
-		alternativePanel.removeAll();
+		containerPanel.removeAll();
 
-		JTextField columnName = new JTextField("Alternative");
-		columnName.setEditable(false);
-		alternativePanel.add(columnName);
 
 		// for every map entry, add a tuple to the table,then one more
 		Collection<Entry<Integer, Alternative>> set = map.entrySet();
 		for (Entry<Integer, Alternative> p : set)
-			alternativePanel.add(new AlternativeTuple(p.getKey(), map,
-					parentFrame, alternativePanel));
-		AlternativeTuple tuple = (AlternativeTuple) alternativePanel.add(
-				new AlternativeTuple(map, parentFrame, alternativePanel));
+			addTuple(p.getKey());
+		AlternativeTuple tuple = (AlternativeTuple) addTuple(null);
 		tuple.getTextField().requestFocusInWindow();
 		parentFrame.pack();
 		enableDisableAlternativePanel();
@@ -156,7 +156,7 @@ public class AlternativePane extends UpdatePane implements ActionListener {
 	 * radio button selection
 	 */
 	private void enableDisableAlternativePanel(){
-		Component[] components = alternativePanel.getComponents();
+		Component[] components = containerPanel.getComponents();
 		boolean enabled = !map.useEntireAlternativeSpace();
 		for (Component c : components) {
 			c.setEnabled(enabled);
@@ -172,8 +172,7 @@ public class AlternativePane extends UpdatePane implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		Object source = e.getSource();
 		if (plusButton == source) {
-			AlternativeTuple tuple = (AlternativeTuple) alternativePanel.add(
-					new AlternativeTuple(map, parentFrame, alternativePanel));
+			AlternativeTuple tuple = (AlternativeTuple)addTuple(null);
 			tuple.getTextField().requestFocusInWindow();
 			pack();
 		} else if (source == useEntireSpace) {
@@ -186,9 +185,13 @@ public class AlternativePane extends UpdatePane implements ActionListener {
 			enableDisableAlternativePanel();
 		}
 	}
-
-	public void pack() {
-		parentFrame.pack();
+	
+	@Override
+	protected void resize(AbstractTuple tuple) {
+		int height = (int)tuple.getPreferredSize().getHeight();
+		containerPanel.setPreferredSize(new Dimension(prefWidth-20, height*tuples.size()));
+		repaint();
+		
 	}
 
 }
