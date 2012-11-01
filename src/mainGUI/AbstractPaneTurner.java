@@ -77,12 +77,22 @@ public abstract class AbstractPaneTurner extends JSplitPane {
 	protected abstract Component initializeViewPanes();
 	
 	/**
-	 * Creates and returns the xml representation of the project.
+	 * Creates and returns the main xml document for 
+	 * the project and creates the other xml documents.
 	 * @param xmlfile
 	 * @return xml DOMSource representation of project
 	 */
 	public Document toXML(){
 		return document.toXML();
+	}
+	
+	/**
+	 * Creates and returns a single xml file representation of 
+	 * the project.
+	 * @return
+	 */
+	public Document toExportXML() {
+		return document.toExportXML();
 	}
 
 	/**

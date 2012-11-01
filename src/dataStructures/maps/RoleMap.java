@@ -10,6 +10,16 @@ import java.util.Collection;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -129,6 +139,39 @@ public class RoleMap extends SuperkeyMap<Role>{
 		return rolesElem;
 	}
 	
+	/**
+	 * Create a single Role Element to add to export xml.
+	 * @param doc
+	 * @return
+	 */
+	/*public Element toExportXML(Document doc) {
+		Element rolesElem = doc.createElement("STAKEHOLDERS");
+		
+		Element uniqueIDElem = doc.createElement("UNIQUEMAPID");
+		uniqueIDElem.appendChild(doc.createTextNode(Integer.toString(uniqueID)));
+		rolesElem.appendChild(uniqueIDElem);
+		
+		Element multiElem = doc.createElement("MULTISTAKEHOLDER");
+		multiElem.appendChild(doc.createTextNode(Boolean.toString(isMultipleStakeholder)));
+		rolesElem.appendChild(multiElem);
+		
+		Element roleFile = doc.createElement("ROLEFILE");
+		roleFile.appendChild(doc.createTextNode(createRoleFile(projectFolder)));
+		rolesElem.appendChild(roleFile);
+		
+		if ( isMultipleStakeholder ) {
+			Element hierarchyElem = doc.createElement("HIERARCHYFILE");
+			String hierarchyFile = createHierarchyFile(projectFolder);
+			if(hierarchyFile != null) {
+				hierarchyElem.appendChild(doc.createTextNode(createHierarchyFile(projectFolder)));
+			}
+			rolesElem.appendChild(hierarchyElem);
+		}
+		
+		return rolesElem;
+		return null;
+	}*/
+	
 	private String createRoleFile(File projectFolder) {
 		String fileName = "roles.xml";
 		String roleFileName = projectFolder + System.getProperty("file.separator") + fileName;
@@ -136,21 +179,49 @@ public class RoleMap extends SuperkeyMap<Role>{
 		
 		System.out.println("Creating role file @ "+roleFileName+"\n");
 		
-		String roleXML = "<ROLES>\n";
+		// create xml document
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder;
+		
+		try {
+			docBuilder = docFactory.newDocumentBuilder();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+		Document doc = docBuilder.newDocument();
+		
+		// create root element
+		Element rolesElem = doc.createElement("ROLES");
+		doc.appendChild(rolesElem);
+				
+				
 		Set<Entry<Integer, Role>> allRoles = entrySet();
 		for(Entry<Integer, Role> entry : allRoles){
-			roleXML += entry.getValue().toXML(projectFolder);
+			Element roleElem = entry.getValue().toXML(projectFolder, doc);
+			rolesElem.appendChild(roleElem);
 		}
-		roleXML += "</ROLES>\n";
 		
-		BufferedWriter writer = null;
-		try {
-			writer = new BufferedWriter(new FileWriter(roleFile));
-		    writer.write(roleXML);
-		    writer.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		// write xml to file
+				TransformerFactory transformerFactory = TransformerFactory.newInstance();
+				Transformer transformer;
+				try {
+					transformer = transformerFactory.newTransformer();
+				} catch (TransformerConfigurationException e) {
+					e.printStackTrace();
+					return null;
+				}
+				
+				DOMSource source = new DOMSource(doc);
+				StreamResult result = new StreamResult(roleFile);
+				
+				try {
+					transformer.transform(source,  result);
+				} catch (TransformerException e) {
+					e.printStackTrace();
+					return null;
+				}
 		
 		return fileName;
 	}

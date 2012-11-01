@@ -21,6 +21,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.parsers.DocumentBuilder;
@@ -111,6 +112,26 @@ public class PreferenceReasoner extends JApplet{
 		}
 	};
 	
+	AbstractAction importAction = new AbstractAction("Import") {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	};
+	
+	AbstractAction export = new AbstractAction("Export") {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	};
+	
 	public PreferenceReasoner() {
 		// new JDialog: name your project
 		frame = new JFrame();
@@ -124,6 +145,11 @@ public class PreferenceReasoner extends JApplet{
 		fileMenu.setMnemonic('f');
 		JMenuItem item;
 		
+		item = fileMenu.add("New Project");
+		item.setMnemonic(KeyEvent.VK_N);
+		item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, Event.CTRL_MASK));
+		item.addActionListener(newProj);
+		
 		item = fileMenu.add("Save Project");
 		item.setMnemonic(KeyEvent.VK_S);
 		item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK));
@@ -131,16 +157,19 @@ public class PreferenceReasoner extends JApplet{
 		
 		item = fileMenu.add("Save Project As");
 		item.addActionListener(saveAs);
-		
-		item = fileMenu.add("New Project");
-		item.setMnemonic(KeyEvent.VK_N);
-		item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, Event.CTRL_MASK));
-		item.addActionListener(newProj);
 
 		item = fileMenu.add("Open Project");
 		item.setMnemonic(KeyEvent.VK_O);
 		item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, Event.CTRL_MASK));
 		item.addActionListener(open);
+		
+		fileMenu.add(new JSeparator());
+		
+		item = fileMenu.add("Import Project from XML");
+		item.addActionListener(importAction);
+		
+		item = fileMenu.add("Export Project to XML");
+		item.addActionListener(export);
 
 		JMenu helpMenu = new JMenu("?");
 		
@@ -368,6 +397,38 @@ public class PreferenceReasoner extends JApplet{
 		
 		paneTurner.setSaved(true);
 		
+	}
+	
+	/**
+	 * Shows the user a save dialog to select the location of the exported
+	 * file. Exports the current project to a single XML file.
+	 * @return true if the file is exported successfully
+	 */
+	public boolean export() {
+		JFileChooser chooser = new JFileChooser();
+
+		// suggest filename used on SetupProjectPane
+		String filename = paneTurner.getProjectName();
+		chooser.setSelectedFile(new File(filename));
+
+		int option = chooser.showSaveDialog(paneTurner);
+		if (option == JFileChooser.APPROVE_OPTION) {
+			File file = chooser.getSelectedFile();
+			return export(file);
+		}
+		return false;
+	}
+	
+
+	/**
+	 * Exports the current project to a single XML file at the provided
+	 * location
+	 * @param file to save xml to
+	 * @return true if the file is exported successfully
+	 */
+	public boolean export(File file) {
+		Document xmlFile = paneTurner.toExportXML();
+		return false;
 	}
 	
 	/**

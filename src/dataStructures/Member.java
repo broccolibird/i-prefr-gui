@@ -2,6 +2,10 @@ package dataStructures;
 
 import java.io.File;
 
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 /**
  * Contains information pertaining to each stakeholder
  */
@@ -42,17 +46,26 @@ public class Member extends NameKeyObject<String> {
 	/**
 	 * @return xml string representation of this member
 	 */
-	public String toXML(File projectFolder) {
-		String xml = "\t\t\t<MEMBER ID = '"+key+"'>\n";
-		xml += "\t\t\t\t<NAME>"+name+"</NAME>\n";
+	public Element toXML(File projectFolder, Document doc) {
+		Element memberElem = doc.createElement("MEMBER");
+		Attr memIDAttr = doc.createAttribute("ID");
+		memIDAttr.setValue(Integer.toString(key));
+		memberElem.setAttributeNode(memIDAttr);
+		
+		Element nameElem = doc.createElement("NAME");
+		nameElem.appendChild(doc.createTextNode(name));
+		memberElem.appendChild(nameElem);
+		
+		Element preferenceElem = doc.createElement("PREFERENCEFILE");
+		
 		if(object != null) {
 			String path = createRelativePath(projectFolder);
-			xml += "\t\t\t\t<PREFERENCEFILE>"+path+
-						"</PREFERENCEFILE>\n";
+			preferenceElem.appendChild(doc.createTextNode(path));
 		}
-		xml += "\t\t\t</MEMBER>\n";
 		
-		return xml;
+		memberElem.appendChild(preferenceElem);
+		
+		return memberElem;
 	}
 	
 	/**

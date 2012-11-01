@@ -436,9 +436,9 @@ public abstract class AbstractDocument {
 	//ID attributes are used only for keys of a map value and not for other
 	//numeric identifiers, which should have specific tags
 	/**
-	 * Creates an xml string of the current document
-	 * @param xmlfile - file to be saved to
-	 * @return xml string
+	 * Creates and returns the main xml document of the current project 
+	 * and creates additional xml project files.
+	 * @return xml document
 	 */
 	public Document toXML() {
 	
@@ -475,11 +475,58 @@ public abstract class AbstractDocument {
 		Element networkElem = getNetworkXML(doc);
 		rootElement.appendChild(networkElem);
 		
-//		// add role map
+		// add role map
 		Element roleElem = roleMap.toXML(projectFolder, doc);
 		rootElement.appendChild(roleElem);
 		
 		return doc;
+	}
+	
+	/**
+	 * Creates and returns an xml file containing all
+	 * project information.
+	 * @return xml document
+	 */
+	public Document toExportXML() {
+		// create xml document
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder;
+		
+		try {
+			docBuilder = docFactory.newDocumentBuilder();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+		Document doc = docBuilder.newDocument();
+		
+		// create root element
+		Element rootElement = doc.createElement("DOCUMENT");
+		doc.appendChild(rootElement);
+		
+		// add meta data
+		Element metaDataElem = metaData.toXML(doc);
+		rootElement.appendChild(metaDataElem);
+		
+		// add attribute map
+		Element attrMapElem = attributeMap.toXML(doc);
+		rootElement.appendChild(attrMapElem);
+		
+		// add alternative map
+		Element altMapElem = alternativeMap.toXML(attributeMap, doc);
+		rootElement.appendChild(altMapElem);
+		
+		// add network info
+		Element networkElem = getNetworkXML(doc);
+		rootElement.appendChild(networkElem);
+		
+		// add role map
+		Element roleElem = roleMap.toXML(projectFolder, doc);
+		rootElement.appendChild(roleElem);
+		
+		return doc;
+				
 	}
 	
 }
