@@ -2,6 +2,7 @@ package mainGUI;
 
 import guiElements.tuples.DomainTuple;
 
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.Collection;
 import java.util.Map.Entry;
@@ -9,6 +10,7 @@ import java.util.Map.Entry;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import dataStructures.Attribute;
@@ -44,22 +46,34 @@ public class DomainPane extends UpdatePane {
 	private JPanel initializeGUI() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		
+		JPanel headerPanel = new JPanel();
+		headerPanel.setLayout(new GridLayout(0, 2));
+		
+		JTextField name = new JTextField("Attribute Name");
+		JTextField domainEnum = new JTextField("Domain Enumeration");
+		name.setEditable(false);
+		domainEnum.setEditable(false);
+		headerPanel.add(name);
+		headerPanel.add(domainEnum);
+		panel.add(headerPanel);
+		
 		domainPanel = new JPanel();
 		domainPanel.setLayout(new GridLayout(0,2));
+		
+		JScrollPane scrollPane = new JScrollPane(domainPanel);
+		scrollPane.setPreferredSize(new Dimension(550, 650));
+		scrollPane.setBorder(null);
+		
 		update();
-		panel.add(domainPanel);
+		panel.add(scrollPane);
 		return panel;
 	}
  
 	public void update() {
 		// for every map entry, add a tuple to the table
 		domainPanel.removeAll();
-		JTextField name = new JTextField("Attribute Name");
-		JTextField domainEnum = new JTextField("Domain Enumeration");
-		name.setEditable(false);
-		domainEnum.setEditable(false);
-		domainPanel.add(name);
-		domainPanel.add(domainEnum);
+		
 		Collection<Entry<Integer, Attribute>> set = map.entrySet();
 		for (Entry<Integer, Attribute> p : set){
 			addTuple(p.getKey());
