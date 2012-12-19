@@ -83,9 +83,9 @@ public class NewDialog extends JDialog implements ActionListener {
 		single.setMnemonic(KeyEvent.VK_S);
 		single.addActionListener(this);
 		multiple = new JRadioButton("Multiple");
-//		multiple.setMnemonic(KeyEvent.VK_M);
-//		multiple.addActionListener(this);
-		multiple.setEnabled(false);
+		multiple.setMnemonic(KeyEvent.VK_M);
+		multiple.addActionListener(this);
+//		multiple.setEnabled(false);
 		single.setSelected(true);
 		multipleSelected = false;
 		
@@ -109,9 +109,9 @@ public class NewDialog extends JDialog implements ActionListener {
 		// Add network options (TCP-net/CI-net)
 		JLabel networkLabel = new JLabel("Select preference network type:");
 		cp = new JRadioButton("(T)CP-NET");
-//		cp.setMnemonic(KeyEvent.VK_T);
-		cp.setEnabled(false);
-//		cp.addActionListener(this);
+		cp.setMnemonic(KeyEvent.VK_T);
+//		cp.setEnabled(false);
+		cp.addActionListener(this);
 		ci = new JRadioButton("CI-NET");
 		ci.setMnemonic(KeyEvent.VK_C);
 		ci.setSelected(true);
