@@ -2,9 +2,9 @@ package mainGUI;
 
 import guiElements.tuples.ValueTuple;
 
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 
 import javax.swing.BoxLayout;
@@ -12,6 +12,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import dataStructures.Alternative;
@@ -51,10 +52,16 @@ public class ValuePane extends UpdatePane{
 	private JPanel initializeGUI() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		
 		valuePanel = new JPanel();
-		valuePanel.setLayout(new BoxLayout(valuePanel, BoxLayout.Y_AXIS));
+
+		JScrollPane scrollPane = new JScrollPane(valuePanel);
+		scrollPane.setMaximumSize(new Dimension(675, 650));
+		scrollPane.setBorder(null);
+		
 		update();
-		panel.add(valuePanel);
+		
+		panel.add(scrollPane);
 		return panel;
 	}
 
@@ -65,22 +72,12 @@ public class ValuePane extends UpdatePane{
 			valuePanel.add(new JLabel("Use Entire Possible Alternative Space"));
 		} else {
 			// put column names at top of valuePanel
-			//TODO - make sure this sorting keeps the attribute column names
-			//alligned with the comboboxes
 			ArrayList<Attribute> allAttributes = new ArrayList<Attribute>(
-					attributeMap.values());
-/*			for(Attribute a : allAttributes){
-				System.out.println(a.toXML());
-			}*/
-			Collections.sort(allAttributes);
-			
+					attributeMap.values());			
 			int numAttributes = allAttributes.size();
 
-//			JPanel columnTitles = new JPanel();
 			valuePanel.setLayout(new GridLayout(0, numAttributes+1));
-//			columnTitles
-//					.setLayout(new BoxLayout(columnTitles, BoxLayout.X_AXIS));
-
+			
 			JTextField origin = new JTextField("Alternative");
 			origin.setEditable(false);
 			valuePanel.add(origin);
@@ -90,13 +87,11 @@ public class ValuePane extends UpdatePane{
 				attName.setEditable(false);
 				valuePanel.add(attName);
 			}
-//			valuePanel.add(columnTitles);
 
 			// make a tuple for every alternative
 			LinkedList<Alternative> allAlternatives = new LinkedList<Alternative>(
 					alternativeMap.values());
-			//System.out.println("there are "+allAlternatives.size()+" alternatives in ValuePane");
-			Collections.sort(allAlternatives);
+//			Collections.sort(allAlternatives);
 
 			for (Alternative a : allAlternatives) {
 				if(a.getKey()==null){

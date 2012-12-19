@@ -138,6 +138,7 @@ public class AlternativePane extends ScrollPanePlus implements ActionListener {
 	@Override
 	public void update() {
 		updateRadioButtons();
+		tuples.clear();
 		containerPanel.removeAll();
 
 

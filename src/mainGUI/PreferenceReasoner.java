@@ -507,7 +507,7 @@ public class PreferenceReasoner extends JApplet{
 			int chosenOption = JOptionPane.showOptionDialog(frame, "The file you selected " +
 					"("+xmlFile.getAbsolutePath()+") is " +
 					"not a project file.\nWould you like to open " + filePath + " instead?",
-					"Incorrect file type", JOptionPane.YES_NO_OPTION, (Integer) null, 
+					"Incorrect file type", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, 
 					null, options, options[0]);
 			
 			if( chosenOption == 0) {
